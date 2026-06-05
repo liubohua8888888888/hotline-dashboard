@@ -111,11 +111,11 @@ svg{width:100%}
     <span class="badge" id="nb">新人 0 人</span>
     <div class="tg-wrap">
       <div class="toggle-wrap">
-        <span class="toggle-label active" id="tl1">含新人</span>
-        <div class="toggle-track" id="toggleTrack" onclick="toggleSwitch()">
+        <span class="toggle-label active" id="tl1" style="cursor:pointer" onclick="ex=false;refresh()">含新人</span>
+        <div class="toggle-track" id="toggleTrack">
           <div class="toggle-thumb"></div>
         </div>
-        <span class="toggle-label" id="tl2">剔除新人</span>
+        <span class="toggle-label" id="tl2" style="cursor:pointer" onclick="ex=true;refresh()">剔除新人</span>
       </div>
     </div>
   </div>
@@ -6090,6 +6090,7 @@ var CLS=function(v,type){
 
 function refresh(){renderAll();var t=document.getElementById('toggleTrack');var l1=document.getElementById('tl1');var l2=document.getElementById('tl2');if(ex){t.classList.add('on');l1.classList.remove('active');l2.classList.add('active')}else{t.classList.remove('on');l1.classList.add('active');l2.classList.remove('active')}}
 function toggleSwitch(){ex=!ex;var t=document.getElementById('toggleTrack');var l1=document.getElementById('tl1');var l2=document.getElementById('tl2');if(ex){t.classList.add('on');l1.classList.remove('active');l2.classList.add('active')}else{t.classList.remove('on');l1.classList.add('active');l2.classList.remove('active')}refresh()}
+(function(){var tr=document.getElementById('toggleTrack');if(tr){tr.addEventListener('click',function(e){e.preventDefault();toggleSwitch()});tr.addEventListener('touchend',function(e){e.preventDefault();toggleSwitch()})}})()
 function swBtns(n){}
 function swTab(i){document.querySelectorAll('.tab').forEach(function(t,j){t.classList.toggle('active',j===i)});document.querySelectorAll('.tp').forEach(function(p,j){p.classList.toggle('active',j===i)});if(i===4){try{rQcKpi();rQcWeekTrend();rQcSceneBar();rQcHeatmap();renderQcDetail();}catch(e){}}}
 function renderAll(){rKPI();rGrp();rZone();rWeek();rGrpWeek();rAlert();var nc=((D.overall.人数_含新人||0)-(D.overall.人数_剔除新人||0));document.getElementById('nb').textContent='新人 '+nc+' 人'}
