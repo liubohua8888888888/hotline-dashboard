@@ -1,0 +1,2260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>热线管理看板 - 2026年6月</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0e1a;--card:rgba(15,23,42,.85);--border:rgba(100,116,139,.2);--accent:#00d4ff;--text:#e2e8f0;--text2:#94a3b8;--red:#ff4757;--green:#00e676;--yellow:#ffd740;--purple:#b388ff;--orange:#ffa726;--pink:#ff6b9d}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.header{background:linear-gradient(135deg,#0f172a,#1e1b4b);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:10px}
+.header h1{font-size:20px;font-weight:700;background:linear-gradient(90deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header-right{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.tg-wrap{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2)}
+.tg{position:relative;width:40px;height:22px;cursor:pointer}
+.tg input{opacity:0;width:0;height:0}
+.tg-s{position:absolute;inset:0;background:#334155;border-radius:22px;transition:.3s}
+.tg-s::before{content:"";position:absolute;width:16px;height:16px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.3s}
+.tg input:checked+.tg-s{background:var(--accent)}
+.tg input:checked+.tg-s::before{transform:translateX(18px)}
+.badge{background:rgba(0,212,255,.15);color:var(--accent);padding:3px 10px;border-radius:16px;font-size:11px}
+.info-btn{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:rgba(100,116,139,.3);color:var(--text2);font-size:10px;cursor:pointer;margin-left:3px;vertical-align:middle;position:relative;font-style:normal}
+.info-btn:hover .info-tip{display:block}
+.info-tip{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#1e293b;border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:11px;color:var(--text2);white-space:normal;width:240px;z-index:200;box-shadow:0 4px 12px rgba(0,0,0,.3);line-height:1.7;pointer-events:auto;font-weight:400;text-align:left}
+.info-tip::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#1e293b}
+.tabs{display:flex;padding:0 28px;background:rgba(15,23,42,.5);border-bottom:1px solid var(--border);overflow-x:auto}
+.tab{padding:10px 20px;cursor:pointer;color:var(--text2);font-size:13px;font-weight:500;border-bottom:2px solid transparent;transition:.2s;white-space:nowrap}
+.tab:hover{color:var(--text)}.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.main{padding:20px 28px;max-width:1700px;margin:0 auto}
+.tp{display:none}.tp.active{display:block}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 16px;position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;top:0;left:0;width:3px;height:100%;border-radius:3px 0 0 3px}
+.kpi .lb{font-size:11px;color:var(--text2);margin-bottom:3px}
+.kpi .vl{font-size:20px;font-weight:700}
+.kpi .df{font-size:10px;margin-top:2px}
+.k1::before{background:var(--accent)}.k2::before{background:var(--purple)}.k3::before{background:var(--green)}
+.k4::before{background:var(--yellow)}.k5::before{background:var(--red)}.k6::before{background:var(--pink)}
+.k7::before{background:var(--orange)}.k8::before{background:#448aff}
+.stl{font-size:15px;font-weight:600;margin:16px 0 10px;padding-left:8px;border-left:3px solid var(--accent)}
+table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px}
+th{background:rgba(30,41,59,.8);padding:8px 8px;text-align:center;font-weight:600;color:var(--text2);font-size:11px;white-space:nowrap;border-bottom:1px solid var(--border);cursor:pointer;user-select:none}
+th:hover{background:rgba(30,41,59,1)}
+th .arr{margin-left:3px;font-size:9px;opacity:.5}
+th.sorted .arr{opacity:1;color:var(--accent)}
+td{padding:6px 8px;text-align:center;border-bottom:1px solid rgba(100,116,139,.08);white-space:nowrap}
+tr:hover{background:rgba(30,41,59,.4)}
+.vr{color:var(--red);font-weight:600}.vg{color:var(--green);font-weight:600}.va{color:var(--accent);font-weight:600}
+.vy{color:var(--yellow);font-weight:600}
+.cr{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.cb{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px}
+.cb h3{font-size:13px;margin-bottom:12px;color:var(--text2)}
+.zg{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.zc{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px}
+.zc h3{font-size:15px;font-weight:600;margin-bottom:14px}.zc h3 span{font-size:12px;font-weight:400;color:var(--text2)}
+.zk{display:grid;grid-template-columns:repeat(auto-fill,minmax(95px,1fr));gap:7px;margin-bottom:14px}
+.zki{background:rgba(30,41,59,.5);border-radius:7px;padding:8px;text-align:center}
+.zki .zl{font-size:10px;color:var(--text2);margin-bottom:2px}.zki .zv{font-size:16px;font-weight:700}
+.zki .zd{font-size:9px;margin-top:1px}
+.pb{height:7px;background:rgba(51,65,85,.5);border-radius:4px;margin:6px 0 10px;overflow:hidden}
+.pb .fl{height:100%;border-radius:4px;transition:width .6s}
+.as{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.ac{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px}
+.ac h3{font-size:14px;margin-bottom:10px}
+.ai{padding:7px 10px;margin:5px 0;border-radius:5px;font-size:12px;display:flex;align-items:center;gap:8px}
+.ai.w{background:rgba(255,71,87,.1);border-left:3px solid var(--red)}
+.ai.g{background:rgba(0,230,118,.1);border-left:3px solid var(--green)}
+.ai .spark{flex-shrink:0}
+svg{width:100%}
+.foot{text-align:center;padding:14px;color:var(--text2);font-size:11px;border-top:1px solid var(--border);margin-top:28px}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:#0f172a;border:1px solid var(--border);border-radius:12px;padding:20px;max-width:1100px;width:95%;max-height:85vh;overflow-y:auto}
+.modal h2{font-size:16px;margin-bottom:12px;color:var(--accent)}
+.modal .close{float:right;cursor:pointer;color:var(--text2);font-size:18px}
+.modal .close:hover{color:var(--text)}
+.tooltip{position:absolute;background:#1e293b;border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:11px;pointer-events:none;z-index:100;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:middle}
+
+.qc-hm{display:grid;gap:0;margin-bottom:16px}
+.qc-hm-cell{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;min-width:36px;min-height:32px;border:1px solid rgba(100,116,139,.1);position:relative}
+.qc-hm-cell:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:#1e293b;border:1px solid var(--border);border-radius:5px;padding:4px 8px;font-size:10px;color:var(--text2);white-space:nowrap;z-index:50;pointer-events:none;font-weight:400}
+.qc-hm-label{font-size:11px;color:var(--text2);display:flex;align-items:center;justify-content:center;min-width:60px;padding:4px}
+.sev-tag{display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600}
+.sev-s{background:rgba(255,71,87,.2);color:var(--red)}.sev-m{background:rgba(255,167,38,.2);color:var(--orange)}.sev-l{background:rgba(0,230,118,.2);color:var(--green)}
+.qc-detail-expand{background:rgba(15,23,42,.5);border-bottom:1px solid var(--border)}
+.qc-detail-expand td{padding:8px 12px;text-align:left;font-size:11px;color:var(--text2);line-height:1.6}
+
+.qc-subpanel{display:none}.qc-subpanel.active{display:block}
+.qc-subtab{cursor:pointer;font-size:13px;font-weight:500;transition:.2s}
+.qc-subtab:hover{color:var(--text)}
+.qc-subtab.active{color:var(--accent);border-bottom-color:var(--accent)!important}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>热线管理看板 - 2026年6月</h1>
+  <div class="header-right">
+    <span class="badge" id="nb">新人 0 人</span>
+    <div class="tg-wrap">
+      <span>含新人</span>
+      <label class="tg"><input type="checkbox" id="tg" onchange="refresh()"><span class="tg-s"></span></label>
+      <span>剔除新人</span>
+    </div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="swTab(0)">整体概览</div>
+  <div class="tab" onclick="swTab(1)">区域对比</div>
+  <div class="tab" onclick="swTab(2)">分周趋势</div>
+  <div class="tab" onclick="swTab(3)">异常关注</div>
+  <div class="tab" onclick="swTab(4)">质检差错</div>
+</div>
+
+<div class="main">
+<div class="tp active" id="p0">
+  <div class="kpi-grid" id="kpi"></div>
+  <div class="stl">各组月度指标 <span style="font-size:11px;color:var(--text2);font-weight:400">点击表头可排序</span></div>
+  <div style="overflow-x:auto"><table id="gt"><thead></thead><tbody></tbody></table></div>
+  <div class="cr">
+    <div class="cb"><h3>各组日均接起量（降序）</h3><svg id="cD" height="200"></svg></div>
+    <div class="cb"><h3>各质检通过率（降序）</h3><svg id="cQ" height="200"></svg></div>
+    <div class="cb"><h3>各差错量（降序）</h3><svg id="cF" height="200"></svg></div>
+    <div class="cb"><h3>各一解率（降序）</h3><svg id="cY" height="200"></svg></div>
+  </div>
+  <div class="cr">
+    <div class="cb"><h3>各工时利用率（降序）</h3><svg id="cW" height="200"></svg></div>
+    <div class="cb"><h3>各外诉率（降序）</h3><svg id="cE" height="200"></svg></div>
+    <div class="cb"><h3>各退单量（降序）</h3><svg id="cR" height="200"></svg></div>
+    <div class="cb"><h3>各满意率（降序）</h3><svg id="cS" height="200"></svg></div>
+  </div>
+</div>
+
+<div class="tp" id="p1">
+  <div class="zg" id="zg"></div>
+  <div class="stl">核心指标对标</div>
+  <div style="overflow-x:auto"><table id="ct"><thead></thead><tbody></tbody></table></div>
+</div>
+
+<div class="tp" id="p2">
+  <div class="kpi-grid" id="wk"></div>
+  <div class="cr">
+    <div class="cb"><h3>区域分周日均接起趋势</h3><svg id="wc" height="200"></svg></div>
+    <div class="cb"><h3>区域分周质检通过率趋势</h3><svg id="wq" height="200"></svg></div>
+  </div>
+  <div class="cr">
+    <div class="cb"><h3>区域分周一解率趋势</h3><svg id="wr" height="200"></svg></div>
+    <div class="cb"><h3>区域分周平均事后时长趋势</h3><svg id="wa" height="200"></svg></div>
+  </div>
+  <div class="cb"><h3>整体质检通过率分周趋势（含新人 vs 剔除新人）</h3><svg id="gw0" height="200"></svg></div>
+  <div class="cr">
+    <div class="cb"><h3>叶莉莎区域(1-4组)质检通过率趋势</h3><svg id="gwA" height="200"></svg></div>
+    <div class="cb"><h3>陈浩区域(5-8组)质检通过率趋势</h3><svg id="gwB" height="200"></svg></div>
+  </div>
+  <div class="stl">各组分周质检通过率明细</div>
+  <div style="overflow-x:auto"><table id="gwt_0"><thead></thead><tbody></tbody></table></div>
+  <div class="stl">各组分周一解率明细</div>
+  <div style="overflow-x:auto"><table id="gwt_1"><thead></thead><tbody></tbody></table></div>
+  <div class="stl">各组分周日均接起明细</div>
+  <div style="overflow-x:auto"><table id="gwt_2"><thead></thead><tbody></tbody></table></div>
+  <div class="stl">各组分周差错量明细</div>
+  <div style="overflow-x:auto"><table id="gwt_3"><thead></thead><tbody></tbody></table></div>
+  <div class="stl">各组分周满意率明细</div>
+  <div style="overflow-x:auto"><table id="gwt_4"><thead></thead><tbody></tbody></table></div>
+  <div class="stl">各组分周工时利用率明细</div>
+  <div style="overflow-x:auto"><table id="gwt_5"><thead></thead><tbody></tbody></table></div>
+  <div class="stl">整体周度汇总</div>
+  <div style="overflow-x:auto"><table id="wt"><thead></thead><tbody></tbody></table></div>
+</div>
+
+<div class="tp" id="p3">
+  <div class="as" id="as"></div>
+</div>
+<div class="tp" id="p4">
+  <div style="display:flex;gap:0;margin-bottom:16px;border-bottom:1px solid var(--border)">
+    <div class="qc-subtab active" id="qcst0" onclick="swQcSub(0)" style="padding:8px 20px;cursor:pointer;font-size:13px;font-weight:500;color:var(--accent);border-bottom:2px solid var(--accent)">差错总览</div>
+    <div class="qc-subtab" id="qcst1" onclick="swQcSub(1)" style="padding:8px 20px;cursor:pointer;font-size:13px;font-weight:500;color:var(--text2);border-bottom:2px solid transparent">区域对比</div>
+  </div>
+  <div class="qc-subpanel active" id="qcsp0">
+    <div class="kpi-grid" id="qck"></div>
+    <div class="cr">
+      <div class="cb"><h3>差错量分周趋势</h3><svg id="qcWeekTrend" height="200"></svg></div>
+      <div class="cb"><h3>差错高频场景 TOP10</h3><svg id="qcSceneBar" height="200"></svg></div>
+    </div>
+    <div class="stl">组别 × 场景差错热力图</div>
+    <div style="overflow-x:auto"><div id="qcHeatmap"></div></div>
+    <div class="stl">人员差错排行</div>
+    <div style="overflow-x:auto"><table id="qcPersonT"><thead></thead><tbody></tbody></table></div>
+    <div class="stl">差错明细 <span style="font-size:11px;color:var(--text2);font-weight:400" id="qcFilterInfo"></span></div>
+    <div style="overflow-x:auto;margin-bottom:12px">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px">
+        <select id="qcGrpF" onchange="renderQcDetail()" style="background:#1e293b;color:#e2e8f0;border:1px solid rgba(100,116,139,.3);border-radius:5px;padding:4px 8px;font-size:12px"><option value="">全部组别</option><option>热线一组</option><option>热线二组</option><option>热线三组</option><option>热线四组</option><option>热线五组</option><option>热线六组</option><option>热线七组</option><option>热线八组</option></select>
+        <select id="qcSevF" onchange="renderQcDetail()" style="background:#1e293b;color:#e2e8f0;border:1px solid rgba(100,116,139,.3);border-radius:5px;padding:4px 8px;font-size:12px"><option value="">全部评分区间</option><option value="80-100">80~99分（轻微扣分）</option><option value="0-80">1~80分（一般差错）</option><option value="0">0分（严重差错）</option></select>
+        <input type="text" id="qcNameF" placeholder="搜索姓名" oninput="renderQcDetail()" style="background:#1e293b;color:#e2e8f0;border:1px solid rgba(100,116,139,.3);border-radius:5px;padding:4px 8px;font-size:12px;width:100px">
+        <input type="text" id="qcSceneF" placeholder="搜索场景" oninput="renderQcDetail()" style="background:#1e293b;color:#e2e8f0;border:1px solid rgba(100,116,139,.3);border-radius:5px;padding:4px 8px;font-size:12px;width:120px">
+        <input type="text" id="qcTypeF" placeholder="搜索差错类型" oninput="renderQcDetail()" style="background:#1e293b;color:#e2e8f0;border:1px solid rgba(100,116,139,.3);border-radius:5px;padding:4px 8px;font-size:12px;width:130px">
+        <button onclick="clearQcFilters()" style="background:#334155;color:#e2e8f0;border:1px solid rgba(100,116,139,.3);border-radius:5px;padding:4px 10px;font-size:12px;cursor:pointer">清除</button>
+        <span id="qcCount" style="font-size:11px;color:var(--text2);margin-left:8px"></span>
+      </div>
+      <table id="qcDetailT"><thead></thead><tbody></tbody></table>
+    </div>
+  </div>
+  <div class="qc-subpanel" id="qcsp1" style="display:none">
+    <div class="kpi-grid" id="qcZoneKpi"></div>
+    <div class="cr">
+      <div class="cb"><h3>区域核心指标对标</h3><svg id="qcZoneBenchmark" height="220"></svg></div>
+      <div class="cb"><h3>区域差错量分周趋势</h3><svg id="qcZoneWeek" height="220"></svg></div>
+    </div>
+    <div class="cr">
+      <div class="cb"><h3>区域评分区间对比</h3><svg id="qcZoneSev" height="200"></svg></div>
+      <div class="cb"><h3>区域差错场景TOP10</h3><svg id="qcZoneScene" height="200"></svg></div>
+    </div>
+    <div class="stl">各区域分组多维对比</div>
+    <div style="overflow-x:auto"><table id="qcZoneTable"><thead></thead><tbody></tbody></table></div>
+    <div class="stl">区域坐席差错与绩效排行 <span style="font-size:11px;color:var(--text2);font-weight:400" id="qcZonePerfInfo"></span></div>
+    <div style="overflow-x:auto"><table id="qcZonePerf"><thead></thead><tbody></tbody></table></div>
+  </div>
+</div></div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal"><span class="close" onclick="closeModal()">&times;</span><h2 id="mt"></h2><input id="ms" type="text" placeholder="搜索姓名..." style="width:100%;padding:6px 10px;margin-bottom:10px;background:var(--bg2);border:1px solid var(--bd);border-radius:6px;color:#e2e8f0;font-size:13px;box-sizing:border-box" oninput="filterModal()"><div id="mc"></div></div>
+</div>
+
+<div class="foot">Made by 刘博华 | 数据周期：2026年6月1日 - 6月3日</div>
+
+
+
+<script type="application/json" id="qc_json">{
+  "summary": {
+    "total": 1707,
+    "pass": 1616,
+    "fail": 91,
+    "pass_rate": 94.67
+  },
+  "grp_stats": {
+    "热线一组": {
+      "质检量": 202,
+      "差错量": 5,
+      "通过率": 97.52
+    },
+    "热线二组": {
+      "质检量": 193,
+      "差错量": 4,
+      "通过率": 97.93
+    },
+    "热线三组": {
+      "质检量": 266,
+      "差错量": 18,
+      "通过率": 93.23
+    },
+    "热线四组": {
+      "质检量": 209,
+      "差错量": 7,
+      "通过率": 96.65
+    },
+    "热线五组": {
+      "质检量": 213,
+      "差错量": 14,
+      "通过率": 93.43
+    },
+    "热线六组": {
+      "质检量": 171,
+      "差错量": 17,
+      "通过率": 90.06
+    },
+    "热线七组": {
+      "质检量": 256,
+      "差错量": 12,
+      "通过率": 95.31
+    },
+    "热线八组": {
+      "质检量": 197,
+      "差错量": 14,
+      "通过率": 92.89
+    }
+  },
+  "records": [
+    {
+      "姓名": "穆琪",
+      "组别": "热线三组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-04",
+      "场景": "其他还款方式咨询",
+      "整单评论": "[2026-06-04 14:38:23]王明卫:【质检差错】客户账单需对公还款，坐席发送对公账户和对公短链，引导客户对公还款，核实客户是渤海信托（蓝海）账单，需操作回购后才支持对公还款，坐席未申请回购，遗漏关键步骤\n【质检判罚】遗漏关键步骤-遗漏关键步骤：客户反馈的问题，按照SOP需要多个步骤进行判断或处理，客服遗漏关键步骤、错误处理或跳步骤执行，影响问题解决或处理",
+      "单句评论": "-",
+      "日期": "2026-06-04",
+      "差错类型": "遗漏关键步骤",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "王嘉乐",
+      "组别": "热线五组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-04",
+      "场景": "协商还款",
+      "整单评论": "[2026-06-04 16:04:39]刘倩:【质检差错】账单逾期一天，客服协助减免逾期费用，小结单应该选择：未结清账单费率不满。 【质检判罚】问题分类选择错误-客服未按客户问题场景选择合适准确的小结单分类或工单分类。",
+      "单句评论": "-",
+      "日期": "2026-06-04",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "何海艳",
+      "组别": "热线三组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-04",
+      "场景": "逾期客户延期还款",
+      "整单评论": "[2026-06-04 14:28:55]潘小佩:【质检差错】账单逾期申请停催，应转接给贷后转接组，错误转接给常规转接组\n【质检判罚】不应升但升/不应转但转-不应转但转：按业务 SOP 应自闭环场景，或不满足转接条件，客服错误转接（在线特例：在线坐席之间相互转接双判）\n",
+      "单句评论": "-",
+      "日期": "2026-06-04",
+      "差错类型": "不应升但升/不应转但转",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "赵晓莹",
+      "组别": "热线五组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-04",
+      "场景": "结清账单费率不满",
+      "整单评论": "[2026-06-04 17:32:54]潘小佩:【质检差错】催促问题处理，沟通转接，未在处理中工单备注\n【质检判罚】关键信息记录错误-客服在联络记录/工单内容/处理结果中，存在信息记录不准确或未记录的情况，且可能会影响后续客户问题的处理\n",
+      "单句评论": "-",
+      "日期": "2026-06-04",
+      "差错类型": "关键信息记录错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "张梦欣",
+      "组别": "热线八组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-04",
+      "场景": "超级会员取消",
+      "整单评论": "[2026-06-04 16:59:20]潘小佩:【质检差错】退好借卡+超级会员，坐席小结单未记录退超级会员问题\n【质检判罚】关键信息记录错误-客服在联络记录/工单内容/处理结果中，存在信息记录不准确或未记录的情况，且可能会影响后续客户问题的处理\n",
+      "单句评论": "-",
+      "日期": "2026-06-04",
+      "差错类型": "关键信息记录错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "周灿",
+      "组别": "热线一组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-04",
+      "场景": "协商还款",
+      "整单评论": "[2026-06-04 13:39:22]潘小佩:【质检差错】催促问题回电，处理中工单未备注\n【质检判罚】关键信息记录错误-客服在联络记录/工单内容/处理结果中，存在信息记录不准确或未记录的情况，且可能会影响后续客户问题的处理\n",
+      "单句评论": "-",
+      "日期": "2026-06-04",
+      "差错类型": "关键信息记录错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "刘越美",
+      "组别": "热线四组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-04",
+      "场景": "协商还款",
+      "整单评论": "[2026-06-04 13:42:58]段林涛:【质检差错】客户进线协商还款已经起诉，要求撤诉，坐席告知已经进入法诉阶段，引导与对方协商，客户未认可挂机坐席未建单升级处理；法诉用户需建单贷后处理（贷后系统核实该客户确实已进入法诉）；\n【质检判罚】应升未升：按业务 SOP 应升级场景，客服未创建升级工单",
+      "单句评论": "[2026-06-04 13:36:55]段林涛:1",
+      "日期": "2026-06-04",
+      "差错类型": "应升未升",
+      "差错描述": "[2026-06-04 13:36:55]段林涛:1"
+    },
+    {
+      "姓名": "张梦欣",
+      "组别": "热线八组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-04",
+      "场景": "好借卡取消",
+      "整单评论": "[2026-06-04 14:45:51]王明卫:【质检差错】客户咨询69扣款核实告知好借卡扣款，客户需退费，协助处理退费，沟通中客户查询其他权益卡开通记录，坐席核实告知还有好借卡和超级会员，协助操作退费，且客户咨询放款失败问题，坐席解释告知，小结单联络备注未记录客户查询其他权益卡坐席协助退费和咨询放款失败问题，客户问题记录不完整\n【质检判罚】关键信息记录错误-关键信息记录错误：客服在联络记录/工单内容/处理结果中，存在信息记录不准确或未记录的情况，且可能会影响后续客户问题的处理",
+      "单句评论": "[2026-06-04 12:13:45]王明卫:咨询放款失败问题\n[2026-06-04 14:41:25]王明卫:超级会员退费",
+      "日期": "2026-06-04",
+      "差错类型": "关键信息记录错误",
+      "差错描述": "[2026-06-04 12:13:45]王明卫:咨询放款失败问题\n[2026-06-04 14:41:25]王明卫:超级会员退费"
+    },
+    {
+      "姓名": "杨媛",
+      "组别": "热线六组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-04",
+      "场景": "好借卡咨询",
+      "整单评论": "[2026-06-04 14:35:37]段林涛:【质检差错】客户进线要求取消好借卡自动续费，坐席引导告知关闭，沟通中无查询诉求仅关闭会员续费，小结单需点选“增值服务-好借卡取消”，坐席错选好借卡咨询；\n【质检判罚】问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类。",
+      "单句评论": "[2026-06-04 14:33:34]段林涛:1",
+      "日期": "2026-06-04",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "[2026-06-04 14:33:34]段林涛:1"
+    },
+    {
+      "姓名": "史磊磊",
+      "组别": "热线二组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-04",
+      "场景": "投诉催收作业",
+      "整单评论": "[2026-06-04 11:48:28]潘小佩:【质检差错】非注册号码进线投诉催收，验证码无法核验，建议客户注册号码进线，小结单应为催收投诉安抚，坐席错选投诉催收作业\n【质检判罚】问题分类选择错误-客服未按客户问题场景选择合适准确的小结单分类或工单分类\n",
+      "单句评论": "-",
+      "日期": "2026-06-04",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "张思婕",
+      "组别": "热线八组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-03",
+      "场景": "-",
+      "整单评论": "[2026-06-03 14:23:42]段林涛:【质检差错】回电给客户退权益卡，坐席未保存小结单，全员群未报备有异常；\n【质检判罚】问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类。若智能落单推荐的小结单或工单分类不准确，需手动选择符合客户问题场景的分类，直接选择推荐分类需扣罚",
+      "单句评论": "-",
+      "日期": "2026-06-03",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "何海艳",
+      "组别": "热线三组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-03",
+      "场景": "催收投诉安抚",
+      "整单评论": "[2026-06-03 16:08:20]刘倩:【质检判罚】客户投诉催收威胁恐吓，爆通讯录，客服解释催收规则，一直告知会核实催收问题规范流程，并会记录备注，强安抚未建单。 【质检判罚】应升未升/应转未转-应升未升：按业务 SOP 应升级场景，客服未创建升级工单",
+      "单句评论": "-",
+      "日期": "2026-06-03",
+      "差错类型": "应升未升/应转未转",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "王嘉乐",
+      "组别": "热线五组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-03",
+      "场景": "结清账单费率不满",
+      "整单评论": "[2026-06-03 14:11:35]王明卫:【质检差错】客户进线咨询费用不满问题处理进度，安抚不认可，在线转接处理，有处理中的费率不满工单未备注\n【质检判罚】关键信息记录错误-关键信息记录错误：客服在联络记录/工单内容/处理结果中，存在信息记录不准确或未记录的情况，且可能会影响后续客户问题的处理",
+      "单句评论": "-",
+      "日期": "2026-06-03",
+      "差错类型": "关键信息记录错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "张思婕",
+      "组别": "热线八组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-03",
+      "场景": "催收投诉安抚",
+      "整单评论": "[2026-06-03 14:21:55]潘小佩:【质检差错】申请停催，明天还款，未抱怨/投诉催收，小结单应为逾期延期还款，坐席错选催收投诉安抚\n【质检判罚】问题分类选择错误-客服未按客户问题场景选择合适准确的小结单分类或工单分类\n",
+      "单句评论": "-",
+      "日期": "2026-06-03",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "刘浩",
+      "组别": "热线三组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-04",
+      "场景": "未结清账单费率不满",
+      "整单评论": "[2026-06-04 17:52:38]杨姿娇:【质检差错】客户进线时，有处理中未结清账单费率不满工单，坐席未追加备注\n【质检判罚】关键信息记录错误-客服在工单内容中，存在信息记录不准确的情况",
+      "单句评论": "-",
+      "日期": "2026-06-04",
+      "差错类型": "关键信息记录错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "王嘉乐",
+      "组别": "热线五组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-02",
+      "场景": "账单查询",
+      "整单评论": "[2026-06-02 14:57:12]潘小佩:【质检差错】客户进线反馈自己之前号码打不进来客服电话，怀疑平台拉黑了自己，最后客户再次纠结此问题，坐席告知客户短时间内多次进线的话他可能会有一些阻止，解答有误，目前未通知有此流程，如客户打不进来可建议客户换时间致电/解释咨询人数较多，不可按坐席解答告知，避免引起客户外诉\n【质检判罚】解答错误-客户进线反馈的问题，客服错误处理或提供不准确的解决方案，导致未解决或未覆盖客户的问题；或未按照SOP准流程执行，处理不全/错误，包括但不限于：产品规则解答错误、政策条款解答错误、操作指引介绍错误及信息数据回复错误等\n",
+      "单句评论": "[2026-06-02 14:53:14]潘小佩:短时间内多次进线的话他可能会有一些阻止",
+      "日期": "2026-06-02",
+      "差错类型": "解答错误",
+      "差错描述": "[2026-06-02 14:53:14]潘小佩:短时间内多次进线的话他可能会有一些阻止"
+    },
+    {
+      "姓名": "穆琪",
+      "组别": "热线三组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-02",
+      "场景": "协商还款",
+      "整单评论": "[2026-06-02 14:24:50]王明卫:【质检差错】客户进线反馈减免还款问题，和工作人员协商减免的是5月7号账单，但工作人员操作减免的是6月1号账单，坐席告知问题处理中催促一下，有处理中的协商还款工单未备注\n【质检判罚】关键信息记录错误-关键信息记录错误：客服在联络记录/工单内容/处理结果中，存在信息记录不准确或未记录的情况，且可能会影响后续客户问题的处理",
+      "单句评论": "-",
+      "日期": "2026-06-02",
+      "差错类型": "关键信息记录错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "穆琪",
+      "组别": "热线三组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-02",
+      "场景": "超级会员取消",
+      "整单评论": "[2026-06-02 14:31:22]潘小佩:【质检差错】客户表示自己没下载好分期APP，没订购会员被扣费199，坐席给客户解释，可能好分期平台有其他合作方，你在合作方那边误触了，解答有误，实际是客户2026-03-05办理的季卡是自动续费，所以到期扣费了\n【质检判罚】解答错误-客户进线反馈的问题，客服错误处理或提供不准确的解决方案，导致未解决或未覆盖客户的问题；或未按照SOP准流程执行，处理不全/错误，包括但不限于：产品规则解答错误、政策条款解答错误、操作指引介绍错误及信息数据回复错误等\n",
+      "单句评论": "[2026-06-02 14:31:27]潘小佩:解答错误",
+      "日期": "2026-06-02",
+      "差错类型": "解答错误",
+      "差错描述": "[2026-06-02 14:31:27]潘小佩:解答错误"
+    },
+    {
+      "姓名": "黄晓纯",
+      "组别": "热线四组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-02",
+      "场景": "协商还款",
+      "整单评论": "[2026-06-02 14:09:41]潘小佩:【质检差错】有处理中贷后二线工单，坐席未备注\n【质检判罚】关键信息记录错误-客服在联络记录/工单内容/处理结果中，存在信息记录不准确或未记录的情况，且可能会影响后续客户问题的处理\n",
+      "单句评论": "-",
+      "日期": "2026-06-02",
+      "差错类型": "关键信息记录错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "何海艳",
+      "组别": "热线三组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-02",
+      "场景": "催收投诉安抚",
+      "整单评论": "[2026-06-02 14:19:43]潘小佩:【质检差错】1、不要联系紧急联系人，未点借款人诉求停催联系人标签；2、咨询账单情况，小结单未记录；3、客户咨询总欠款金额，坐席沟通只告知客户8笔待还，实际客户还有逾期账单， 总需要还款笔数是11笔，坐席解答不完整，信息解读偏差\n【质检判罚】1、标签选择错误-客服未按客户问题场景、沟通情况、业务信息等选择正确的标签；2、非关键信息记录错误-主要指信息记录不准确或未记录的情况，但无需后续处理或不影响后续处理；3、服务技巧及礼仪欠佳-服务技巧不足：未掌握倾听、引导、确认等沟通技巧，导致客户需求传递不畅，或信息解读偏差，引起客户反感、增加沟通成本\n\n",
+      "单句评论": "[2026-06-02 14:20:43]潘小佩:降频，不要联系预留联系人\n[2026-06-02 14:21:50]潘小佩:待还订单8笔",
+      "日期": "2026-06-02",
+      "差错类型": "标签选择错误",
+      "差错描述": "[2026-06-02 14:20:43]潘小佩:降频，不要联系预留联系人\n[2026-06-02 14:21:50]潘小佩:待还订单8笔"
+    },
+    {
+      "姓名": "周培",
+      "组别": "热线七组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-02",
+      "场景": "超级会员取消",
+      "整单评论": "[2026-06-02 14:50:59]刘倩:【质检判罚】客户表示今天扣款199，咨询为什么扣款199，客服告知今天早上十点去操作创建的会员，客户表示自己未开通会员，客服解释可能是误操作，解答有误，2026-06-02创建的会员是因为客户在2025-12-05开通会员会员季卡，开通时有点选自动续费，今天扣款是权益卡到期续费扣款。\n【质检判罚】解答错误：客户进线反馈的问题，客服错误处理或提供不准确的解决方案，导致未解决或未覆盖客户的问题；或未按照SOP准流程执行，处理不全/错误，",
+      "单句评论": "-",
+      "日期": "2026-06-02",
+      "差错类型": "解答错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "张思婕",
+      "组别": "热线八组",
+      "质检评分": 75,
+      "最近复检时间": "2026-06-02",
+      "场景": "提前还款或结清咨询",
+      "整单评论": "[2026-06-02 14:18:11]刘倩:【质检判罚】1、客户要求提前还2026-06-14账单，最后一期，还款日前还款：支持，客服告知不支持。2、沟通中客户未提及扬言投诉敏感词，小结单内也未备注，小结单误点选扬言投诉标签。\n【质检判罚】1、解答错误：客户进线反馈的问题，客服错误处理或提供不准确的解决方案，导致未解决或未覆盖客户的问题；或未按照SOP准流程执行，处理不全/错误。2、标签选择错误-客服未按客户问题场景、沟通情况、业务信息等选择正确的标签\n",
+      "单句评论": "[2026-06-02 14:19:02]刘倩:告知不支持提前结清，只能6.14号还款日当天还款",
+      "日期": "2026-06-02",
+      "差错类型": "解答错误",
+      "差错描述": "[2026-06-02 14:19:02]刘倩:告知不支持提前结清，只能6.14号还款日当天还款"
+    },
+    {
+      "姓名": "黄晓纯",
+      "组别": "热线四组",
+      "质检评分": 65,
+      "最近复检时间": "2026-06-02",
+      "场景": "协商还款",
+      "整单评论": "[2026-06-02 17:43:03]段林涛:【质检差错】1、客户进线查询逾期账单，核身中提供银行卡后四位错误，坐席未追问直接跳过引导提供最高学历；2、客户逾期场景下有明确说联系资金方可以吗，坐席扬言投诉未点选，3、小结单内未备注联系资金方；\n【质检判罚】1、应核未核：应核身场景客服未核身直接办理业务或解答用户问题；2、标签选择错误：客服未按客户问题场景、沟通情况、业务信息等选择正确的标签，包括但不限于：服务标签、黑产标记、服务来源、资金方、紧急程度等各类标签，错误类型包括漏选、错选、多选等；3、关键信息记录错误：客服在联络记录/工单内容/处理结果中，存在信息记录不准确的情况，且可能会影响后续客户问题的处理，包括但不限于：回访电话、回访时间、客户问题、客户诉求等核心信息",
+      "单句评论": "[2026-06-02 17:38:10]段林涛:1",
+      "日期": "2026-06-02",
+      "差错类型": "应核未核",
+      "差错描述": "[2026-06-02 17:38:10]段林涛:1"
+    },
+    {
+      "姓名": "王嘉乐",
+      "组别": "热线五组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-02",
+      "场景": "结清账单费率不满",
+      "整单评论": "[2026-06-02 13:52:29]刘倩:【质检判罚】客户表示之前结清系统多扣款400，咨询退费处理进度，客服未咨询查看历史记录，盲目告知客户是6.1号申请，处理时效3-7个工作日。\n【质检判罚】未查看历史记录回复错误：客户历史已进线反馈问题，且有处理进展或结果，客服未查看历史进线记录、工单处理进展、工单处理结果，重复询问或提供错误方案",
+      "单句评论": "-",
+      "日期": "2026-06-02",
+      "差错类型": "未查看历史记录回复错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "李德田",
+      "组别": "热线六组",
+      "质检评分": 75,
+      "最近复检时间": "2026-06-02",
+      "场景": "账单查询",
+      "整单评论": "[2026-06-02 13:51:01]潘小佩:【质检差错】1、3s内未完成开头语表述；2、沟通客户提供的号码是15950973796，坐席小结单错误备注为15950973739，记录有误\n【质检判罚】1、首触不规范-时效规则：热线：3s内完成开头语表述；2、关键信息记录错误-客服在联络记录/工单内容/处理结果中，存在信息记录不准确或未记录的情况，且可能会影响后续客户问题的处理\n\n",
+      "单句评论": "[2026-06-02 13:51:21]潘小佩:15950973796",
+      "日期": "2026-06-02",
+      "差错类型": "首触不规范",
+      "差错描述": "[2026-06-02 13:51:21]潘小佩:15950973796"
+    },
+    {
+      "姓名": "何海艳",
+      "组别": "热线三组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-02",
+      "场景": "催收投诉安抚",
+      "整单评论": "[2026-06-02 17:20:22]段林涛:【质检差错】客户进线咨询延期停催诉求，未抱怨催收问题，坐席应选“贷后流程-逾期延期还款”，坐席错选“贷后流程-投诉催收安抚”\n【质检判罚】问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类。若智能落单推荐的小结单或工单分类不准确，需手动选择符合客户问题场景的分类，直接选择推荐分类需扣罚",
+      "单句评论": "-",
+      "日期": "2026-06-02",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "仝圆圆",
+      "组别": "热线六组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-03",
+      "场景": "结清账单费率不满",
+      "整单评论": "[2026-06-03 15:11:00]吴敌:【质检差错】客户要查询账单放款时间，并表示息费问题已达成一致，仅要求查询放款时间，三级分类应选择账单查询；\n【质检判罚】问题分类选择错误；\n",
+      "单句评论": "-",
+      "日期": "2026-06-03",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "吕星镇",
+      "组别": "热线七组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-03",
+      "场景": "降费卡取消",
+      "整单评论": "[2026-06-03 09:38:51]王明卫:【质检差错】客户对5月20号开通的先享后付降费卡不满需取消，坐席告知关闭，核实未操作减免取消。\n【质检判罚】权益卡应退减未退减-承诺退减未退减：符合退减场景下，客服承诺客户退减权益卡，但实际未操作",
+      "单句评论": "-",
+      "日期": "2026-06-03",
+      "差错类型": "权益卡应退减未退减",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "赵晓莹",
+      "组别": "热线五组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-03",
+      "场景": "超级会员取消",
+      "整单评论": "[2026-06-03 13:56:29]潘小佩:【质检差错】退好借卡+惠享服务，小结单应为好借卡取消/降费卡取消，坐席错选超级会员取消\n【质检判罚】问题分类选择错误-客服未按客户问题场景选择合适准确的小结单分类或工单分类\n",
+      "单句评论": "-",
+      "日期": "2026-06-03",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "刘迪",
+      "组别": "热线六组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-02",
+      "场景": "降费卡取消",
+      "整单评论": "[2026-06-02 14:32:44]吴敌:【质检差错】客户咨询199/15两笔扣费原因，工单备注为199.15记录未能正确表达申请退费金额；\n【质检判罚】关键信息记录错误；",
+      "单句评论": "-",
+      "日期": "2026-06-02",
+      "差错类型": "关键信息记录错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "陈北仁",
+      "组别": "热线七组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-02",
+      "场景": "账单查询",
+      "整单评论": "[2026-06-02 11:47:53]王明卫:【质检差错】客户进线不需要超级会员，需退回199扣款，核身未通过离线，小结单三级类别应选择超级会员取消，坐席错选账单查询\n【质检判罚】问题分类选择错误-问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类",
+      "单句评论": "[2026-06-02 11:44:37]王明卫:不需要199超级会员需退费",
+      "日期": "2026-06-02",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "[2026-06-02 11:44:37]王明卫:不需要199超级会员需退费"
+    },
+    {
+      "姓名": "李德田",
+      "组别": "热线六组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-02",
+      "场景": "降费卡取消",
+      "整单评论": "[2026-06-01 17:14:35]段林涛:【质检差错】客户进线取消一笔60元降费权益卡，未涉及扣款无需退费，坐席已申请减免；错误备注申请退费24小时内到账；\n【质检判罚】关键信息记录错误：客服在联络记录/工单内容/处理结果中，存在信息记录不准确的情况，且可能会影响后续客户问题的处理，包括但不限于：回访电话、回访时间、客户问题、客户诉求等核心信息",
+      "单句评论": "[2026-06-01 17:13:04]段林涛:1",
+      "日期": "2026-06-02",
+      "差错类型": "关键信息记录错误",
+      "差错描述": "[2026-06-01 17:13:04]段林涛:1"
+    },
+    {
+      "姓名": "张思婕",
+      "组别": "热线八组",
+      "质检评分": 75,
+      "最近复检时间": "2026-06-01",
+      "场景": "未逾期协商还款",
+      "整单评论": "[2026-06-01 18:21:46]段林涛:【质检差错】客户进线未逾期协商还款，1、客户提及银监会，坐席未在小结单内备注；2、服务标签未点选；\n【质检判罚】1、关键信息记录错误：客服在联络记录/工单内容/处理结果中，存在信息记录不准确的情况，且可能会影响后续客户问题的处理，包括但不限于：回访电话、回访时间、客户问题、客户诉求等核心信息；2、标签选择错误：客服未按客户问题场景、沟通情况、业务信息等选择正确的标签，包括但不限于：服务标签、黑产标记、服务来源、资金方、紧急程度等各类标签，错误类型包括漏选、错选、多选等",
+      "单句评论": "[2026-06-01 18:18:32]段林涛:1",
+      "日期": "2026-06-01",
+      "差错类型": "关键信息记录错误",
+      "差错描述": "[2026-06-01 18:18:32]段林涛:1"
+    },
+    {
+      "姓名": "杜娇",
+      "组别": "热线七组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-03",
+      "场景": "超级会员取消",
+      "整单评论": "[2026-06-03 12:16:21]潘小佩:【质检差错】退会员，坐席告知原路退还到农业银行卡，实际会员扣费卡是中国建设银行8108，坐席操作退的卡也是8108，坐席返回客户信息有误\n【质检判罚】解答错误-客户进线反馈的问题，客服错误处理或提供不准确的解决方案，导致未解决或未覆盖客户的问题；或未按照SOP准流程执行，处理不全/错误，包括但不限于：产品规则解答错误、政策条款解答错误、操作指引介绍错误及信息数据回复错误等\n\n",
+      "单句评论": "[2026-06-03 12:14:38]潘小佩:退农业银行",
+      "日期": "2026-06-03",
+      "差错类型": "解答错误",
+      "差错描述": "[2026-06-03 12:14:38]潘小佩:退农业银行"
+    },
+    {
+      "姓名": "何海艳",
+      "组别": "热线三组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-02",
+      "场景": "结清证明申请",
+      "整单评论": "[2026-06-02 15:02:47]王明卫:【质检差错】客户因注册号码注销需开具结清证明，坐席核实后告知客户登录APP-选择其他方式登录-原手机不再使用-现在使用的手机号登录-我的-开具结清证明，解答错误，此场景可引导客户修改注册号码后登录APP开具结清证明或提供注册号码注销证明，核身通过后，坐席协助开具结清证明\n【质检判罚】解答错误-解答错误：客户进线反馈的问题，客服错误处理或提供不准确的解决方案，导致未解决或未覆盖客户的问题；或未按照SOP准流程执行，处理不全/错误",
+      "单句评论": "[2026-06-02 14:58:01]王明卫:1",
+      "日期": "2026-06-02",
+      "差错类型": "解答错误",
+      "差错描述": "[2026-06-02 14:58:01]王明卫:1"
+    },
+    {
+      "姓名": "周培",
+      "组别": "热线七组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "未结清账单费率不满",
+      "整单评论": "[2026-06-01 16:09:11]潘小佩:【质检差错】账单逾期申请减免，小结单应为协商还款，坐席错选未结清账单费率不满（ 5.25号 10:22岗中培训群已同步小结单点选变更）\n【质检判罚】问题分类选择错误-客服未按客户问题场景选择合适准确的小结单分类或工单分类\n",
+      "单句评论": "-",
+      "日期": "2026-06-01",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "李德田",
+      "组别": "热线六组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "征信上报规则",
+      "整单评论": "[2026-06-01 16:40:07]刘倩:【质检差错】客户咨询授信额度，无融担账户，小结单应该选择：征信相关问题-征信问题咨询-资金方-征信上报规则。 【质检判罚】问题分类选择错误-客服未按客户问题场景选择合适准确的小结单分类或工单分类。",
+      "单句评论": "-",
+      "日期": "2026-06-01",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "王嘉乐",
+      "组别": "热线五组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "调取合同申请",
+      "整单评论": "[2026-06-01 16:42:27]刘倩:【质检差错】客户因提前还款，要求查看合同，有处理中的还款费率工单，客服未追加备注。\n【质检判罚】关键信息记录错误：客服在联络记录/工单内容/处理结果中，存在信息记录不准确或未记录的情况，且可能会影响后续客户问题的处理。",
+      "单句评论": "-",
+      "日期": "2026-06-01",
+      "差错类型": "关键信息记录错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "周培",
+      "组别": "热线七组",
+      "质检评分": 70,
+      "最近复检时间": "2026-06-01",
+      "场景": "协商还款",
+      "整单评论": "[2026-06-01 18:16:56]王明卫:【质检差错】1、客户进线需协商还款，安抚未认可，客户离线，需升级处理坐席未建单升级，应升未升；2、核身流程中，客户收不到验证码，坐席直接换问题核验，未按照业务流程处理。\n【质检判罚】1、应升未升/应转未转-应升未升：按业务 SOP 应升级场景，客服未创建升级工单；2、应核未核-应核未核：应核身场景客服未核身直接办理业务或解答用户问题",
+      "单句评论": "[2026-06-01 17:15:44]王明卫:客户收不到验证未引导提供凭证直接换问题",
+      "日期": "2026-06-01",
+      "差错类型": "应升未升/应转未转",
+      "差错描述": "[2026-06-01 17:15:44]王明卫:客户收不到验证未引导提供凭证直接换问题"
+    },
+    {
+      "姓名": "张思婕",
+      "组别": "热线八组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "账单查询",
+      "整单评论": "[2026-06-01 17:20:07]段林涛:【质检差错】客户进行咨询会员、查询273077922账单，坐席错误告知结清金额为1041.5；已结清的金额不可对客告知；\n【质检判罚】解答错误：客户进线反馈的问题，客服错误处理或提供不准确的解决方案，导致未解决或未覆盖客户的问题；或未按照SOP准流程执行，处理不全/错误，包括但不限于：产品规则解答错误、政策条款解答错误、操作指引介绍错误及信息数据回复错误等\n",
+      "单句评论": "[2026-06-01 17:17:42]段林涛:1\n[2026-06-01 17:17:45]段林涛:1",
+      "日期": "2026-06-01",
+      "差错类型": "解答错误",
+      "差错描述": "[2026-06-01 17:17:42]段林涛:1\n[2026-06-01 17:17:45]段林涛:1"
+    },
+    {
+      "姓名": "周培",
+      "组别": "热线七组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "未结清账单费率不满",
+      "整单评论": "[2026-06-01 17:13:58]王明卫:【质检差错】协助操作减免逾期费用，小结单三级类别应选择协商还款，坐席错选未结清账单费率不满\n【质检判罚】问题分类选择错误-问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类",
+      "单句评论": "-",
+      "日期": "2026-06-01",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "陈北仁",
+      "组别": "热线七组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-03",
+      "场景": "营销活动咨询",
+      "整单评论": "[2026-06-03 11:52:59]段林涛:【质检差错】客户进线咨询天创信用扣款49.9明确说要退回来，坐席引导联系，错选“增值服务-营销活动咨询”，客户明确说到退费需点选“增值服务-营销活动退款”\n【质检判罚】问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类。若智能落单推荐的小结单或工单分类不准确，需手动选择符合客户问题场景的分类，直接选择推荐分类需扣罚",
+      "单句评论": "[2026-06-03 11:50:32]段林涛:1",
+      "日期": "2026-06-03",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "[2026-06-03 11:50:32]段林涛:1"
+    },
+    {
+      "姓名": "穆琪",
+      "组别": "热线三组",
+      "质检评分": 70,
+      "最近复检时间": "2026-06-01",
+      "场景": "协商还款",
+      "整单评论": "[2026-06-01 17:11:09]王明卫:【质检差错】1、客户进线申请延期停催业务，会话中坐席言贷后和客服不是一个平台，解答错误；2、核实问题未使用静音键进行等待；3、客户有停催联系人诉求，未点选借款人诉求停催联系人标签\n【质检判罚】1、解答错误-解答错误：客户进线反馈的问题，客服错误处理或提供不准确的解决方案，导致未解决或未覆盖客户的问题；或未按照SOP准流程执行，处理不全/错误；2、等待不规范-.等待操作不规范：未使用静音键进行等待；3、标签选择错误-标签选择错误：客服未按客户问题场景、沟通情况、业务信息等选择正确的标签",
+      "单句评论": "[2026-06-01 17:05:43]王明卫:未正确使用静音键\n[2026-06-01 17:06:16]王明卫:停催联系人诉求",
+      "日期": "2026-06-01",
+      "差错类型": "解答错误",
+      "差错描述": "[2026-06-01 17:05:43]王明卫:未正确使用静音键\n[2026-06-01 17:06:16]王明卫:停催联系人诉求"
+    },
+    {
+      "姓名": "李旻宁",
+      "组别": "热线八组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-02",
+      "场景": "降费卡取消",
+      "整单评论": "[2026-06-02 15:28:32]吴敌:【质检差错】权益卡可查询范围要求关闭自动续费，客服未按流程操作，要求客户提供扣费时间凭证；\n【质检判罚】解答错误；",
+      "单句评论": "-",
+      "日期": "2026-06-02",
+      "差错类型": "解答错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "李德田",
+      "组别": "热线六组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "超级会员取消",
+      "整单评论": "[2026-06-01 16:53:22]王明卫:【质检差错】客户申请会员退费，坐席告知原路退回，核实退费未操作，承诺退减未退减\n【质检判罚】权益卡应退减未退减-承诺退减未退减：符合退减场景下，客服承诺客户退减权益卡，但实际未操作",
+      "单句评论": "-",
+      "日期": "2026-06-01",
+      "差错类型": "权益卡应退减未退减",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "穆琪",
+      "组别": "热线三组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "协商还款",
+      "整单评论": "[2026-06-01 16:16:52]潘小佩:【质检差错】反馈暂时无法还款，沟通坐席告知客户账单待还款，没逾期不会有催收人员联系，实际客户\n2026-05-28，2026-05-30，2026-05-31的账单已经逾期，坐席返回客户信息有误\n【质检判罚】解答错误-客户进线反馈的问题，客服错误处理或提供不准确的解决方案，导致未解决或未覆盖客户的问题；或未按照SOP准流程执行，处理不全/错误，包括但不限于：产品规则解答错误、政策条款解答错误、操作指引介绍错误及信息数据回复错误等\n",
+      "单句评论": "[2026-06-01 16:16:06]潘小佩:账单待还款，不会有催收人员联系，实际好几笔账单已经逾期",
+      "日期": "2026-06-01",
+      "差错类型": "解答错误",
+      "差错描述": "[2026-06-01 16:16:06]潘小佩:账单待还款，不会有催收人员联系，实际好几笔账单已经逾期"
+    },
+    {
+      "姓名": "杨元婷",
+      "组别": "热线一组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-03",
+      "场景": "超级会员取消",
+      "整单评论": "[2026-06-03 11:11:09]潘小佩:【质检差错】会员退款，坐席询问退费卡，客户表示退到扣费卡农业银行，坐席告知客户是中国银行扣款的，返回客户信息有误，客户199扣费成功的卡是中国农业银行*7415，并非中国银行(4970)\n【质检判罚】解答错误-客户进线反馈的问题，客服错误处理或提供不准确的解决方案，导致未解决或未覆盖客户的问题；或未按照SOP准流程执行，处理不全/错误，包括但不限于：产品规则解答错误、政策条款解答错误、操作指引介绍错误及信息数据回复错误等\n",
+      "单句评论": "-",
+      "日期": "2026-06-03",
+      "差错类型": "解答错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "崔珂",
+      "组别": "热线三组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-03",
+      "场景": "未结清账单费率不满",
+      "整单评论": "[2026-06-03 13:28:19]杨姿娇:【质检差错】坐席转接告知常规转接组：客户无退息记录和注销记录，实际客户2026/2/10新客退过息，错误转接\n【质检判罚】不应升但升/不应转但转-不应转但转：按业务 SOP 应自闭环场景，或不满足转接条件，客服错误转接",
+      "单句评论": "[2026-06-03 13:26:20]杨姿娇:坐席告知无退息记录，注销记录，实际客户2026/2/10新客退过息",
+      "日期": "2026-06-03",
+      "差错类型": "不应升但升/不应转但转",
+      "差错描述": "[2026-06-03 13:26:20]杨姿娇:坐席告知无退息记录，注销记录，实际客户2026/2/10新客退过息"
+    },
+    {
+      "姓名": "仝圆圆",
+      "组别": "热线六组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-02",
+      "场景": "开具发票申请",
+      "整单评论": "[2026-06-02 10:34:14]段林涛:【质检差错】客户进线咨询发票问题，询问是否有解压码，坐席未进一步确认错误告知为身份证号码；结清证明有解压码；发票无需解压码；\n【质检判罚】解答错误：客户进线反馈的问题，客服错误处理或提供不准确的解决方案，导致未解决或未覆盖客户的问题；或未按照SOP准流程执行，处理不全/错误，包括但不限于：产品规则解答错误、政策条款解答错误、操作指引介绍错误及信息数据回复错误等",
+      "单句评论": "[2026-06-02 10:30:33]段林涛:诉求模糊，坐席未探寻",
+      "日期": "2026-06-02",
+      "差错类型": "解答错误",
+      "差错描述": "[2026-06-02 10:30:33]段林涛:诉求模糊，坐席未探寻"
+    },
+    {
+      "姓名": "蒲园园",
+      "组别": "热线三组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-02",
+      "场景": "账单查询",
+      "整单评论": "[2026-06-02 10:57:04]段林涛:【质检差错】客户进线协商减免罚息和利息，客户无查看账单诉求，坐席错选还款流程-账单查询；\n【质检判罚】问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类。若智能落单推荐的小结单或工单分类不准确，需手动选择符合客户问题场景的分类，直接选择推荐分类需扣罚",
+      "单句评论": "[2026-06-02 10:55:28]段林涛:1",
+      "日期": "2026-06-02",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "[2026-06-02 10:55:28]段林涛:1"
+    },
+    {
+      "姓名": "樊凯飞",
+      "组别": "热线六组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-02",
+      "场景": "未结清账单费率不满",
+      "整单评论": "[2026-06-02 15:37:53]段林涛:【质检差错】客户进线对利息担保费不认可，客户逾期状态下坐席错选“特殊业务咨询办理-未结清费率不满”，应点选“贷后流程-协商还款”\n【质检判罚】问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类。若智能落单推荐的小结单或工单分类不准确，需手动选择符合客户问题场景的分类，直接选择推荐分类需扣罚",
+      "单句评论": "-",
+      "日期": "2026-06-02",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "胡鑫",
+      "组别": "热线三组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "临时特殊队列",
+      "整单评论": "[2026-06-01 15:24:46]杨姿娇:【质检差错】4月1日通知：遇到法诉用户协商还款，一二线：坐席无需谈判直接建单贷后，建单规范 贷后流程—协商还款—协商还款 （关键词 需贷后跟进）；如客户是诉前-确认与法诉的协商方案、诉中-诉前和解 结清后询问撤诉进度、诉后-法诉完成  汇款法院后询问结清进度，建单规范 贷后流程-其他-临时特殊列队-法诉用户（关键词）\n【质检判罚】问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类",
+      "单句评论": "-",
+      "日期": "2026-06-01",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "王朝",
+      "组别": "热线六组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-02",
+      "场景": "账单查询",
+      "整单评论": "[2026-06-02 14:28:49]段林涛:【质检差错】客户进线咨询扣款记录4月23日明确说到扣款69元，坐席错记为6元；\n【质检判罚】关键信息记录错误：客服在联络记录/工单内容/处理结果中，存在信息记录不准确的情况，且可能会影响后续客户问题的处理，包括但不限于：回访电话、回访时间、客户问题、客户诉求等核心信息",
+      "单句评论": "[2026-06-02 14:27:09]段林涛:1",
+      "日期": "2026-06-02",
+      "差错类型": "关键信息记录错误",
+      "差错描述": "[2026-06-02 14:27:09]段林涛:1"
+    },
+    {
+      "姓名": "卜浩",
+      "组别": "热线五组",
+      "质检评分": 0,
+      "最近复检时间": "2026-06-02",
+      "场景": "好借卡取消",
+      "整单评论": "[2026-06-02 14:05:19]段林涛:【质检差错】客户进线咨询权益卡自己未购买被扣款要求退费，沟通中借款人爱人插话，坐席提醒本人讲话或授权家人，要么就一个人讲话就行，引发客户不满，且沟通中坐席过度使用文明用语话术（有挂机倾向）激怒客户，与客户产生争执，全程坐席态度强势且未对客户情绪进行安抚引发客户不满，导致客户问题解决完后，扬言银监会投诉；\n【质检判罚】三级违规-言辞不当-态度强势，扣款100；情绪急躁：客户不认可处理方案时，客服沟通中表现出明显烦躁或急躁情绪，或言语上对客户的诉求、问题或意见表现出厌烦或明显的不愿意继续对话的态度",
+      "单句评论": "-",
+      "日期": "2026-06-02",
+      "差错类型": "三级违规",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "何遐威",
+      "组别": "热线六组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "好借卡取消",
+      "整单评论": "[2026-06-01 09:44:04]王明卫:【质检差错】协助操作减免取消惠享服务权益卡，小结单三级类别应选择降费卡取消，坐席错选好借卡取消\n【质检判罚】问题分类选择错误-问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类",
+      "单句评论": "-",
+      "日期": "2026-06-01",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "李静",
+      "组别": "热线三组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "结清账单费率不满",
+      "整单评论": "[2026-06-01 09:37:43]王明卫:【质检差错】客户账单逾期进线需退息和协商处理逾期账单还款问题，安抚不认可升级贷后二线处理，小结单三级类别应选择协商还款，坐席错选结清账单费率不满\n【质检判罚】问题分类选择错误-问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类",
+      "单句评论": "-",
+      "日期": "2026-06-01",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "李彦霏",
+      "组别": "热线二组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "未结清账单费率不满",
+      "整单评论": "[2026-06-01 09:23:50]王明卫:【质检差错】客户进线需处理账单费率问题，在线转接处理，有处理中的费率不满工单未备注\n【质检判罚】关键信息记录错误-关键信息记录错误：客服在联络记录/工单内容/处理结果中，存在信息记录不准确或未记录的情况，且可能会影响后续客户问题的处理",
+      "单句评论": "-",
+      "日期": "2026-06-01",
+      "差错类型": "关键信息记录错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "王佳睿",
+      "组别": "热线六组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "当期还款办理",
+      "整单评论": "[2026-06-01 16:52:58]潘小佩:【质检差错】已还期数是0，不支持微信还款，坐席错误告知微信，解答有误\n【质检判罚】解答错误-客户进线反馈的问题，客服错误处理或提供不准确的解决方案，导致未解决或未覆盖客户的问题；或未按照SOP准流程执行，处理不全/错误，包括但不限于：产品规则解答错误、政策条款解答错误、操作指引介绍错误及信息数据回复错误等\n",
+      "单句评论": "[2026-06-01 16:53:20]潘小佩:开通其他还款方式，微信/支付宝",
+      "日期": "2026-06-01",
+      "差错类型": "解答错误",
+      "差错描述": "[2026-06-01 16:53:20]潘小佩:开通其他还款方式，微信/支付宝"
+    },
+    {
+      "姓名": "席龙",
+      "组别": "热线三组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "催收投诉安抚",
+      "整单评论": "[2026-06-01 12:58:29]潘小佩:【质检差错】反馈催收频次高，延期还款，小结单应为催收投诉安抚，坐席 错选逾期客户延期还款\n【质检判罚】问题分类选择错误-客服未按客户问题场景选择合适准确的小结单分类或工单分类\n",
+      "单句评论": "-",
+      "日期": "2026-06-01",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "柴倩茹",
+      "组别": "热线八组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "临时特殊队列",
+      "整单评论": "[2026-06-01 17:25:30]杨姿娇:【质检差错】4月1日通知：遇到法诉用户协商还款，一二线：坐席无需谈判直接建单贷后，建单规范 贷后流程—协商还款—协商还款 （关键词 需贷后跟进）；如客户是诉前-确认与法诉的协商方案、诉中-诉前和解 结清后询问撤诉进度、诉后-法诉完成 汇款法院后询问结清进度，建单规范 贷后流程-其他-临时特殊列队-法诉用户（关键词） ；此客户沟通不涉及诉前、诉中、诉后相关，小结及工单类型点选不符合场景\n【质检判罚】问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类",
+      "单句评论": "-",
+      "日期": "2026-06-01",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "周培",
+      "组别": "热线七组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "-",
+      "整单评论": "[2026-06-01 16:55:49]段林涛:【质检差错】小结单未保存，坐席未在全员群报备；\n【质检判罚】问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类。若智能落单推荐的小结单或工单分类不准确，需手动选择符合客户问题场景的分类，直接选择推荐分类需扣罚",
+      "单句评论": "-",
+      "日期": "2026-06-01",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "王嘉乐",
+      "组别": "热线五组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "账单查询",
+      "整单评论": "[2026-06-01 15:08:04]段林涛:【质检差错】客户进线咨询25号结清账单明确息费不满，且有处理中的费率工单，坐席未查看进线记录错误点选小结单；\n【质检判罚】问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类。若智能落单推荐的小结单或工单分类不准确，需手动选择符合客户问题场景的分类，直接选择推荐分类需扣罚",
+      "单句评论": "[2026-06-01 15:06:26]段林涛:1",
+      "日期": "2026-06-01",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "[2026-06-01 15:06:26]段林涛:1"
+    },
+    {
+      "姓名": "李德田",
+      "组别": "热线六组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "-",
+      "整单评论": "[2026-06-01 11:04:29]段林涛:【质检差错】客户进线查看合同，借款完整合同啊加全部还款明细，坐席未保存小结单。全员群未报备；\n【质检判罚】问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类。若智能落单推荐的小结单或工单分类不准确，需手动选择符合客户问题场景的分类，直接选择推荐分类需扣罚",
+      "单句评论": "-",
+      "日期": "2026-06-01",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "何海艳",
+      "组别": "热线三组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "超级会员咨询",
+      "整单评论": "[2026-06-01 16:30:53]段林涛:【质检差错】客户进线咨询退他人权益卡，坐席引导本人进线/提供相关授权即可办理，客户认可；坐席错选超级会员咨询；\n【质检判罚】问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类。若智能落单推荐的小结单或工单分类不准确，需手动选择符合客户问题场景的分类，直接选择推荐分类需扣罚",
+      "单句评论": "[2026-06-01 16:27:42]段林涛:1",
+      "日期": "2026-06-01",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "[2026-06-01 16:27:42]段林涛:1"
+    },
+    {
+      "姓名": "毛戈源",
+      "组别": "热线五组",
+      "质检评分": 60,
+      "最近复检时间": "2026-06-03",
+      "场景": "电话无声&无应答",
+      "整单评论": "[2026-06-03 12:44:27]刘倩:【质检差错】1、12:14:45（00:00:08）客户要求退会员，小结单备注：客户进线未说明诉求，小结单备注与沟通情况不符。2、客户要求退会员，小结单应该选择：超级会员取消。若未听清客户 【质检判罚】1、关键信息记录错误：客服在联络记录/工单内容/处理结果中，存在信息记录不准确或未记录的情况，且可能会影响后续客户问题的处理。2、题分类选择错误-客服未按客户问题场景选择合适准确的小结单分类或工单分类。",
+      "单句评论": "-",
+      "日期": "2026-06-03",
+      "差错类型": "关键信息记录错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "刘影",
+      "组别": "热线五组",
+      "质检评分": 60,
+      "最近复检时间": "2026-06-02",
+      "场景": "临时特殊队列",
+      "整单评论": "[2026-06-02 09:35:17]杨姿娇:【质检差错】1、4月1日通知：遇到法诉用户协商还款，一二线：坐席无需谈判直接建单贷后，建单规范 贷后流程—协商还款—协商还款 （关键词 需贷后跟进），此通小结及工单类型错误；2、回电内容错误备注至工单处理结果处，应备注在工单内容\n【质检判罚】1、问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类；2、关键信息记录错误-客服在工单内容/处理结果中，存在信息记录不准确的情况",
+      "单句评论": "-",
+      "日期": "2026-06-02",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "张思婕",
+      "组别": "热线八组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "投诉催收作业",
+      "整单评论": "[2026-06-01 17:05:28]段林涛:【质检差错】客户进线咨询协商还款金额，无投诉催收诉求，坐席需按协商还款点选小结单建单，坐席错建投诉催收作业；\n【质检判罚】问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类。若智能落单推荐的小结单或工单分类不准确，需手动选择符合客户问题场景的分类，直接选择推荐分类需扣罚",
+      "单句评论": "-",
+      "日期": "2026-06-01",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "张思婕",
+      "组别": "热线八组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "电话无声&无应答",
+      "整单评论": "[2026-06-01 14:48:18]段林涛:【质检差错】客户进线核身客户明确报身份证号为：430624199112083619；坐席错误告知数字不对，数字的话不是18位；\n【质检判罚】解答错误：客户进线反馈的问题，客服错误处理或提供不准确的解决方案，导致未解决或未覆盖客户的问题；或未按照SOP准流程执行，处理不全/错误，包括但不限于：产品规则解答错误、政策条款解答错误、操作指引介绍错误及信息数据回复错误等",
+      "单句评论": "[2026-06-01 14:44:16]刘倩:430624199112083619\n[2026-06-01 14:44:59]刘倩:4306241991\n[2026-06-01 14:45:10]刘倩:12083619",
+      "日期": "2026-06-01",
+      "差错类型": "解答错误",
+      "差错描述": "[2026-06-01 14:44:16]刘倩:430624199112083619\n[2026-06-01 14:44:59]刘倩:4306241991\n[2026-06-01 14:45:10]刘"
+    },
+    {
+      "姓名": "刘鑫",
+      "组别": "热线四组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-02",
+      "场景": "账单查询",
+      "整单评论": "[2026-06-02 13:20:37]刘倩:【质检差错】新客，客户表示自己还款后多还款165的费用，客服告知已退回，小结单应该选择：结清账单费率不满。 \n【质检判罚】问题分类选择错误-客服未按客户问题场景选择合适准确的小结单分类或工单分类。",
+      "单句评论": "-",
+      "日期": "2026-06-02",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "侯锐敏",
+      "组别": "热线五组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-03",
+      "场景": "催收业务咨询与办理",
+      "整单评论": "[2026-06-03 16:57:37]王明卫:【质检差错】会话中逾期客户查询总欠款，坐席引导客户通过APP查询，客户询问坐席总欠款你看不到是吧，坐席回复是的，引导通过APP查看，解答错误，客户总欠款可以通过客服系统查询告知。\n【质检判罚】解答错误-解答错误：客户进线反馈的问题，客服错误处理或提供不准确的解决方案，导致未解决或未覆盖客户的问题；或未按照SOP准流程执行，处理不全/错误",
+      "单句评论": "[2026-06-03 16:56:02]王明卫:解答错误",
+      "日期": "2026-06-03",
+      "差错类型": "解答错误",
+      "差错描述": "[2026-06-03 16:56:02]王明卫:解答错误"
+    },
+    {
+      "姓名": "汤吉顺",
+      "组别": "热线四组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-02",
+      "场景": "未结清账单费率不满",
+      "整单评论": "[2026-06-02 16:41:48]刘倩:【质检判罚】11:06:58（00:00:42）-11:07:10（00:00:54）长时间未回应。\n【质检判罚】响应不及时-时效规则：在线：非首触响应时效应在2min以内；热线：客户表述完问题及诉求后，电话沟通响应时效应在5s内给予回应",
+      "单句评论": "[2026-06-02 16:41:30]刘倩:长时间未回应。",
+      "日期": "2026-06-02",
+      "差错类型": "响应不及时",
+      "差错描述": "[2026-06-02 16:41:30]刘倩:长时间未回应。"
+    },
+    {
+      "姓名": "梁金悦",
+      "组别": "热线六组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "其他权益卡咨询",
+      "整单评论": "[2026-06-01 17:36:32]王明卫:【质检差错】客户进线查询会员开通记录，核实告知无记录，小结单三级类别可选择超级会员咨询，坐席错选其他权益卡咨询\n【质检判罚】问题分类选择错误-问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类",
+      "单句评论": "-",
+      "日期": "2026-06-01",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "吕星镇",
+      "组别": "热线七组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "征信上报规则",
+      "整单评论": "[2026-06-01 18:31:40]刘倩:【质检差错】客户要求注销与重庆市黑卡小额贷款有限公司合作的循环贷账户，小结单应该选择：征信相关问题-征信问题咨询-小贷-征信上报规则。 【质检判罚】问题分类选择错误-客服未按客户问题场景选择合适准确的小结单分类或工单分类。",
+      "单句评论": "-",
+      "日期": "2026-06-01",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "杨雪",
+      "组别": "热线四组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "优惠券使用规则咨询",
+      "整单评论": "[2026-06-01 17:21:23]王明卫:【质检差错】客户咨询京东E卡使用问题，沟通中坐席解释告知支付1元后，充值成功，1元会退回，解答错误\n【质检判罚】解答错误-解答错误：客户进线反馈的问题，客服错误处理或提供不准确的解决方案，导致未解决或未覆盖客户的问题；或未按照SOP准流程执行，处理不全/错误",
+      "单句评论": "[2026-06-01 16:43:36]王明卫:1\n[2026-06-01 17:20:18]王明卫:解答错误",
+      "日期": "2026-06-01",
+      "差错类型": "解答错误",
+      "差错描述": "[2026-06-01 16:43:36]王明卫:1\n[2026-06-01 17:20:18]王明卫:解答错误"
+    },
+    {
+      "姓名": "高行",
+      "组别": "热线七组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-04",
+      "场景": "-",
+      "整单评论": "[2026-06-04 14:04:45]杨姿娇:【质检差错】点选仿冒电话/工作人员小结单，需按流程先询问客户是否已经添加对方微信，是否给对方提供验证码，然后根据客户回复的未加微信或已加微信流程进一步沟通处理，坐席遗漏关键步骤未询问客户是否添加微信、是否给对方提供验证码\n【质检判罚】遗漏关键步骤：客户反馈的问题，按照SOP需要多个步骤进行判断或处理，客服遗漏关键步骤",
+      "单句评论": "[2026-06-04 09:19:02]杨姿娇:中介未加微",
+      "日期": "2026-06-04",
+      "差错类型": "遗漏关键步骤",
+      "差错描述": "[2026-06-04 09:19:02]杨姿娇:中介未加微"
+    },
+    {
+      "姓名": "刘艳",
+      "组别": "热线六组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-04",
+      "场景": "仿冒网址、电话或工作人员",
+      "整单评论": "[2026-06-04 14:15:34]杨姿娇:【质检差错】客户2022/11/20已注销，2026/5/26进线反馈接到电话让处理逾期账单，小结应为恶意短信\n【质检判罚】问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类",
+      "单句评论": "[2026-06-04 09:55:14]杨姿娇:小结单错选",
+      "日期": "2026-06-04",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "[2026-06-04 09:55:14]杨姿娇:小结单错选"
+    },
+    {
+      "姓名": "王兰兰",
+      "组别": "热线六组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-04",
+      "场景": "仿冒网址、电话或工作人员",
+      "整单评论": "[2026-06-04 14:21:21]杨姿娇:【质检差错】客户进线要求不要给自己打电话了，对方说好分期有额度，让下载好分期，坐席直接告知是仿冒好分期的人员，提醒客户谨防诈骗；目前点选仿冒电话/工作人员小结单，需按流程先询问客户是否已经添加对方微信，是否给对方提供验证码，然后根据客户回复的未加微信或已加微信流程进一步沟通处理，坐席遗漏关键步骤未询问客户是否添加微信、是否给对方提供验证码\n【质检判罚】遗漏关键步骤：客户反馈的问题，按照SOP需要多个步骤进行判断或处理，客服遗漏关键步骤",
+      "单句评论": "[2026-06-04 10:21:55]杨姿娇:中介未加微",
+      "日期": "2026-06-04",
+      "差错类型": "遗漏关键步骤",
+      "差错描述": "[2026-06-04 10:21:55]杨姿娇:中介未加微"
+    },
+    {
+      "姓名": "胡鑫",
+      "组别": "热线三组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-04",
+      "场景": "仿冒网址、电话或工作人员",
+      "整单评论": "[2026-06-04 14:34:41]杨姿娇:【质检差错】未注册/已注册账户未借款，收到逾期电话或短信，小结应为恶意短信\n【质检判罚】问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类",
+      "单句评论": "[2026-06-04 10:50:05]杨姿娇:小结单错选",
+      "日期": "2026-06-04",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "[2026-06-04 10:50:05]杨姿娇:小结单错选"
+    },
+    {
+      "姓名": "鲁玉红",
+      "组别": "热线八组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "协商还款",
+      "整单评论": "[2026-06-01 16:44:26]王琴:【质检差错】客户表示自己和贷后协商了还款方案，确认方案还款，此场景如客户未操作减免需按照按照协商还款流程沟通，无需升级贷后，坐席错误建单贷后\n【质检判罚】不应升但升/不应转但转-不应升但升：按业务 SOP 应自闭环场景，或不满足升级条件，客服错误升级",
+      "单句评论": "-",
+      "日期": "2026-06-01",
+      "差错类型": "不应升但升/不应转但转",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "雷海燕",
+      "组别": "热线一组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "临时特殊队列",
+      "整单评论": "[2026-06-01 16:47:36]王琴:【质检差错】4月1日通知：遇到法诉用户协商还款，一二线：坐席无需谈判直接建单贷后，建单规范 贷后流程—协商还款—协商还款 （关键词 需贷后跟进）；如客户是诉前-确认与法诉的协商方案、诉中-诉前和解 结清后询问撤诉进度、诉后-法诉完成 汇款法院后询问结清进度，建单规范 贷后流程-其他-临时特殊列队-法诉用户（关键词） \n【质检判罚】问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类",
+      "单句评论": "-",
+      "日期": "2026-06-01",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "王瑜",
+      "组别": "热线二组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-04",
+      "场景": "仿冒网址、电话或工作人员",
+      "整单评论": "[2026-06-04 14:23:35]王敏:【质检差错】客户言接到好分期营销电话说可以提额，坐席探寻是否400VIP专线，客户言不是，小结单点选仿冒，点选仿冒电话/工作人员小结单，需按流程先询问客户是否已经添加对方微信，是否给对方提供验证码，然后根据客户回复的未加微信或已加微信流程进一步沟通处理，坐席遗漏关键步骤未询问客户是否添加微信、是否给对方提供验证码\n【质检判罚】遗漏关键步骤：客户反馈的问题，按照SOP需要多个步骤进行判断或处理，客服遗漏关键步骤",
+      "单句评论": "[2026-06-04 10:00:25]王敏:中介未加微",
+      "日期": "2026-06-04",
+      "差错类型": "遗漏关键步骤",
+      "差错描述": "[2026-06-04 10:00:25]王敏:中介未加微"
+    },
+    {
+      "姓名": "陈北仁",
+      "组别": "热线七组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-01",
+      "场景": "协商还款",
+      "整单评论": "[2026-06-01 17:23:03]王琴:【质检差错】法诉客户进线确认与法诉的协商方案，小结单和工单类型应为临时特殊列队\n【质检判罚】问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类",
+      "单句评论": "-",
+      "日期": "2026-06-01",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "王靖",
+      "组别": "热线八组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-04",
+      "场景": "仿冒网址、电话或工作人员",
+      "整单评论": "[2026-06-04 14:25:53]王敏:【质检差错】点选仿冒电话/工作人员小结单，需按流程先询问客户是否已经添加对方微信，是否给对方提供验证码，然后根据客户回复的未加微信或已加微信流程进一步沟通处理，坐席遗漏关键步骤未询问客户是否添加微信、是否给对方提供验证码\n【质检判罚】遗漏关键步骤：客户反馈的问题，按照SOP需要多个步骤进行判断或处理，客服遗漏关键步骤",
+      "单句评论": "[2026-06-04 10:11:09]王敏:中介未加微",
+      "日期": "2026-06-04",
+      "差错类型": "遗漏关键步骤",
+      "差错描述": "[2026-06-04 10:11:09]王敏:中介未加微"
+    },
+    {
+      "姓名": "刘越美",
+      "组别": "热线四组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-04",
+      "场景": "仿冒网址、电话或工作人员",
+      "整单评论": "[2026-06-04 14:28:53]王敏:【质检差错】客户言接到好分期催收电话让还款，言语辱骂，坐席核实客户名下无好分期欠款，建议无需理会，此小结单应选恶意短信；不符合仿冒场景，点选错误\n【质检判罚】问题分类选择错误-客服未按客户问题场景选择合适准确的小结单分类或工单分类",
+      "单句评论": "[2026-06-04 10:56:17]王敏:小结单错选",
+      "日期": "2026-06-04",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "[2026-06-04 10:56:17]王敏:小结单错选"
+    },
+    {
+      "姓名": "王瑜",
+      "组别": "热线二组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-04",
+      "场景": "仿冒网址、电话或工作人员",
+      "整单评论": "[2026-06-04 14:32:07]王敏:【质检差错】点选仿冒电话/工作人员小结单，需按流程先询问客户是否已经添加对方微信，是否给对方提供验证码，然后根据客户回复的未加微信或已加微信流程进一步沟通处理，坐席遗漏关键步骤未询问客户是否添加微信、是否给对方提供验证码\n【质检判罚】遗漏关键步骤：客户反馈的问题，按照SOP需要多个步骤进行判断或处理，客服遗漏关键步骤",
+      "单句评论": "[2026-06-04 11:11:30]王敏:中介未加微",
+      "日期": "2026-06-04",
+      "差错类型": "遗漏关键步骤",
+      "差错描述": "[2026-06-04 11:11:30]王敏:中介未加微"
+    },
+    {
+      "姓名": "韩敏",
+      "组别": "热线八组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-02",
+      "场景": "投诉催收作业",
+      "整单评论": "[2026-06-02 09:19:13]王琴:【质检差错】逾期催收问题坐席已处理，对扣款不满，逾期账单未划扣到待还款账单属于正常划扣，无需建单\n【质检判罚】不应升但升/不应转但转-不应升但升：按业务 SOP 应自闭环场景，或不满足升级条件，客服错误升级",
+      "单句评论": "-",
+      "日期": "2026-06-02",
+      "差错类型": "不应升但升/不应转但转",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "张双娜",
+      "组别": "热线一组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-04",
+      "场景": "仿冒网址、电话或工作人员",
+      "整单评论": "[2026-06-04 14:39:27]王敏:【质检差错】客户抱怨总是接到好分期推广营销电话要求屏蔽。并言之前已经多次投诉过了，坐席告知客户已屏蔽，客户认可，小结单可选投诉电销短信/电话，不符合仿冒场景，点选错误；\n【质检判罚】问题分类选择错误-客服未按客户问题场景选择合适准确的小结单分类或工单分类",
+      "单句评论": "[2026-06-04 12:07:46]王敏:小结单错选",
+      "日期": "2026-06-04",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "[2026-06-04 12:07:46]王敏:小结单错选"
+    },
+    {
+      "姓名": "吴淑菡",
+      "组别": "热线五组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-02",
+      "场景": "临时特殊队列",
+      "整单评论": "[2026-06-02 10:19:16]王琴:【质检差错】4月1日通知：遇到法诉用户协商还款，一二线：坐席无需谈判直接建单贷后，建单规范 贷后流程—协商还款—协商还款 （关键词 需贷后跟进）；如客户是诉前-确认与法诉的协商方案、诉中-诉前和解 结清后询问撤诉进度、诉后-法诉完成 汇款法院后询问结清进度，建单规范 贷后流程-其他-临时特殊列队-法诉用户（关键词） \n【质检判罚】问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类",
+      "单句评论": "-",
+      "日期": "2026-06-02",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "仝圆圆",
+      "组别": "热线六组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-02",
+      "场景": "临时特殊队列",
+      "整单评论": "[2026-06-02 10:25:31]王琴:【质检差错】4月1日通知：遇到法诉用户协商还款，一二线：坐席无需谈判直接建单贷后，建单规范 贷后流程—协商还款—协商还款 （关键词 需贷后跟进）；如客户是诉前-确认与法诉的协商方案、诉中-诉前和解 结清后询问撤诉进度、诉后-法诉完成 汇款法院后询问结清进度，建单规范 贷后流程-其他-临时特殊列队-法诉用户（关键词） \n【质检判罚】问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类",
+      "单句评论": "-",
+      "日期": "2026-06-02",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    },
+    {
+      "姓名": "孙佳琦",
+      "组别": "热线一组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-04",
+      "场景": "仿冒网址、电话或工作人员",
+      "整单评论": "[2026-06-04 14:46:22]王敏:【质检差错】客户言接到自称好分期的说可以线下放款，坐席告知无此业务，且告知电销电话之前已在系统屏蔽了，点选仿冒电话/工作人员小结单，需按流程先询问客户是否已经添加对方微信，是否给对方提供验证码，然后根据客户回复的未加微信或已加微信流程进一步沟通处理，坐席遗漏关键步骤未询问客户是否添加微信、是否给对方提供验证码等\n【质检判罚】遗漏关键步骤：客户反馈的问题，按照SOP需要多个步骤进行判断或处理，客服遗漏关键步骤",
+      "单句评论": "[2026-06-04 12:19:17]王敏:中介未加微",
+      "日期": "2026-06-04",
+      "差错类型": "遗漏关键步骤",
+      "差错描述": "[2026-06-04 12:19:17]王敏:中介未加微"
+    },
+    {
+      "姓名": "卜浩",
+      "组别": "热线五组",
+      "质检评分": 80,
+      "最近复检时间": "2026-06-02",
+      "场景": "临时特殊队列",
+      "整单评论": "[2026-06-02 10:59:04]王琴:【质检差错】4月1日通知：遇到法诉用户协商还款，一二线：坐席无需谈判直接建单贷后，建单规范 贷后流程—协商还款—协商还款 （关键词 需贷后跟进）；如客户是诉前-确认与法诉的协商方案、诉中-诉前和解 结清后询问撤诉进度、诉后-法诉完成 汇款法院后询问结清进度，建单规范 贷后流程-其他-临时特殊列队-法诉用户（关键词） \n【质检判罚】问题分类选择错误：客服未按客户问题场景选择合适准确的小结单分类或工单分类",
+      "单句评论": "-",
+      "日期": "2026-06-02",
+      "差错类型": "问题分类选择错误",
+      "差错描述": "-"
+    }
+  ],
+  "scene_stats": {
+    "其他还款方式咨询": 1,
+    "协商还款": 11,
+    "逾期客户延期还款": 1,
+    "结清账单费率不满": 5,
+    "超级会员取消": 7,
+    "好借卡取消": 3,
+    "好借卡咨询": 1,
+    "投诉催收作业": 3,
+    "-": 4,
+    "催收投诉安抚": 5,
+    "未结清账单费率不满": 7,
+    "账单查询": 8,
+    "提前还款或结清咨询": 1,
+    "降费卡取消": 4,
+    "未逾期协商还款": 1,
+    "结清证明申请": 1,
+    "征信上报规则": 2,
+    "调取合同申请": 1,
+    "营销活动咨询": 1,
+    "开具发票申请": 1,
+    "临时特殊队列": 7,
+    "当期还款办理": 1,
+    "超级会员咨询": 1,
+    "电话无声&无应答": 2,
+    "催收业务咨询与办理": 1,
+    "其他权益卡咨询": 1,
+    "优惠券使用规则咨询": 1,
+    "仿冒网址、电话或工作人员": 9
+  },
+  "week_stats": {
+    "W1": 91
+  },
+  "heat_data": {
+    "热线三组": {
+      "其他还款方式咨询": 1,
+      "逾期客户延期还款": 1,
+      "催收投诉安抚": 4,
+      "未结清账单费率不满": 2,
+      "协商还款": 3,
+      "超级会员取消": 1,
+      "结清证明申请": 1,
+      "账单查询": 1,
+      "临时特殊队列": 1,
+      "结清账单费率不满": 1,
+      "超级会员咨询": 1,
+      "仿冒网址、电话或工作人员": 1
+    },
+    "热线五组": {
+      "协商还款": 1,
+      "结清账单费率不满": 3,
+      "账单查询": 2,
+      "超级会员取消": 1,
+      "调取合同申请": 1,
+      "好借卡取消": 1,
+      "电话无声&无应答": 1,
+      "临时特殊队列": 3,
+      "催收业务咨询与办理": 1
+    },
+    "热线八组": {
+      "超级会员取消": 1,
+      "好借卡取消": 1,
+      "-": 1,
+      "催收投诉安抚": 1,
+      "提前还款或结清咨询": 1,
+      "未逾期协商还款": 1,
+      "账单查询": 1,
+      "降费卡取消": 1,
+      "临时特殊队列": 1,
+      "投诉催收作业": 2,
+      "电话无声&无应答": 1,
+      "协商还款": 1,
+      "仿冒网址、电话或工作人员": 1
+    },
+    "热线一组": {
+      "协商还款": 1,
+      "超级会员取消": 1,
+      "临时特殊队列": 1,
+      "仿冒网址、电话或工作人员": 2
+    },
+    "热线四组": {
+      "协商还款": 3,
+      "账单查询": 1,
+      "未结清账单费率不满": 1,
+      "优惠券使用规则咨询": 1,
+      "仿冒网址、电话或工作人员": 1
+    },
+    "热线六组": {
+      "好借卡咨询": 1,
+      "账单查询": 2,
+      "结清账单费率不满": 1,
+      "降费卡取消": 2,
+      "征信上报规则": 1,
+      "超级会员取消": 1,
+      "开具发票申请": 1,
+      "未结清账单费率不满": 1,
+      "好借卡取消": 1,
+      "当期还款办理": 1,
+      "-": 1,
+      "其他权益卡咨询": 1,
+      "仿冒网址、电话或工作人员": 2,
+      "临时特殊队列": 1
+    },
+    "热线二组": {
+      "投诉催收作业": 1,
+      "未结清账单费率不满": 1,
+      "仿冒网址、电话或工作人员": 2
+    },
+    "热线七组": {
+      "超级会员取消": 2,
+      "降费卡取消": 1,
+      "账单查询": 1,
+      "未结清账单费率不满": 2,
+      "协商还款": 2,
+      "营销活动咨询": 1,
+      "-": 2,
+      "征信上报规则": 1
+    }
+  }
+}</script>
+<script>
+var QC=JSON.parse(document.getElementById('qc_json').textContent);
+
+var D={"overall":{"人数_含新人":160,"接起量_含新人":33411,"出勤天数_含新人":466,"日均接起_含新人":71.7,"一解率_含新人":93.16,"质检通过率_含新人":95.0691,"质检均分_含新人":98.67,"差错量_含新人":91,"外诉量_含新人":274,"外诉率_含新人":0.008200891921822155,"通话时长_含新人":4.54,"事后时长_含新人":0.35,"退单量_含新人":60,"质检量_含新人":1707,"邀评率_含新人":14.55,"满意率_含新人":97.76,"工时利用率_含新人":95.5522,"人数_剔除新人":153,"接起量_剔除新人":32369,"出勤天数_剔除新人":440,"日均接起_剔除新人":73.57,"一解率_剔除新人":93.23,"质检通过率_剔除新人":95.2858,"质检均分_剔除新人":99.0,"差错量_剔除新人":55,"外诉量_剔除新人":273,"外诉率_剔除新人":0.00843399548951157,"通话时长_剔除新人":4.49,"事后时长_剔除新人":0.31,"退单量_剔除新人":58,"质检量_剔除新人":1402,"邀评率_剔除新人":14.63,"满意率_剔除新人":97.75,"工时利用率_剔除新人":95.7816},"groups":[{"组别":"热线一组","人数_含新人":21,"接起量_含新人":5538,"出勤天数_含新人":76,"日均接起_含新人":72.87,"一解率_含新人":92.97,"质检通过率_含新人":96.547,"质检均分_含新人":99.33,"差错量_含新人":5,"外诉量_含新人":41,"外诉率_含新人":0.007403394727338389,"通话时长_含新人":4.67,"事后时长_含新人":0.26,"退单量_含新人":9,"质检量_含新人":202,"邀评率_含新人":13.67,"满意率_含新人":97.61,"工时利用率_含新人":96.2793,"人数_剔除新人":21,"接起量_剔除新人":5538,"出勤天数_剔除新人":76,"日均接起_剔除新人":72.87,"一解率_剔除新人":92.97,"质检通过率_剔除新人":96.547,"质检均分_剔除新人":99.33,"差错量_剔除新人":5,"外诉量_剔除新人":41,"外诉率_剔除新人":0.007403394727338389,"通话时长_剔除新人":4.67,"事后时长_剔除新人":0.26,"退单量_剔除新人":9,"质检量_剔除新人":202,"邀评率_剔除新人":13.67,"满意率_剔除新人":97.61,"工时利用率_剔除新人":96.2793},{"组别":"热线二组","人数_含新人":19,"接起量_含新人":3816,"出勤天数_含新人":53,"日均接起_含新人":72.0,"一解率_含新人":93.2,"质检通过率_含新人":97.949,"质检均分_含新人":99.48,"差错量_含新人":4,"外诉量_含新人":30,"外诉率_含新人":0.007861635220125786,"通话时长_含新人":4.63,"事后时长_含新人":0.33,"退单量_含新人":4,"质检量_含新人":193,"邀评率_含新人":13.8,"满意率_含新人":97.41,"工时利用率_含新人":95.1706,"人数_剔除新人":19,"接起量_剔除新人":3816,"出勤天数_剔除新人":53,"日均接起_剔除新人":72.0,"一解率_剔除新人":93.2,"质检通过率_剔除新人":97.949,"质检均分_剔除新人":99.48,"差错量_剔除新人":4,"外诉量_剔除新人":30,"外诉率_剔除新人":0.007861635220125786,"通话时长_剔除新人":4.63,"事后时长_剔除新人":0.33,"退单量_剔除新人":4,"质检量_剔除新人":193,"邀评率_剔除新人":13.8,"满意率_剔除新人":97.41,"工时利用率_剔除新人":95.1706},{"组别":"热线三组","人数_含新人":21,"接起量_含新人":3512,"出勤天数_含新人":52,"日均接起_含新人":67.54,"一解率_含新人":92.83,"质检通过率_含新人":94.5273,"质检均分_含新人":98.44,"差错量_含新人":18,"外诉量_含新人":26,"外诉率_含新人":0.007403189066059226,"通话时长_含新人":4.59,"事后时长_含新人":0.39,"退单量_含新人":10,"质检量_含新人":266,"邀评率_含新人":15.29,"满意率_含新人":98.02,"工时利用率_含新人":95.909,"人数_剔除新人":19,"接起量_剔除新人":3193,"出勤天数_剔除新人":44,"日均接起_剔除新人":72.57,"一解率_剔除新人":92.92,"质检通过率_剔除新人":95.1421,"质检均分_剔除新人":99.09,"差错量_剔除新人":7,"外诉量_剔除新人":26,"外诉率_剔除新人":0.008142812402129659,"通话时长_剔除新人":4.47,"事后时长_剔除新人":0.22,"退单量_剔除新人":9,"质检量_剔除新人":171,"邀评率_剔除新人":15.6,"满意率_剔除新人":98.01,"工时利用率_剔除新人":96.5716},{"组别":"热线四组","人数_含新人":20,"接起量_含新人":4813,"出勤天数_含新人":64,"日均接起_含新人":75.2,"一解率_含新人":92.16,"质检通过率_含新人":97.5422,"质检均分_含新人":99.02,"差错量_含新人":7,"外诉量_含新人":35,"外诉率_含新人":0.007271971743195512,"通话时长_含新人":4.17,"事后时长_含新人":0.39,"退单量_含新人":10,"质检量_含新人":209,"邀评率_含新人":16.48,"满意率_含新人":98.09,"工时利用率_含新人":95.0702,"人数_剔除新人":19,"接起量_剔除新人":4657,"出勤天数_剔除新人":60,"日均接起_剔除新人":77.62,"一解率_剔除新人":92.26,"质检通过率_剔除新人":97.6361,"质检均分_剔除新人":99.21,"差错量_剔除新人":5,"外诉量_剔除新人":35,"外诉率_剔除新人":0.00751556796220743,"通话时长_剔除新人":4.12,"事后时长_剔除新人":0.34,"退单量_剔除新人":9,"质检量_剔除新人":171,"邀评率_剔除新人":16.49,"满意率_剔除新人":98.02,"工时利用率_剔除新人":95.3928},{"组别":"热线五组","人数_含新人":20,"接起量_含新人":3461,"出勤天数_含新人":49,"日均接起_含新人":70.63,"一解率_含新人":93.17,"质检通过率_含新人":95.9352,"质检均分_含新人":97.89,"差错量_含新人":14,"外诉量_含新人":36,"外诉率_含新人":0.010401618029471251,"通话时长_含新人":4.67,"事后时长_含新人":0.39,"退单量_含新人":6,"质检量_含新人":213,"邀评率_含新人":15.29,"满意率_含新人":96.5,"工时利用率_含新人":95.4941,"人数_剔除新人":19,"接起量_剔除新人":3292,"出勤天数_剔除新人":45,"日均接起_剔除新人":73.16,"一解率_剔除新人":93.23,"质检通过率_剔除新人":96.3682,"质检均分_剔除新人":98.18,"差错量_剔除新人":8,"外诉量_剔除新人":36,"外诉率_剔除新人":0.010935601458080195,"通话时长_剔除新人":4.6,"事后时长_剔除新人":0.34,"退单量_剔除新人":6,"质检量_剔除新人":165,"邀评率_剔除新人":15.36,"满意率_剔除新人":96.32,"工时利用率_剔除新人":95.5656},{"组别":"热线六组","人数_含新人":19,"接起量_含新人":3047,"出勤天数_含新人":41,"日均接起_含新人":74.32,"一解率_含新人":94.37,"质检通过率_含新人":91.4083,"质检均分_含新人":97.87,"差错量_含新人":17,"外诉量_含新人":29,"外诉率_含新人":0.009517558254020347,"通话时长_含新人":4.33,"事后时长_含新人":0.37,"退单量_含新人":2,"质检量_含新人":171,"邀评率_含新人":14.81,"满意率_含新人":97.68,"工时利用率_含新人":95.7293,"人数_剔除新人":18,"接起量_剔除新人":2983,"出勤天数_剔除新人":39,"日均接起_剔除新人":76.49,"一解率_剔除新人":94.47,"质检通过率_剔除新人":91.7887,"质检均分_剔除新人":98.35,"差错量_剔除新人":12,"外诉量_剔除新人":29,"外诉率_剔除新人":0.009721756620851492,"通话时长_剔除新人":4.28,"事后时长_剔除新人":0.33,"退单量_剔除新人":2,"质检量_剔除新人":152,"邀评率_剔除新人":14.94,"满意率_剔除新人":98.0,"工时利用率_剔除新人":96.2862},{"组别":"热线七组","人数_含新人":20,"接起量_含新人":4904,"出勤天数_含新人":68,"日均接起_含新人":72.12,"一解率_含新人":93.09,"质检通过率_含新人":93.5459,"质检均分_含新人":98.97,"差错量_含新人":12,"外诉量_含新人":41,"外诉率_含新人":0.008360522022838499,"通话时长_含新人":4.45,"事后时长_含新人":0.38,"退单量_含新人":9,"质检量_含新人":256,"邀评率_含新人":13.31,"满意率_含新人":98.4,"工时利用率_含新人":95.5643,"人数_剔除新人":19,"接起量_剔除新人":4740,"出勤天数_剔除新人":64,"日均接起_剔除新人":74.06,"一解率_剔除新人":93.16,"质检通过率_剔除新人":93.6554,"质检均分_剔除新人":99.26,"差错量_剔除新人":7,"外诉量_剔除新人":41,"外诉率_剔除新人":0.008649789029535865,"通话时长_剔除新人":4.38,"事后时长_剔除新人":0.34,"退单量_剔除新人":9,"质检量_剔除新人":204,"邀评率_剔除新人":13.46,"满意率_剔除新人":98.34,"工时利用率_剔除新人":95.5977},{"组别":"热线八组","人数_含新人":20,"接起量_含新人":4320,"出勤天数_含新人":63,"日均接起_含新人":68.57,"一解率_含新人":93.98,"质检通过率_含新人":91.9333,"质检均分_含新人":98.3,"差错量_含新人":14,"外诉量_含新人":36,"外诉率_含新人":0.008333333333333333,"通话时长_含新人":4.82,"事后时长_含新人":0.35,"退单量_含新人":10,"质检量_含新人":197,"邀评率_含新人":14.18,"满意率_含新人":98.06,"工时利用率_含新人":95.1084,"人数_剔除新人":19,"接起量_剔除新人":4150,"出勤天数_剔除新人":59,"日均接起_剔除新人":70.34,"一解率_剔除新人":94.14,"质检通过率_剔除新人":92.144,"质检均分_剔除新人":98.82,"差错量_剔除新人":7,"外诉量_剔除新人":35,"外诉率_剔除新人":0.008433734939759036,"通话时长_剔除新人":4.76,"事后时长_剔除新人":0.34,"退单量_剔除新人":10,"质检量_剔除新人":144,"邀评率_剔除新人":14.4,"满意率_剔除新人":97.98,"工时利用率_剔除新人":95.5266}],"weeks":[{"周":"W1","天数":7,"接起量":33411,"日均接起":4773.0,"质检量":1707,"质检通过率":94.67,"质检均分":98.67,"差错量":91,"各组":{"热线一组":{"接起量":5538,"日均接起":791.1},"热线二组":{"接起量":3816,"日均接起":545.1},"热线三组":{"接起量":3512,"日均接起":501.7},"热线四组":{"接起量":4813,"日均接起":687.6},"热线五组":{"接起量":3461,"日均接起":494.4},"热线六组":{"接起量":3047,"日均接起":435.3},"热线七组":{"接起量":4904,"日均接起":700.6},"热线八组":{"接起量":4320,"日均接起":617.1}}},{"周":"W2","天数":7,"接起量":0,"日均接起":0.0,"质检量":0,"质检通过率":0,"质检均分":0,"差错量":0,"各组":{"热线一组":{"接起量":0,"日均接起":0.0},"热线二组":{"接起量":0,"日均接起":0.0},"热线三组":{"接起量":0,"日均接起":0.0},"热线四组":{"接起量":0,"日均接起":0.0},"热线五组":{"接起量":0,"日均接起":0.0},"热线六组":{"接起量":0,"日均接起":0.0},"热线七组":{"接起量":0,"日均接起":0.0},"热线八组":{"接起量":0,"日均接起":0.0}}},{"周":"W3","天数":7,"接起量":0,"日均接起":0.0,"质检量":0,"质检通过率":0,"质检均分":0,"差错量":0,"各组":{"热线一组":{"接起量":0,"日均接起":0.0},"热线二组":{"接起量":0,"日均接起":0.0},"热线三组":{"接起量":0,"日均接起":0.0},"热线四组":{"接起量":0,"日均接起":0.0},"热线五组":{"接起量":0,"日均接起":0.0},"热线六组":{"接起量":0,"日均接起":0.0},"热线七组":{"接起量":0,"日均接起":0.0},"热线八组":{"接起量":0,"日均接起":0.0}}},{"周":"W4","天数":7,"接起量":0,"日均接起":0.0,"质检量":0,"质检通过率":0,"质检均分":0,"差错量":0,"各组":{"热线一组":{"接起量":0,"日均接起":0.0},"热线二组":{"接起量":0,"日均接起":0.0},"热线三组":{"接起量":0,"日均接起":0.0},"热线四组":{"接起量":0,"日均接起":0.0},"热线五组":{"接起量":0,"日均接起":0.0},"热线六组":{"接起量":0,"日均接起":0.0},"热线七组":{"接起量":0,"日均接起":0.0},"热线八组":{"接起量":0,"日均接起":0.0}}},{"周":"W5","天数":3,"接起量":0,"日均接起":0.0,"质检量":0,"质检通过率":0,"质检均分":0,"差错量":0,"各组":{"热线一组":{"接起量":0,"日均接起":0.0},"热线二组":{"接起量":0,"日均接起":0.0},"热线三组":{"接起量":0,"日均接起":0.0},"热线四组":{"接起量":0,"日均接起":0.0},"热线五组":{"接起量":0,"日均接起":0.0},"热线六组":{"接起量":0,"日均接起":0.0},"热线七组":{"接起量":0,"日均接起":0.0},"热线八组":{"接起量":0,"日均接起":0.0}}}],"persons":[{"姓名":"毛星星","组别":"热线五组","新人":false,"出勤天数":3,"接起量":226,"日均接起":75.33,"一解率":97.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":2,"外诉率":0.00885,"事后时长":0.12,"通话时长":4.81,"退单量":0,"质检量":4,"邀评率":25.0,"满意率":1.0,"工时利用率":96.7,"绩效得分":89.38,"排名":1},{"姓名":"李聃","组别":"热线四组","新人":false,"出勤天数":3,"接起量":268,"日均接起":89.33,"一解率":95.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":0,"外诉率":0.0,"事后时长":0.15,"通话时长":3.69,"退单量":0,"质检量":8,"邀评率":10.0,"满意率":1.0,"工时利用率":96.1,"绩效得分":88.04,"排名":2},{"姓名":"司晨晨","组别":"热线八组","新人":false,"出勤天数":3,"接起量":257,"日均接起":85.67,"一解率":96.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.003891,"事后时长":0.04,"通话时长":4.47,"退单量":1,"质检量":6,"邀评率":29.0,"满意率":95.0,"工时利用率":96.91,"绩效得分":86.43,"排名":3},{"姓名":"张雯艳","组别":"热线三组","新人":false,"出勤天数":3,"接起量":219,"日均接起":73.0,"一解率":96.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":0,"外诉率":0.0,"事后时长":0.29,"通话时长":5.16,"退单量":0,"质检量":9,"邀评率":7.0,"满意率":1.0,"工时利用率":97.12,"绩效得分":86.26,"排名":4},{"姓名":"林浩然","组别":"热线八组","新人":false,"出勤天数":4,"接起量":283,"日均接起":70.75,"一解率":94.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.003534,"事后时长":0.07,"通话时长":4.55,"退单量":0,"质检量":3,"邀评率":16.0,"满意率":1.0,"工时利用率":91.05,"绩效得分":85.9,"排名":5},{"姓名":"张蕾","组别":"热线八组","新人":false,"出勤天数":4,"接起量":297,"日均接起":74.25,"一解率":95.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":0,"外诉率":0.0,"事后时长":0.53,"通话时长":4.08,"退单量":1,"质检量":13,"邀评率":5.0,"满意率":1.0,"工时利用率":94.25,"绩效得分":84.99,"排名":6},{"姓名":"查翠平","组别":"热线三组","新人":false,"出勤天数":3,"接起量":254,"日均接起":84.67,"一解率":95.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":2,"外诉率":0.007874,"事后时长":0.03,"通话时长":3.7,"退单量":3,"质检量":10,"邀评率":22.0,"满意率":98.0,"工时利用率":96.39,"绩效得分":84.92,"排名":7},{"姓名":"胡芳","组别":"热线八组","新人":false,"出勤天数":4,"接起量":313,"日均接起":78.25,"一解率":95.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":4,"外诉率":0.01278,"事后时长":0.31,"通话时长":4.41,"退单量":1,"质检量":10,"邀评率":20.0,"满意率":97.0,"工时利用率":97.15,"绩效得分":84.91,"排名":8},{"姓名":"张楠","组别":"热线八组","新人":false,"出勤天数":2,"接起量":152,"日均接起":76.0,"一解率":98.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.006579,"事后时长":0.33,"通话时长":4.14,"退单量":0,"质检量":11,"邀评率":13.0,"满意率":1.0,"工时利用率":95.42,"绩效得分":84.91,"排名":9},{"姓名":"刘静静","组别":"热线二组","新人":false,"出勤天数":4,"接起量":336,"日均接起":84.0,"一解率":94.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":2,"外诉率":0.005952,"事后时长":0.17,"通话时长":4.12,"退单量":0,"质检量":12,"邀评率":19.0,"满意率":98.0,"工时利用率":96.65,"绩效得分":84.02,"排名":10},{"姓名":"石翼","组别":"热线六组","新人":false,"出勤天数":2,"接起量":167,"日均接起":83.5,"一解率":97.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.005988,"事后时长":0.46,"通话时长":4.59,"退单量":0,"质检量":8,"邀评率":8.0,"满意率":1.0,"工时利用率":96.36,"绩效得分":83.99,"排名":11},{"姓名":"孙瑞","组别":"热线二组","新人":false,"出勤天数":3,"接起量":237,"日均接起":79.0,"一解率":95.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":4,"外诉率":0.016878,"事后时长":0.14,"通话时长":4.35,"退单量":0,"质检量":5,"邀评率":18.0,"满意率":98.0,"工时利用率":94.5,"绩效得分":83.03,"排名":12},{"姓名":"吴少杰","组别":"热线八组","新人":false,"出勤天数":4,"接起量":249,"日均接起":62.25,"一解率":95.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.004016,"事后时长":0.56,"通话时长":5.06,"退单量":0,"质检量":3,"邀评率":8.0,"满意率":1.0,"工时利用率":91.64,"绩效得分":82.99,"排名":13},{"姓名":"任奕霖","组别":"热线一组","新人":false,"出勤天数":4,"接起量":311,"日均接起":77.75,"一解率":95.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":0,"外诉率":0.0,"事后时长":0.33,"通话时长":4.11,"退单量":0,"质检量":12,"邀评率":11.0,"满意率":97.0,"工时利用率":95.4,"绩效得分":82.65,"排名":14},{"姓名":"赵红红","组别":"热线五组","新人":false,"出勤天数":2,"接起量":187,"日均接起":93.5,"一解率":96.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.005348,"事后时长":0.51,"通话时长":4.31,"退单量":0,"质检量":9,"邀评率":21.0,"满意率":1.0,"工时利用率":94.69,"绩效得分":82.54,"排名":15},{"姓名":"吉欢庆","组别":"热线七组","新人":false,"出勤天数":2,"接起量":180,"日均接起":90.0,"一解率":97.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":2,"外诉率":0.011111,"事后时长":0.29,"通话时长":4.73,"退单量":0,"质检量":1,"邀评率":12.0,"满意率":95.0,"工时利用率":94.71,"绩效得分":82.45,"排名":16},{"姓名":"周月","组别":"热线七组","新人":false,"出勤天数":4,"接起量":288,"日均接起":72.0,"一解率":94.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":2,"外诉率":0.006944,"事后时长":0.32,"通话时长":4.66,"退单量":0,"质检量":16,"邀评率":8.0,"满意率":1.0,"工时利用率":95.06,"绩效得分":82.06,"排名":17},{"姓名":"高诣婷","组别":"热线二组","新人":false,"出勤天数":3,"接起量":224,"日均接起":74.67,"一解率":96.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.004464,"事后时长":0.5,"通话时长":3.88,"退单量":0,"质检量":12,"邀评率":19.0,"满意率":98.0,"工时利用率":93.95,"绩效得分":81.81,"排名":18},{"姓名":"王敏","组别":"热线四组","新人":false,"出勤天数":4,"接起量":346,"日均接起":86.5,"一解率":94.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":2,"外诉率":0.00578,"事后时长":0.32,"通话时长":4.21,"退单量":0,"质检量":9,"邀评率":15.0,"满意率":98.0,"工时利用率":97.8,"绩效得分":81.64,"排名":19},{"姓名":"路甜","组别":"热线六组","新人":false,"出勤天数":3,"接起量":225,"日均接起":75.0,"一解率":95.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.004444,"事后时长":0.4,"通话时长":4.81,"退单量":0,"质检量":7,"邀评率":26.0,"满意率":1.0,"工时利用率":98.3,"绩效得分":80.95,"排名":20},{"姓名":"高建宏","组别":"热线六组","新人":false,"出勤天数":2,"接起量":184,"日均接起":92.0,"一解率":95.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":0,"外诉率":0.0,"事后时长":0.43,"通话时长":4.33,"退单量":0,"质检量":4,"邀评率":15.0,"满意率":1.0,"工时利用率":94.93,"绩效得分":80.74,"排名":21},{"姓名":"张利姣","组别":"热线四组","新人":false,"出勤天数":4,"接起量":287,"日均接起":71.75,"一解率":94.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":3,"外诉率":0.010453,"事后时长":0.51,"通话时长":4.35,"退单量":1,"质检量":10,"邀评率":21.0,"满意率":1.0,"工时利用率":95.25,"绩效得分":80.52,"排名":22},{"姓名":"吴彬彬","组别":"热线四组","新人":false,"出勤天数":4,"接起量":314,"日均接起":78.5,"一解率":94.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":2,"外诉率":0.006369,"事后时长":0.27,"通话时长":4.0,"退单量":0,"质检量":9,"邀评率":25.0,"满意率":1.0,"工时利用率":94.82,"绩效得分":80.13,"排名":23},{"姓名":"肖玲玲","组别":"热线一组","新人":false,"出勤天数":4,"接起量":283,"日均接起":70.75,"一解率":94.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":4,"外诉率":0.014134,"事后时长":0.25,"通话时长":4.71,"退单量":0,"质检量":9,"邀评率":13.0,"满意率":97.0,"工时利用率":97.54,"绩效得分":78.63,"排名":24},{"姓名":"高聪","组别":"热线四组","新人":false,"出勤天数":4,"接起量":303,"日均接起":75.75,"一解率":94.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.0033,"事后时长":0.46,"通话时长":4.02,"退单量":0,"质检量":9,"邀评率":12.0,"满意率":1.0,"工时利用率":95.83,"绩效得分":78.54,"排名":25},{"姓名":"魏毓","组别":"热线一组","新人":false,"出勤天数":4,"接起量":280,"日均接起":70.0,"一解率":94.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":2,"外诉率":0.007143,"事后时长":0.46,"通话时长":4.79,"退单量":0,"质检量":11,"邀评率":18.0,"满意率":98.0,"工时利用率":96.87,"绩效得分":78.33,"排名":26},{"姓名":"匡敏","组别":"热线五组","新人":false,"出勤天数":2,"接起量":168,"日均接起":84.0,"一解率":96.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.005952,"事后时长":0.7,"通话时长":4.26,"退单量":1,"质检量":10,"邀评率":15.0,"满意率":96.0,"工时利用率":94.34,"绩效得分":78.16,"排名":27},{"姓名":"李环","组别":"热线三组","新人":false,"出勤天数":4,"接起量":295,"日均接起":73.75,"一解率":93.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":2,"外诉率":0.00678,"事后时长":0.1,"通话时长":4.77,"退单量":0,"质检量":11,"邀评率":19.0,"满意率":1.0,"工时利用率":98.17,"绩效得分":77.99,"排名":28},{"姓名":"陈雅茹","组别":"热线七组","新人":false,"出勤天数":4,"接起量":285,"日均接起":71.25,"一解率":93.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.003509,"事后时长":0.23,"通话时长":4.57,"退单量":2,"质检量":11,"邀评率":17.0,"满意率":1.0,"工时利用率":94.33,"绩效得分":77.36,"排名":29},{"姓名":"蒋锴","组别":"热线七组","新人":false,"出勤天数":3,"接起量":227,"日均接起":75.67,"一解率":94.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.004405,"事后时长":0.28,"通话时长":3.92,"退单量":0,"质检量":13,"邀评率":18.0,"满意率":1.0,"工时利用率":93.88,"绩效得分":76.86,"排名":30},{"姓名":"宋司婷","组别":"热线七组","新人":false,"出勤天数":4,"接起量":290,"日均接起":72.5,"一解率":94.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.003448,"事后时长":0.42,"通话时长":4.39,"退单量":0,"质检量":11,"邀评率":14.0,"满意率":97.0,"工时利用率":95.85,"绩效得分":76.74,"排名":31},{"姓名":"刘丽婷","组别":"热线一组","新人":false,"出勤天数":4,"接起量":311,"日均接起":77.75,"一解率":96.0,"质检通过率":100.0,"质检均分":99.44,"差错量":0,"外诉量":3,"外诉率":0.009646,"事后时长":0.48,"通话时长":3.8,"退单量":0,"质检量":9,"邀评率":12.0,"满意率":1.0,"工时利用率":95.59,"绩效得分":76.42,"排名":32},{"姓名":"薛妍","组别":"热线六组","新人":false,"出勤天数":2,"接起量":150,"日均接起":75.0,"一解率":95.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.006667,"事后时长":0.09,"通话时长":4.74,"退单量":0,"质检量":8,"邀评率":7.0,"满意率":90.0,"工时利用率":97.39,"绩效得分":76.26,"排名":33},{"姓名":"王卓君","组别":"热线七组","新人":false,"出勤天数":4,"接起量":282,"日均接起":70.5,"一解率":94.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":3,"外诉率":0.010638,"事后时长":0.62,"通话时长":4.4,"退单量":0,"质检量":12,"邀评率":25.0,"满意率":99.0,"工时利用率":95.98,"绩效得分":76.04,"排名":34},{"姓名":"李文雪","组别":"热线一组","新人":false,"出勤天数":3,"接起量":215,"日均接起":71.67,"一解率":93.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.004651,"事后时长":0.21,"通话时长":5.05,"退单量":0,"质检量":6,"邀评率":12.0,"满意率":1.0,"工时利用率":96.71,"绩效得分":75.63,"排名":35},{"姓名":"付娟","组别":"热线七组","新人":false,"出勤天数":4,"接起量":256,"日均接起":64.0,"一解率":93.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":4,"外诉率":0.015625,"事后时长":0.13,"通话时长":5.77,"退单量":1,"质检量":9,"邀评率":10.0,"满意率":1.0,"工时利用率":96.61,"绩效得分":75.52,"排名":36},{"姓名":"邵彦","组别":"热线二组","新人":false,"出勤天数":3,"接起量":239,"日均接起":79.67,"一解率":94.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":4,"外诉率":0.016736,"事后时长":0.55,"通话时长":3.83,"退单量":0,"质检量":10,"邀评率":14.0,"满意率":97.0,"工时利用率":94.18,"绩效得分":75.25,"排名":37},{"姓名":"刘迪","组别":"热线六组","新人":false,"出勤天数":3,"接起量":264,"日均接起":88.0,"一解率":97.0,"质检通过率":93.33,"质检均分":98.67,"差错量":1,"外诉量":6,"外诉率":0.022727,"事后时长":0.03,"通话时长":3.43,"退单量":0,"质检量":15,"邀评率":19.0,"满意率":98.0,"工时利用率":94.96,"绩效得分":75.16,"排名":38},{"姓名":"余鑫","组别":"热线七组","新人":false,"出勤天数":4,"接起量":322,"日均接起":80.5,"一解率":93.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":3,"外诉率":0.009317,"事后时长":0.61,"通话时长":3.79,"退单量":2,"质检量":10,"邀评率":11.0,"满意率":1.0,"工时利用率":94.65,"绩效得分":74.96,"排名":39},{"姓名":"张馨雨","组别":"热线四组","新人":false,"出勤天数":4,"接起量":277,"日均接起":69.25,"一解率":93.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":3,"外诉率":0.01083,"事后时长":0.4,"通话时长":4.71,"退单量":2,"质检量":11,"邀评率":12.0,"满意率":1.0,"工时利用率":94.73,"绩效得分":74.81,"排名":40},{"姓名":"韦思语","组别":"热线二组","新人":false,"出勤天数":3,"接起量":228,"日均接起":76.0,"一解率":94.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":0,"外诉率":0.0,"事后时长":0.04,"通话时长":4.18,"退单量":0,"质检量":12,"邀评率":14.0,"满意率":88.0,"工时利用率":94.44,"绩效得分":74.42,"排名":41},{"姓名":"史丽英","组别":"热线七组","新人":false,"出勤天数":3,"接起量":256,"日均接起":85.33,"一解率":93.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":2,"外诉率":0.007812,"事后时长":0.24,"通话时长":3.31,"退单量":0,"质检量":10,"邀评率":24.0,"满意率":1.0,"工时利用率":94.39,"绩效得分":73.55,"排名":42},{"姓名":"杨媛","组别":"热线六组","新人":false,"出勤天数":3,"接起量":239,"日均接起":79.67,"一解率":96.0,"质检通过率":90.0,"质检均分":98.0,"差错量":1,"外诉量":3,"外诉率":0.012552,"事后时长":0.24,"通话时长":4.49,"退单量":0,"质检量":10,"邀评率":13.0,"满意率":1.0,"工时利用率":97.36,"绩效得分":73.22,"排名":43},{"姓名":"张瑜","组别":"热线四组","新人":false,"出勤天数":4,"接起量":282,"日均接起":70.5,"一解率":93.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.003546,"事后时长":0.22,"通话时长":4.6,"退单量":0,"质检量":7,"邀评率":17.0,"满意率":94.0,"工时利用率":94.93,"绩效得分":72.62,"排名":44},{"姓名":"刘振武","组别":"热线八组","新人":false,"出勤天数":2,"接起量":116,"日均接起":58.0,"一解率":95.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":2,"外诉率":0.017241,"事后时长":0.28,"通话时长":4.78,"退单量":1,"质检量":9,"邀评率":7.0,"满意率":1.0,"工时利用率":94.26,"绩效得分":72.6,"排名":45},{"姓名":"郭楠","组别":"热线三组","新人":false,"出勤天数":3,"接起量":240,"日均接起":80.0,"一解率":94.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":0,"外诉率":0.0,"事后时长":0.4,"通话时长":4.13,"退单量":0,"质检量":8,"邀评率":15.0,"满意率":97.0,"工时利用率":96.27,"绩效得分":72.58,"排名":46},{"姓名":"张世界","组别":"热线一组","新人":false,"出勤天数":4,"接起量":271,"日均接起":67.75,"一解率":96.0,"质检通过率":100.0,"质检均分":99.44,"差错量":0,"外诉量":4,"外诉率":0.01476,"事后时长":0.08,"通话时长":5.13,"退单量":1,"质检量":9,"邀评率":11.0,"满意率":90.0,"工时利用率":95.51,"绩效得分":72.42,"排名":47},{"姓名":"庞淑静","组别":"热线八组","新人":false,"出勤天数":4,"接起量":289,"日均接起":72.25,"一解率":93.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":3,"外诉率":0.010381,"事后时长":0.1,"通话时长":4.89,"退单量":1,"质检量":13,"邀评率":12.0,"满意率":94.0,"工时利用率":96.88,"绩效得分":72.36,"排名":48},{"姓名":"黄小群","组别":"热线四组","新人":false,"出勤天数":3,"接起量":235,"日均接起":78.33,"一解率":93.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.004255,"事后时长":0.37,"通话时长":4.35,"退单量":1,"质检量":13,"邀评率":9.0,"满意率":1.0,"工时利用率":95.06,"绩效得分":72.21,"排名":49},{"姓名":"耿晨妮","组别":"热线一组","新人":false,"出勤天数":4,"接起量":275,"日均接起":68.75,"一解率":93.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":0,"外诉率":0.0,"事后时长":0.19,"通话时长":4.98,"退单量":0,"质检量":11,"邀评率":13.0,"满意率":91.0,"工时利用率":97.01,"绩效得分":71.85,"排名":50},{"姓名":"陈家义","组别":"热线一组","新人":false,"出勤天数":4,"接起量":286,"日均接起":71.5,"一解率":92.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.003497,"事后时长":0.02,"通话时长":5.25,"退单量":1,"质检量":8,"邀评率":13.0,"满意率":1.0,"工时利用率":98.91,"绩效得分":71.71,"排名":51},{"姓名":"田翠","组别":"热线一组","新人":false,"出勤天数":2,"接起量":161,"日均接起":80.5,"一解率":94.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":4,"外诉率":0.024845,"事后时长":0.17,"通话时长":4.77,"退单量":0,"质检量":4,"邀评率":16.0,"满意率":96.0,"工时利用率":95.49,"绩效得分":71.42,"排名":52},{"姓名":"潘雪艳","组别":"热线一组","新人":false,"出勤天数":4,"接起量":281,"日均接起":70.25,"一解率":92.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":4,"外诉率":0.014235,"事后时长":0.05,"通话时长":4.84,"退单量":0,"质检量":10,"邀评率":15.0,"满意率":1.0,"工时利用率":94.53,"绩效得分":71.39,"排名":53},{"姓名":"张敬","组别":"热线二组","新人":false,"出勤天数":3,"接起量":208,"日均接起":69.33,"一解率":92.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.004808,"事后时长":0.1,"通话时长":5.11,"退单量":0,"质检量":11,"邀评率":21.0,"满意率":1.0,"工时利用率":97.33,"绩效得分":71.04,"排名":54},{"姓名":"聂小洁","组别":"热线四组","新人":false,"出勤天数":4,"接起量":333,"日均接起":83.25,"一解率":92.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.003003,"事后时长":0.05,"通话时长":4.38,"退单量":0,"质检量":11,"邀评率":20.0,"满意率":97.0,"工时利用率":97.95,"绩效得分":70.94,"排名":55},{"姓名":"郭孟栩","组别":"热线五组","新人":false,"出勤天数":2,"接起量":146,"日均接起":73.0,"一解率":96.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.006849,"事后时长":0.37,"通话时长":4.74,"退单量":0,"质检量":8,"邀评率":14.0,"满意率":95.0,"工时利用率":94.29,"绩效得分":70.46,"排名":56},{"姓名":"王瑜","组别":"热线二组","新人":false,"出勤天数":4,"接起量":265,"日均接起":66.25,"一解率":95.0,"质检通过率":86.67,"质检均分":97.0,"差错量":2,"外诉量":2,"外诉率":0.007547,"事后时长":0.17,"通话时长":5.25,"退单量":0,"质检量":15,"邀评率":12.0,"满意率":1.0,"工时利用率":93.87,"绩效得分":69.84,"排名":57},{"姓名":"麻海军","组别":"热线五组","新人":false,"出勤天数":4,"接起量":249,"日均接起":62.25,"一解率":92.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":0,"外诉率":0.0,"事后时长":0.57,"通话时长":5.17,"退单量":1,"质检量":3,"邀评率":13.0,"满意率":1.0,"工时利用率":93.99,"绩效得分":69.69,"排名":58},{"姓名":"王朝","组别":"热线六组","新人":false,"出勤天数":2,"接起量":177,"日均接起":88.5,"一解率":97.0,"质检通过率":90.0,"质检均分":98.0,"差错量":1,"外诉量":1,"外诉率":0.00565,"事后时长":0.44,"通话时长":3.72,"退单量":1,"质检量":10,"邀评率":9.0,"满意率":1.0,"工时利用率":95.54,"绩效得分":69.48,"排名":59},{"姓名":"丁思怡","组别":"热线八组","新人":false,"出勤天数":4,"接起量":357,"日均接起":89.25,"一解率":94.0,"质检通过率":100.0,"质检均分":99.09,"差错量":0,"外诉量":6,"外诉率":0.016807,"事后时长":0.03,"通话时长":3.96,"退单量":0,"质检量":11,"邀评率":18.0,"满意率":1.0,"工时利用率":97.31,"绩效得分":69.41,"排名":60},{"姓名":"石龙丹","组别":"热线二组","新人":false,"出勤天数":2,"接起量":169,"日均接起":84.5,"一解率":92.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.005917,"事后时长":0.07,"通话时长":4.21,"退单量":0,"质检量":11,"邀评率":23.0,"满意率":1.0,"工时利用率":95.06,"绩效得分":69.26,"排名":61},{"姓名":"崔悦","组别":"热线六组","新人":false,"出勤天数":1,"接起量":81,"日均接起":81.0,"一解率":94.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":0,"外诉率":0.0,"事后时长":0.1,"通话时长":3.26,"退单量":0,"质检量":8,"邀评率":9.0,"满意率":1.0,"工时利用率":96.41,"绩效得分":69.22,"排名":62},{"姓名":"张诗昱","组别":"热线三组","新人":false,"出勤天数":3,"接起量":211,"日均接起":70.33,"一解率":95.0,"质检通过率":100.0,"质检均分":98.89,"差错量":0,"外诉量":3,"外诉率":0.014218,"事后时长":0.44,"通话时长":4.24,"退单量":0,"质检量":9,"邀评率":14.0,"满意率":1.0,"工时利用率":94.35,"绩效得分":68.89,"排名":63},{"姓名":"董琪","组别":"热线三组","新人":false,"出勤天数":3,"接起量":218,"日均接起":72.67,"一解率":92.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":2,"外诉率":0.009174,"事后时长":0.06,"通话时长":5.14,"退单量":0,"质检量":11,"邀评率":17.0,"满意率":1.0,"工时利用率":96.39,"绩效得分":68.76,"排名":64},{"姓名":"杜娇","组别":"热线七组","新人":false,"出勤天数":4,"接起量":293,"日均接起":73.25,"一解率":95.0,"质检通过率":90.91,"质检均分":97.73,"差错量":1,"外诉量":4,"外诉率":0.013652,"事后时长":0.34,"通话时长":4.68,"退单量":1,"质检量":11,"邀评率":8.0,"满意率":1.0,"工时利用率":96.84,"绩效得分":68.64,"排名":65},{"姓名":"周珍珍","组别":"热线一组","新人":false,"出勤天数":4,"接起量":307,"日均接起":76.75,"一解率":92.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":0,"外诉率":0.0,"事后时长":0.14,"通话时长":4.43,"退单量":0,"质检量":9,"邀评率":14.0,"满意率":98.0,"工时利用率":97.72,"绩效得分":68.3,"排名":66},{"姓名":"管文鑫","组别":"热线七组","新人":false,"出勤天数":3,"接起量":228,"日均接起":76.0,"一解率":92.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.004386,"事后时长":0.24,"通话时长":3.92,"退单量":0,"质检量":12,"邀评率":17.0,"满意率":1.0,"工时利用率":94.15,"绩效得分":67.77,"排名":67},{"姓名":"刘利利","组别":"热线五组","新人":false,"出勤天数":1,"接起量":86,"日均接起":86.0,"一解率":94.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.011628,"事后时长":0.54,"通话时长":4.69,"退单量":0,"质检量":2,"邀评率":28.0,"满意率":1.0,"工时利用率":95.35,"绩效得分":67.64,"排名":68},{"姓名":"陈北仁","组别":"热线七组","新人":false,"出勤天数":3,"接起量":282,"日均接起":94.0,"一解率":94.0,"质检通过率":78.57,"质检均分":95.71,"差错量":3,"外诉量":4,"外诉率":0.014184,"事后时长":0.03,"通话时长":3.32,"退单量":0,"质检量":14,"邀评率":13.0,"满意率":1.0,"工时利用率":96.19,"绩效得分":67.19,"排名":69},{"姓名":"罗荣","组别":"热线七组","新人":false,"出勤天数":4,"接起量":274,"日均接起":68.5,"一解率":92.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":2,"外诉率":0.007299,"事后时长":0.4,"通话时长":4.78,"退单量":0,"质检量":13,"邀评率":10.0,"满意率":96.0,"工时利用率":96.39,"绩效得分":66.97,"排名":70},{"姓名":"刁寒寒","组别":"热线八组","新人":false,"出勤天数":1,"接起量":63,"日均接起":63.0,"一解率":94.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":0,"外诉率":0.0,"事后时长":0.15,"通话时长":4.88,"退单量":0,"质检量":6,"邀评率":8.0,"满意率":1.0,"工时利用率":95.92,"绩效得分":66.86,"排名":71},{"姓名":"蒲园园","组别":"热线三组","新人":false,"出勤天数":3,"接起量":230,"日均接起":76.67,"一解率":94.0,"质检通过率":90.91,"质检均分":98.18,"差错量":1,"外诉量":2,"外诉率":0.008696,"事后时长":0.03,"通话时长":4.33,"退单量":0,"质检量":11,"邀评率":18.0,"满意率":1.0,"工时利用率":99.8,"绩效得分":66.73,"排名":72},{"姓名":"何维","组别":"热线七组","新人":false,"出勤天数":2,"接起量":178,"日均接起":89.0,"一解率":93.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":3,"外诉率":0.016854,"事后时长":0.15,"通话时长":3.6,"退单量":0,"质检量":7,"邀评率":11.0,"满意率":90.0,"工时利用率":95.19,"绩效得分":66.59,"排名":73},{"姓名":"李珍珍","组别":"热线七组","新人":false,"出勤天数":4,"接起量":300,"日均接起":75.0,"一解率":91.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.003333,"事后时长":0.32,"通话时长":4.34,"退单量":1,"质检量":13,"邀评率":15.0,"满意率":1.0,"工时利用率":96.33,"绩效得分":66.53,"排名":74},{"姓名":"朱聪英","组别":"热线三组","新人":false,"出勤天数":3,"接起量":211,"日均接起":70.33,"一解率":92.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.004739,"事后时长":0.3,"通话时长":4.43,"退单量":0,"质检量":13,"邀评率":18.0,"满意率":97.0,"工时利用率":95.05,"绩效得分":66.49,"排名":75},{"姓名":"高齐","组别":"热线二组","新人":false,"出勤天数":2,"接起量":139,"日均接起":69.5,"一解率":94.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.007194,"事后时长":0.29,"通话时长":4.43,"退单量":0,"质检量":6,"邀评率":14.0,"满意率":95.0,"工时利用率":94.38,"绩效得分":66.11,"排名":76},{"姓名":"李泫逸","组别":"热线二组","新人":false,"出勤天数":3,"接起量":180,"日均接起":60.0,"一解率":94.0,"质检通过率":100.0,"质检均分":99.44,"差错量":0,"外诉量":1,"外诉率":0.005556,"事后时长":0.65,"通话时长":5.42,"退单量":0,"质检量":9,"邀评率":5.0,"满意率":1.0,"工时利用率":93.66,"绩效得分":65.72,"排名":77},{"姓名":"张曼思","组别":"热线一组","新人":false,"出勤天数":3,"接起量":229,"日均接起":76.33,"一解率":94.0,"质检通过率":100.0,"质检均分":99.29,"差错量":0,"外诉量":1,"外诉率":0.004367,"事后时长":0.33,"通话时长":5.29,"退单量":0,"质检量":7,"邀评率":23.0,"满意率":98.0,"工时利用率":98.47,"绩效得分":65.6,"排名":78},{"姓名":"冀蒙","组别":"热线一组","新人":false,"出勤天数":3,"接起量":230,"日均接起":76.67,"一解率":91.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":4,"外诉率":0.017391,"事后时长":0.35,"通话时长":4.57,"退单量":1,"质检量":11,"邀评率":19.0,"满意率":1.0,"工时利用率":96.37,"绩效得分":65.53,"排名":79},{"姓名":"贺娟","组别":"热线二组","新人":false,"出勤天数":4,"接起量":301,"日均接起":75.25,"一解率":92.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":2,"外诉率":0.006645,"事后时长":0.48,"通话时长":4.26,"退单量":2,"质检量":13,"邀评率":13.0,"满意率":90.0,"工时利用率":95.49,"绩效得分":65.47,"排名":80},{"姓名":"刘影","组别":"热线五组","新人":false,"出勤天数":3,"接起量":226,"日均接起":75.33,"一解率":95.0,"质检通过率":91.67,"质检均分":96.67,"差错量":1,"外诉量":5,"外诉率":0.022124,"事后时长":0.22,"通话时长":4.6,"退单量":0,"质检量":12,"邀评率":12.0,"满意率":1.0,"工时利用率":95.68,"绩效得分":65.43,"排名":81},{"姓名":"寻一娜","组别":"热线六组","新人":false,"出勤天数":2,"接起量":139,"日均接起":69.5,"一解率":93.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":0,"外诉率":0.0,"事后时长":0.23,"通话时长":3.86,"退单量":0,"质检量":9,"邀评率":17.0,"满意率":1.0,"工时利用率":97.4,"绩效得分":65.21,"排名":82},{"姓名":"寇洁梅","组别":"热线七组","新人":false,"出勤天数":3,"接起量":172,"日均接起":57.33,"一解率":92.0,"质检通过率":0,"质检均分":0,"差错量":0,"外诉量":1,"外诉率":0.005814,"事后时长":0.59,"通话时长":5.5,"退单量":2,"质检量":0,"邀评率":16.0,"满意率":1.0,"工时利用率":96.03,"绩效得分":65.2,"排名":83},{"姓名":"杨元婷","组别":"热线一组","新人":false,"出勤天数":4,"接起量":291,"日均接起":72.75,"一解率":94.0,"质检通过率":90.0,"质检均分":98.0,"差错量":1,"外诉量":2,"外诉率":0.006873,"事后时长":0.39,"通话时长":4.34,"退单量":0,"质检量":10,"邀评率":16.0,"满意率":1.0,"工时利用率":95.91,"绩效得分":65.04,"排名":84},{"姓名":"樊凯飞","组别":"热线六组","新人":false,"出勤天数":2,"接起量":159,"日均接起":79.5,"一解率":96.0,"质检通过率":90.0,"质检均分":97.5,"差错量":1,"外诉量":0,"外诉率":0.0,"事后时长":0.41,"通话时长":4.17,"退单量":0,"质检量":10,"邀评率":14.0,"满意率":1.0,"工时利用率":94.88,"绩效得分":65.01,"排名":85},{"姓名":"代冕","组别":"热线一组","新人":false,"出勤天数":4,"接起量":277,"日均接起":69.25,"一解率":91.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.00361,"事后时长":0.38,"通话时长":4.44,"退单量":1,"质检量":11,"邀评率":10.0,"满意率":1.0,"工时利用率":94.23,"绩效得分":64.53,"排名":86},{"姓名":"杨晨","组别":"热线五组","新人":false,"出勤天数":3,"接起量":174,"日均接起":58.0,"一解率":91.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":0,"外诉率":0.0,"事后时长":0.25,"通话时长":4.23,"退单量":0,"质检量":11,"邀评率":20.0,"满意率":1.0,"工时利用率":96.41,"绩效得分":64.46,"排名":87},{"姓名":"韩敏","组别":"热线八组","新人":false,"出勤天数":3,"接起量":204,"日均接起":68.0,"一解率":97.0,"质检通过率":85.71,"质检均分":97.14,"差错量":1,"外诉量":2,"外诉率":0.009804,"事后时长":0.5,"通话时长":5.29,"退单量":0,"质检量":7,"邀评率":11.0,"满意率":95.0,"工时利用率":95.08,"绩效得分":63.45,"排名":88},{"姓名":"李巍","组别":"热线五组","新人":false,"出勤天数":4,"接起量":289,"日均接起":72.25,"一解率":93.0,"质检通过率":100.0,"质检均分":99.64,"差错量":0,"外诉量":6,"外诉率":0.020761,"事后时长":0.32,"通话时长":4.61,"退单量":2,"质检量":14,"邀评率":22.0,"满意率":98.0,"工时利用率":94.75,"绩效得分":63.12,"排名":89},{"姓名":"梁梦凡","组别":"热线四组","新人":false,"出勤天数":4,"接起量":293,"日均接起":73.25,"一解率":90.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.003413,"事后时长":0.17,"通话时长":3.98,"退单量":2,"质检量":9,"邀评率":17.0,"满意率":96.0,"工时利用率":94.75,"绩效得分":62.84,"排名":90},{"姓名":"王攀","组别":"热线二组","新人":false,"出勤天数":3,"接起量":203,"日均接起":67.67,"一解率":91.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":2,"外诉率":0.009852,"事后时长":0.44,"通话时长":4.69,"退单量":0,"质检量":14,"邀评率":10.0,"满意率":1.0,"工时利用率":96.17,"绩效得分":62.55,"排名":91},{"姓名":"雷海燕","组别":"热线一组","新人":false,"出勤天数":3,"接起量":256,"日均接起":85.33,"一解率":94.0,"质检通过率":90.91,"质检均分":97.73,"差错量":1,"外诉量":2,"外诉率":0.007812,"事后时长":0.18,"通话时长":3.8,"退单量":1,"质检量":11,"邀评率":18.0,"满意率":96.0,"工时利用率":94.43,"绩效得分":62.43,"排名":92},{"姓名":"王鹏娟","组别":"热线四组","新人":false,"出勤天数":4,"接起量":334,"日均接起":83.5,"一解率":90.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":2,"外诉率":0.005988,"事后时长":0.51,"通话时长":3.64,"退单量":1,"质检量":11,"邀评率":25.0,"满意率":99.0,"工时利用率":94.27,"绩效得分":61.6,"排名":93},{"姓名":"李佳祥","组别":"热线五组","新人":false,"出勤天数":3,"接起量":204,"日均接起":68.0,"一解率":92.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":2,"外诉率":0.009804,"事后时长":0.51,"通话时长":4.75,"退单量":0,"质检量":11,"邀评率":7.0,"满意率":86.0,"工时利用率":94.22,"绩效得分":61.04,"排名":94},{"姓名":"张莽","组别":"热线一组","新人":false,"出勤天数":3,"接起量":201,"日均接起":67.0,"一解率":89.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.004975,"事后时长":0.23,"通话时长":5.46,"退单量":0,"质检量":13,"邀评率":13.0,"满意率":1.0,"工时利用率":96.58,"绩效得分":60.77,"排名":95},{"姓名":"赵瑶","组别":"热线五组","新人":false,"出勤天数":3,"接起量":228,"日均接起":76.0,"一解率":93.0,"质检通过率":100.0,"质检均分":99.0,"差错量":0,"外诉量":4,"外诉率":0.017544,"事后时长":0.31,"通话时长":4.74,"退单量":1,"质检量":10,"邀评率":10.0,"满意率":1.0,"工时利用率":97.45,"绩效得分":60.55,"排名":96},{"姓名":"柴倩茹","组别":"热线八组","新人":false,"出勤天数":3,"接起量":229,"日均接起":76.33,"一解率":94.0,"质检通过率":90.91,"质检均分":98.18,"差错量":1,"外诉量":3,"外诉率":0.0131,"事后时长":0.46,"通话时长":3.84,"退单量":1,"质检量":11,"邀评率":14.0,"满意率":97.0,"工时利用率":94.52,"绩效得分":59.56,"排名":97},{"姓名":"张万鹏","组别":"热线二组","新人":false,"出勤天数":3,"接起量":187,"日均接起":62.33,"一解率":92.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.005348,"事后时长":0.64,"通话时长":4.92,"退单量":0,"质检量":12,"邀评率":9.0,"满意率":94.0,"工时利用率":95.49,"绩效得分":59.46,"排名":98},{"姓名":"庞博","组别":"热线二组","新人":false,"出勤天数":2,"接起量":137,"日均接起":68.5,"一解率":95.0,"质检通过率":100.0,"质检均分":98.57,"差错量":0,"外诉量":3,"外诉率":0.021898,"事后时长":0.28,"通话时长":5.39,"退单量":1,"质检量":7,"邀评率":2.0,"满意率":1.0,"工时利用率":94.91,"绩效得分":59.39,"排名":99},{"姓名":"齐丽娜","组别":"热线二组","新人":false,"出勤天数":2,"接起量":126,"日均接起":63.0,"一解率":92.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":0,"外诉率":0.0,"事后时长":0.25,"通话时长":4.66,"退单量":0,"质检量":13,"邀评率":12.0,"满意率":1.0,"工时利用率":94.76,"绩效得分":58.36,"排名":100},{"姓名":"张旭","组别":"热线六组","新人":false,"出勤天数":2,"接起量":162,"日均接起":81.0,"一解率":92.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":2,"外诉率":0.012346,"事后时长":0.65,"通话时长":4.63,"退单量":0,"质检量":4,"邀评率":9.0,"满意率":93.0,"工时利用率":95.5,"绩效得分":58.27,"排名":101},{"姓名":"吴淑菡","组别":"热线五组","新人":false,"出勤天数":2,"接起量":154,"日均接起":77.0,"一解率":95.0,"质检通过率":88.89,"质检均分":97.78,"差错量":1,"外诉量":2,"外诉率":0.012987,"事后时长":0.45,"通话时长":4.26,"退单量":0,"质检量":9,"邀评率":10.0,"满意率":87.0,"工时利用率":94.46,"绩效得分":58.27,"排名":102},{"姓名":"王欣彤","组别":"热线三组","新人":false,"出勤天数":2,"接起量":173,"日均接起":86.5,"一解率":92.0,"质检通过率":100.0,"质检均分":99.38,"差错量":0,"外诉量":1,"外诉率":0.00578,"事后时长":0.19,"通话时长":4.61,"退单量":1,"质检量":8,"邀评率":21.0,"满意率":1.0,"工时利用率":94.16,"绩效得分":57.61,"排名":103},{"姓名":"梁金悦","组别":"热线六组","新人":false,"出勤天数":2,"接起量":136,"日均接起":68.0,"一解率":96.0,"质检通过率":91.67,"质检均分":98.33,"差错量":1,"外诉量":3,"外诉率":0.022059,"事后时长":0.19,"通话时长":5.14,"退单量":0,"质检量":12,"邀评率":21.0,"满意率":93.0,"工时利用率":97.36,"绩效得分":57.52,"排名":104},{"姓名":"吕星镇","组别":"热线七组","新人":false,"出勤天数":3,"接起量":212,"日均接起":70.67,"一解率":94.0,"质检通过率":86.67,"质检均分":97.33,"差错量":2,"外诉量":4,"外诉率":0.018868,"事后时长":0.57,"通话时长":4.14,"退单量":0,"质检量":15,"邀评率":11.0,"满意率":1.0,"工时利用率":94.49,"绩效得分":57.47,"排名":105},{"姓名":"刘艳","组别":"热线六组","新人":false,"出勤天数":3,"接起量":227,"日均接起":75.67,"一解率":94.0,"质检通过率":85.71,"质检均分":97.14,"差错量":1,"外诉量":1,"外诉率":0.004405,"事后时长":0.32,"通话时长":4.67,"退单量":1,"质检量":7,"邀评率":14.0,"满意率":97.0,"工时利用率":95.04,"绩效得分":56.85,"排名":106},{"姓名":"王李燕","组别":"热线八组","新人":false,"出勤天数":4,"接起量":194,"日均接起":48.5,"一解率":91.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":0,"外诉率":0.0,"事后时长":0.61,"通话时长":6.85,"退单量":0,"质检量":2,"邀评率":13.0,"满意率":96.0,"工时利用率":93.79,"绩效得分":56.6,"排名":107},{"姓名":"段晨甸","组别":"热线二组","新人":false,"出勤天数":2,"接起量":158,"日均接起":79.0,"一解率":89.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.006329,"事后时长":0.58,"通话时长":4.46,"退单量":0,"质检量":8,"邀评率":19.0,"满意率":1.0,"工时利用率":94.52,"绩效得分":56.46,"排名":108},{"姓名":"史磊磊","组别":"热线二组","新人":false,"出勤天数":3,"接起量":209,"日均接起":69.67,"一解率":93.0,"质检通过率":88.89,"质检均分":97.78,"差错量":1,"外诉量":1,"外诉率":0.004785,"事后时长":0.6,"通话时长":4.93,"退单量":0,"质检量":9,"邀评率":10.0,"满意率":1.0,"工时利用率":96.4,"绩效得分":55.91,"排名":109},{"姓名":"周灿","组别":"热线一组","新人":false,"出勤天数":4,"接起量":310,"日均接起":77.5,"一解率":92.0,"质检通过率":92.31,"质检均分":98.08,"差错量":1,"外诉量":2,"外诉率":0.006452,"事后时长":0.13,"通话时长":4.29,"退单量":0,"质检量":13,"邀评率":12.0,"满意率":95.0,"工时利用率":95.12,"绩效得分":55.7,"排名":110},{"姓名":"何雨欣","组别":"热线五组","新人":false,"出勤天数":2,"接起量":145,"日均接起":72.5,"一解率":92.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":2,"外诉率":0.013793,"事后时长":0.27,"通话时长":4.59,"退单量":1,"质检量":9,"邀评率":8.0,"满意率":91.0,"工时利用率":96.27,"绩效得分":55.45,"排名":111},{"姓名":"刘汉东","组别":"热线五组","新人":false,"出勤天数":1,"接起量":66,"日均接起":66.0,"一解率":91.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":2,"外诉率":0.030303,"事后时长":0.13,"通话时长":4.39,"退单量":0,"质检量":9,"邀评率":15.0,"满意率":1.0,"工时利用率":94.44,"绩效得分":55.34,"排名":112},{"姓名":"仝圆圆","组别":"热线六组","新人":false,"出勤天数":3,"接起量":217,"日均接起":72.33,"一解率":94.0,"质检通过率":72.73,"质检均分":94.09,"差错量":3,"外诉量":3,"外诉率":0.013825,"事后时长":0.46,"通话时长":3.97,"退单量":0,"质检量":11,"邀评率":21.0,"满意率":98.0,"工时利用率":94.45,"绩效得分":54.94,"排名":113},{"姓名":"张梦欣","组别":"热线八组","新人":false,"出勤天数":4,"接起量":233,"日均接起":58.25,"一解率":94.0,"质检通过率":33.33,"质检均分":86.67,"差错量":2,"外诉量":0,"外诉率":0.0,"事后时长":0.92,"通话时长":5.17,"退单量":1,"质检量":3,"邀评率":23.0,"满意率":98.0,"工时利用率":94.58,"绩效得分":54.74,"排名":114},{"姓名":"刘越美","组别":"热线四组","新人":false,"出勤天数":3,"接起量":251,"日均接起":83.67,"一解率":93.0,"质检通过率":77.78,"质检均分":95.56,"差错量":2,"外诉量":1,"外诉率":0.003984,"事后时长":0.37,"通话时长":4.35,"退单量":1,"质检量":9,"邀评率":3.0,"满意率":1.0,"工时利用率":97.27,"绩效得分":54.69,"排名":115},{"姓名":"杨楠","组别":"热线二组","新人":false,"出勤天数":2,"接起量":132,"日均接起":66.0,"一解率":91.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.007576,"事后时长":0.28,"通话时长":5.34,"退单量":0,"质检量":7,"邀评率":11.0,"满意率":1.0,"工时利用率":94.48,"绩效得分":54.05,"排名":116},{"姓名":"李旻宁","组别":"热线八组","新人":false,"出勤天数":3,"接起量":211,"日均接起":70.33,"一解率":92.0,"质检通过率":87.5,"质检均分":97.5,"差错量":1,"外诉量":3,"外诉率":0.014218,"事后时长":0.2,"通话时长":5.06,"退单量":1,"质检量":8,"邀评率":4.0,"满意率":1.0,"工时利用率":97.06,"绩效得分":54.03,"排名":117},{"姓名":"孙佳琦","组别":"热线一组","新人":false,"出勤天数":4,"接起量":279,"日均接起":69.75,"一解率":92.0,"质检通过率":90.91,"质检均分":97.73,"差错量":1,"外诉量":2,"外诉率":0.007168,"事后时长":0.33,"通话时长":4.59,"退单量":1,"质检量":11,"邀评率":16.0,"满意率":98.0,"工时利用率":94.7,"绩效得分":53.97,"排名":118},{"姓名":"王靖","组别":"热线八组","新人":false,"出勤天数":4,"接起量":243,"日均接起":60.75,"一解率":93.0,"质检通过率":90.91,"质检均分":97.73,"差错量":1,"外诉量":3,"外诉率":0.012346,"事后时长":0.56,"通话时长":5.88,"退单量":0,"质检量":11,"邀评率":11.0,"满意率":96.0,"工时利用率":99.69,"绩效得分":53.93,"排名":119},{"姓名":"卢晓倩","组别":"热线八组","新人":false,"出勤天数":2,"接起量":171,"日均接起":85.5,"一解率":94.0,"质检通过率":100.0,"质检均分":98.57,"差错量":0,"外诉量":1,"外诉率":0.005848,"事后时长":0.73,"通话时长":4.16,"退单量":0,"质检量":7,"邀评率":18.0,"满意率":97.0,"工时利用率":94.44,"绩效得分":53.88,"排名":120},{"姓名":"毛戈源","组别":"热线五组","新人":false,"出勤天数":3,"接起量":229,"日均接起":76.33,"一解率":93.0,"质检通过率":88.89,"质检均分":95.56,"差错量":1,"外诉量":2,"外诉率":0.008734,"事后时长":0.08,"通话时长":4.91,"退单量":0,"质检量":9,"邀评率":19.0,"满意率":93.0,"工时利用率":97.74,"绩效得分":53.79,"排名":121},{"姓名":"鲁玉红","组别":"热线八组","新人":false,"出勤天数":4,"接起量":289,"日均接起":72.25,"一解率":92.0,"质检通过率":75.0,"质检均分":93.75,"差错量":1,"外诉量":2,"外诉率":0.00692,"事后时长":0.06,"通话时长":5.07,"退单量":2,"质检量":4,"邀评率":17.0,"满意率":1.0,"工时利用率":98.96,"绩效得分":53.75,"排名":122},{"姓名":"胡鑫","组别":"热线三组","新人":false,"出勤天数":2,"接起量":108,"日均接起":54.0,"一解率":95.0,"质检通过率":33.33,"质检均分":86.67,"差错量":2,"外诉量":1,"外诉率":0.009259,"事后时长":0.34,"通话时长":5.49,"退单量":0,"质检量":3,"邀评率":9.0,"满意率":1.0,"工时利用率":95.6,"绩效得分":53.67,"排名":123},{"姓名":"高行","组别":"热线七组","新人":false,"出勤天数":3,"接起量":201,"日均接起":67.0,"一解率":93.0,"质检通过率":93.33,"质检均分":98.67,"差错量":1,"外诉量":2,"外诉率":0.00995,"事后时长":0.21,"通话时长":5.28,"退单量":0,"质检量":15,"邀评率":8.0,"满意率":94.0,"工时利用率":97.84,"绩效得分":53.66,"排名":124},{"姓名":"马倩倩","组别":"热线三组","新人":false,"出勤天数":2,"接起量":139,"日均接起":69.5,"一解率":91.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":2,"外诉率":0.014388,"事后时长":0.05,"通话时长":4.24,"退单量":1,"质检量":10,"邀评率":28.0,"满意率":97.0,"工时利用率":96.86,"绩效得分":53.51,"排名":125},{"姓名":"李思琪","组别":"热线三组","新人":false,"出勤天数":1,"接起量":86,"日均接起":86.0,"一解率":91.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.011628,"事后时长":0.28,"通话时长":4.27,"退单量":1,"质检量":4,"邀评率":12.0,"满意率":1.0,"工时利用率":96.2,"绩效得分":53.44,"排名":126},{"姓名":"张明","组别":"热线三组","新人":false,"出勤天数":2,"接起量":134,"日均接起":67.0,"一解率":91.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":0,"外诉率":0.0,"事后时长":0.4,"通话时长":4.73,"退单量":0,"质检量":9,"邀评率":13.0,"满意率":1.0,"工时利用率":98.18,"绩效得分":53.41,"排名":127},{"姓名":"马向科","组别":"热线四组","新人":false,"出勤天数":4,"接起量":365,"日均接起":91.25,"一解率":91.0,"质检通过率":100.0,"质检均分":98.0,"差错量":0,"外诉量":4,"外诉率":0.010959,"事后时长":0.25,"通话时长":3.4,"退单量":1,"质检量":10,"邀评率":18.0,"满意率":97.0,"工时利用率":94.42,"绩效得分":52.94,"排名":128},{"姓名":"席龙","组别":"热线三组","新人":false,"出勤天数":2,"接起量":131,"日均接起":65.5,"一解率":94.0,"质检通过率":88.89,"质检均分":97.78,"差错量":1,"外诉量":3,"外诉率":0.022901,"事后时长":0.3,"通话时长":4.24,"退单量":2,"质检量":9,"邀评率":10.0,"满意率":1.0,"工时利用率":95.37,"绩效得分":52.54,"排名":129},{"姓名":"郭旭蕊","组别":"热线五组","新人":false,"出勤天数":2,"接起量":155,"日均接起":77.5,"一解率":89.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.006452,"事后时长":0.41,"通话时长":4.61,"退单量":0,"质检量":9,"邀评率":6.0,"满意率":89.0,"工时利用率":97.61,"绩效得分":52.1,"排名":130},{"姓名":"叶之清","组别":"热线六组","新人":false,"出勤天数":1,"接起量":71,"日均接起":71.0,"一解率":89.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":3,"外诉率":0.042254,"事后时长":0.15,"通话时长":3.67,"退单量":0,"质检量":7,"邀评率":8.0,"满意率":1.0,"工时利用率":93.98,"绩效得分":51.33,"排名":131},{"姓名":"王建磊","组别":"热线一组","新人":false,"出勤天数":3,"接起量":215,"日均接起":71.67,"一解率":92.0,"质检通过率":100.0,"质检均分":99.64,"差错量":0,"外诉量":3,"外诉率":0.013953,"事后时长":0.4,"通话时长":4.18,"退单量":1,"质检量":14,"邀评率":11.0,"满意率":96.0,"工时利用率":95.47,"绩效得分":50.68,"排名":132},{"姓名":"李静","组别":"热线三组","新人":false,"出勤天数":2,"接起量":139,"日均接起":69.5,"一解率":94.0,"质检通过率":90.0,"质检均分":98.0,"差错量":1,"外诉量":1,"外诉率":0.007194,"事后时长":0.34,"通话时长":4.24,"退单量":1,"质检量":10,"邀评率":12.0,"满意率":94.0,"工时利用率":99.52,"绩效得分":50.6,"排名":133},{"姓名":"张琪","组别":"热线三组","新人":false,"出勤天数":2,"接起量":129,"日均接起":64.5,"一解率":88.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":2,"外诉率":0.015504,"事后时长":0.31,"通话时长":4.2,"退单量":0,"质检量":12,"邀评率":10.0,"满意率":1.0,"工时利用率":94.13,"绩效得分":49.58,"排名":134},{"姓名":"李彦霏","组别":"热线二组","新人":false,"出勤天数":2,"接起量":138,"日均接起":69.0,"一解率":93.0,"质检通过率":85.71,"质检均分":97.14,"差错量":1,"外诉量":2,"外诉率":0.014493,"事后时长":0.13,"通话时长":6.08,"退单量":1,"质检量":7,"邀评率":7.0,"满意率":1.0,"工时利用率":97.71,"绩效得分":48.27,"排名":135},{"姓名":"曾其发","组别":"热线四组","新人":false,"出勤天数":3,"接起量":243,"日均接起":81.0,"一解率":91.0,"质检通过率":100.0,"质检均分":99.44,"差错量":0,"外诉量":4,"外诉率":0.016461,"事后时长":0.42,"通话时长":3.8,"退单量":0,"质检量":9,"邀评率":13.0,"满意率":94.0,"工时利用率":94.43,"绩效得分":48.07,"排名":136},{"姓名":"张双娜","组别":"热线一组","新人":false,"出勤天数":4,"接起量":269,"日均接起":67.25,"一解率":91.0,"质检通过率":66.67,"质检均分":93.33,"差错量":1,"外诉量":0,"外诉率":0.0,"事后时长":0.3,"通话时长":5.84,"退单量":2,"质检量":3,"邀评率":4.0,"满意率":1.0,"工时利用率":99.0,"绩效得分":47.82,"排名":137},{"姓名":"王嘉乐","组别":"热线五组","新人":true,"出勤天数":4,"接起量":169,"日均接起":42.25,"一解率":92.0,"质检通过率":87.5,"质检均分":96.88,"差错量":6,"外诉量":0,"外诉率":0.0,"事后时长":1.5,"通话时长":5.94,"退单量":0,"质检量":48,"邀评率":14.0,"满意率":1.0,"工时利用率":94.69,"绩效得分":47.13,"排名":138},{"姓名":"王兰兰","组别":"热线六组","新人":false,"出勤天数":2,"接起量":146,"日均接起":73.0,"一解率":92.0,"质检通过率":90.91,"质检均分":98.18,"差错量":1,"外诉量":0,"外诉率":0.0,"事后时长":0.25,"通话时长":3.83,"退单量":0,"质检量":11,"邀评率":13.0,"满意率":1.0,"工时利用率":98.94,"绩效得分":46.9,"排名":139},{"姓名":"刘鑫","组别":"热线四组","新人":false,"出勤天数":4,"接起量":295,"日均接起":73.75,"一解率":91.0,"质检通过率":90.91,"质检均分":97.27,"差错量":1,"外诉量":1,"外诉率":0.00339,"事后时长":0.3,"通话时长":4.38,"退单量":0,"质检量":11,"邀评率":17.0,"满意率":94.0,"工时利用率":94.02,"绩效得分":46.07,"排名":140},{"姓名":"何海艳","组别":"热线三组","新人":true,"出勤天数":4,"接起量":168,"日均接起":42.0,"一解率":91.0,"质检通过率":88.89,"质检均分":97.78,"差错量":6,"外诉量":0,"外诉率":0.0,"事后时长":1.84,"通话时长":5.45,"退单量":0,"质检量":54,"邀评率":8.0,"满意率":1.0,"工时利用率":91.72,"绩效得分":45.86,"排名":141},{"姓名":"周培","组别":"热线七组","新人":true,"出勤天数":4,"接起量":164,"日均接起":41.0,"一解率":91.0,"质检通过率":90.38,"质检均分":97.79,"差错量":5,"外诉量":0,"外诉率":0.0,"事后时长":1.53,"通话时长":6.59,"退单量":0,"质检量":52,"邀评率":9.0,"满意率":1.0,"工时利用率":95.03,"绩效得分":45.38,"排名":142},{"姓名":"穆琪","组别":"热线三组","新人":true,"出勤天数":4,"接起量":151,"日均接起":37.75,"一解率":93.0,"质检通过率":87.8,"质检均分":96.59,"差错量":5,"外诉量":0,"外诉率":0.0,"事后时长":2.4,"通话时长":6.25,"退单量":1,"质检量":41,"邀评率":17.0,"满意率":96.0,"工时利用率":92.81,"绩效得分":44.64,"排名":143},{"姓名":"王彩婷","组别":"热线七组","新人":false,"出勤天数":3,"接起量":214,"日均接起":71.33,"一解率":89.0,"质检通过率":100.0,"质检均分":99.55,"差错量":0,"外诉量":0,"外诉率":0.0,"事后时长":0.34,"通话时长":4.46,"退单量":0,"质检量":11,"邀评率":6.0,"满意率":92.0,"工时利用率":96.46,"绩效得分":43.42,"排名":144},{"姓名":"汤吉顺","组别":"热线四组","新人":false,"出勤天数":3,"接起量":220,"日均接起":73.33,"一解率":89.0,"质检通过率":87.5,"质检均分":97.5,"差错量":1,"外诉量":4,"外诉率":0.018182,"事后时长":0.78,"通话时长":4.46,"退单量":0,"质检量":8,"邀评率":25.0,"满意率":1.0,"工时利用率":96.08,"绩效得分":42.49,"排名":145},{"姓名":"李佳欢","组别":"热线四组","新人":false,"出勤天数":1,"接起量":11,"日均接起":11.0,"一解率":64.0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":1,"外诉率":0.090909,"事后时长":0.41,"通话时长":3.96,"退单量":0,"质检量":9,"邀评率":18.0,"满意率":1.0,"工时利用率":91.67,"绩效得分":41.65,"排名":146},{"姓名":"张思婕","组别":"热线八组","新人":true,"出勤天数":4,"接起量":170,"日均接起":42.5,"一解率":90.0,"质检通过率":86.79,"质检均分":96.89,"差错量":7,"外诉量":1,"外诉率":0.005882,"事后时长":0.62,"通话时长":6.27,"退单量":0,"质检量":53,"邀评率":9.0,"满意率":1.0,"工时利用率":88.94,"绩效得分":40.9,"排名":147},{"姓名":"黄晓纯","组别":"热线四组","新人":true,"出勤天数":4,"接起量":156,"日均接起":39.0,"一解率":89.0,"质检通过率":94.74,"质检均分":98.16,"差错量":2,"外诉量":0,"外诉率":0.0,"事后时长":1.97,"通话时长":5.69,"退单量":1,"质检量":38,"邀评率":16.0,"满意率":1.0,"工时利用率":90.23,"绩效得分":40.76,"排名":148},{"姓名":"赵晓莹","组别":"热线五组","新人":false,"出勤天数":3,"接起量":218,"日均接起":72.67,"一解率":90.0,"质检通过率":83.33,"质检均分":96.25,"差错量":2,"外诉量":2,"外诉率":0.009174,"事后时长":0.25,"通话时长":4.51,"退单量":0,"质检量":12,"邀评率":17.0,"满意率":97.0,"工时利用率":96.38,"绩效得分":40.6,"排名":149},{"姓名":"卜浩","组别":"热线五组","新人":false,"出勤天数":2,"接起量":142,"日均接起":71.0,"一解率":92.0,"质检通过率":84.62,"质检均分":90.77,"差错量":2,"外诉量":1,"外诉率":0.007042,"事后时长":0.08,"通话时长":3.94,"退单量":0,"质检量":13,"邀评率":13.0,"满意率":1.0,"工时利用率":94.32,"绩效得分":40.57,"排名":150},{"姓名":"刘浩","组别":"热线三组","新人":false,"出勤天数":2,"接起量":129,"日均接起":64.5,"一解率":90.0,"质检通过率":83.33,"质检均分":96.67,"差错量":1,"外诉量":2,"外诉率":0.015504,"事后时长":0.11,"通话时长":4.75,"退单量":0,"质检量":6,"邀评率":19.0,"满意率":1.0,"工时利用率":95.85,"绩效得分":36.07,"排名":151},{"姓名":"崔珂","组别":"热线三组","新人":false,"出勤天数":2,"接起量":147,"日均接起":73.5,"一解率":90.0,"质检通过率":91.67,"质检均分":98.33,"差错量":1,"外诉量":1,"外诉率":0.006803,"事后时长":0.26,"通话时长":3.87,"退单量":0,"质检量":12,"邀评率":6.0,"满意率":78.0,"工时利用率":97.41,"绩效得分":33.8,"排名":152},{"姓名":"王佳睿","组别":"热线六组","新人":false,"出勤天数":2,"接起量":114,"日均接起":57.0,"一解率":89.0,"质检通过率":66.67,"质检均分":93.33,"差错量":1,"外诉量":1,"外诉率":0.008772,"事后时长":0.32,"通话时长":4.95,"退单量":0,"质检量":3,"邀评率":21.0,"满意率":1.0,"工时利用率":94.17,"绩效得分":31.69,"排名":153},{"姓名":"何遐威","组别":"热线六组","新人":false,"出勤天数":2,"接起量":125,"日均接起":62.5,"一解率":91.0,"质检通过率":87.5,"质检均分":97.5,"差错量":1,"外诉量":3,"外诉率":0.024,"事后时长":0.61,"通话时长":4.51,"退单量":0,"质检量":8,"邀评率":13.0,"满意率":94.0,"工时利用率":99.75,"绩效得分":30.07,"排名":154},{"姓名":"李德田","组别":"热线六组","新人":true,"出勤天数":2,"接起量":64,"日均接起":32.0,"一解率":90.0,"质检通过率":73.68,"质检均分":93.95,"差错量":5,"外诉量":0,"外诉率":0.0,"事后时长":2.28,"通话时长":6.33,"退单量":0,"质检量":19,"邀评率":9.0,"满意率":83.0,"工时利用率":84.87,"绩效得分":25.36,"排名":155},{"姓名":"张开元","组别":"热线三组","新人":false,"出勤天数":0,"接起量":0,"日均接起":0,"一解率":0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":0,"外诉率":0,"事后时长":0.0,"通话时长":0,"退单量":0,"质检量":6,"邀评率":0,"满意率":0,"工时利用率":0,"绩效得分":0.0,"排名":156},{"姓名":"侯锐敏","组别":"热线五组","新人":false,"出勤天数":0,"接起量":0,"日均接起":0,"一解率":0,"质检通过率":0.0,"质检均分":80.0,"差错量":1,"外诉量":1,"外诉率":0,"事后时长":0.0,"通话时长":0,"退单量":0,"质检量":1,"邀评率":0,"满意率":0,"工时利用率":0,"绩效得分":0.0,"排名":157},{"姓名":"韩梦晓","组别":"热线四组","新人":false,"出勤天数":0,"接起量":0,"日均接起":0,"一解率":0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":2,"外诉率":0,"事后时长":0.0,"通话时长":0,"退单量":0,"质检量":5,"邀评率":0,"满意率":0,"工时利用率":0,"绩效得分":0.0,"排名":158},{"姓名":"万千红","组别":"热线八组","新人":false,"出勤天数":0,"接起量":0,"日均接起":0,"一解率":0,"质检通过率":100.0,"质检均分":100.0,"差错量":0,"外诉量":2,"外诉率":0,"事后时长":0.0,"通话时长":0,"退单量":0,"质检量":6,"邀评率":0,"满意率":0,"工时利用率":0,"绩效得分":0.0,"排名":159},{"姓名":"杨雪","组别":"热线四组","新人":false,"出勤天数":0,"接起量":0,"日均接起":0,"一解率":0,"质检通过率":66.67,"质检均分":93.33,"差错量":1,"外诉量":1,"外诉率":0,"事后时长":0.0,"通话时长":0,"退单量":0,"质检量":3,"邀评率":0,"满意率":0,"工时利用率":0,"绩效得分":0.0,"排名":160}],"zoneA":{"label":"区域A(1-4组)","人数_含新人":81,"接起量_含新人":17679,"出勤天数_含新人":245,"日均接起_含新人":72.16,"一解率_含新人":92.77,"质检通过率_含新人":96.7193,"质检均分_含新人":99.1,"差错量_含新人":34,"外诉量_含新人":132,"外诉率_含新人":0.007466485660953674,"通话时长_含新人":4.51,"事后时长_含新人":0.34,"退单量_含新人":33,"质检量_含新人":870,"邀评率_含新人":14.78,"满意率_含新人":97.78,"工时利用率_含新人":95.6247,"人数_剔除新人":78,"接起量_剔除新人":17204,"出勤天数_剔除新人":233,"日均接起_剔除新人":73.84,"一解率_剔除新人":92.82,"质检通过率_剔除新人":96.892,"质检均分_剔除新人":99.29,"差错量_剔除新人":21,"外诉量_剔除新人":132,"外诉率_剔除新人":0.0076726342710997444,"通话时长_剔除新人":4.48,"事后时长_剔除新人":0.29,"退单量_剔除新人":31,"质检量_剔除新人":737,"邀评率_剔除新人":14.82,"满意率_剔除新人":97.75,"工时利用率_剔除新人":95.8645},"zoneB":{"label":"区域B(5-8组)","人数_含新人":79,"接起量_含新人":15732,"出勤天数_含新人":221,"日均接起_含新人":71.19,"一解率_含新人":93.6,"质检通过率_含新人":93.2147,"质检均分_含新人":98.34,"差错量_含新人":57,"外诉量_含新人":142,"外诉率_含新人":0.009026188660055936,"通话时长_含新人":4.58,"事后时长_含新人":0.37,"退单量_含新人":27,"质检量_含新人":837,"邀评率_含新人":14.28,"满意率_含新人":97.75,"工时利用率_含新人":95.4708,"人数_剔除新人":75,"接起量_剔除新人":15165,"出勤天数_剔除新人":207,"日均接起_剔除新人":73.26,"一解率_剔除新人":93.7,"质检通过率_剔除新人":93.4635,"质检均分_剔除新人":98.73,"差错量_剔除新人":34,"外诉量_剔除新人":141,"外诉率_剔除新人":0.009297725024727992,"通话时长_剔除新人":4.51,"事后时长_剔除新人":0.34,"退单量_剔除新人":27,"质检量_剔除新人":665,"邀评率_剔除新人":14.42,"满意率_剔除新人":97.74,"工时利用率_剔除新人":95.7368}};;
+
+var WL=['W1','W2','W3','W4','W5'];
+var WLF=['第1周(1-3日)','第2周(8-14日)','第3周(15-21日)','第4周(22-28日)','第5周(29-30日)'];
+var WD=[3,7,7,7,7];
+var GC=['#00d4ff','#b388ff','#00e676','#ffa726','#ff6b9d','#448aff','#ff4757','#ffd740'];
+var G=['热线一组','热线二组','热线三组','热线四组','热线五组','热线六组','热线七组','热线八组'];
+var GCLR={};
+G.forEach(function(g,i){GCLR[g]=GC[i]});
+var ex=false;
+var S=function(o,k){return ex?o[k+'_剔除新人']:o[k+'_含新人']};
+var P=function(v,d){d=d==null?2:d;return(v==null?0:v).toFixed(d)};
+var N=function(v){return v==null?'0':v.toLocaleString()};
+var DH=function(o,k){
+  var a=o[k+'_含新人'],b=o[k+'_剔除新人'];
+  if(a==null&&b==null)return'';
+  var d=b-a;if(d===0)return'';
+  var c=d>0?'var(--green)':'var(--red)';
+  var s=d>0?'+':'';
+  var dp=Math.abs(d)>=1?0:Math.abs(d)>=0.01?2:4;
+  return '<div class="df" style="color:'+c+'">'+s+P(d,dp)+'</div>';
+};
+var CLS=function(v,type){
+  if(type==='qc')return v<94?'vr':v>96?'vg':'';
+  if(type==='ext')return v>0.03?'vr':'';
+  if(type==='sat')return v<95?'vr':v>=98?'vg':'';
+  if(type==='wr')return v<70?'vr':v>=85?'vg':'';
+  return'';
+};
+
+function refresh(){ex=document.getElementById('tg').checked;renderAll()}
+function swTab(i){document.querySelectorAll('.tab').forEach(function(t,j){t.classList.toggle('active',j===i)});document.querySelectorAll('.tp').forEach(function(p,j){p.classList.toggle('active',j===i)});if(i===4){try{rQcKpi();rQcWeekTrend();rQcSceneBar();rQcHeatmap();renderQcDetail();}catch(e){}}}
+function renderAll(){rKPI();rGrp();rZone();rWeek();rGrpWeek();rAlert();var nc=((D.overall.人数_含新人||0)-(D.overall.人数_剔除新人||0));document.getElementById('nb').textContent='新人 '+nc+' 人'}
+
+function rKPI(){
+  var o=D.overall,items=[
+    {l:'接起量',k:'接起量',f:'n',c:'k1'},
+    {l:'人数',k:'人数',f:'n',c:'k2'},
+    {l:'日均接起<em class="info-btn">?<span class="info-tip">日均接起量 = 总接起量 ÷ 总出勤天数，出勤天数取自坐席绩效表</span></em>',k:'日均接起',f:'p1',c:''},
+    {l:'质检通过率<em class="info-btn">?<span class="info-tip">质检评分 > 80分（不含80）的评分数 ÷ 总质检量 × 100%</span></em>',k:'质检通过率',f:'qc',c:''},
+    {l:'质检均分',k:'质检均分',f:'p',c:''},
+    {l:'一解率<em class="info-btn">?<span class="info-tip">一解率 = (1 - 重复进线小结单ID去重数 ÷ 签入表接通量) × 100%</span></em>',k:'一解率',f:'p%',c:'k3'},
+    {l:'外诉量',k:'外诉量',f:'n',c:'k5'},
+    {l:'外诉率<em class="info-btn">?<span class="info-tip">外诉率 = 外诉量 ÷ 接起量 × 100%</span></em>',k:'外诉率',f:'e4',c:''},
+    {l:'差错量',k:'差错量',f:'n',c:''},
+    {l:'平均通话时长',k:'通话时长',f:'pmin',c:'k7'},
+    {l:'平均事后时长',k:'事后时长',f:'pmin',c:''},
+    {l:'满意率<em class="info-btn">?<span class="info-tip">满意率 = 满意评价数 ÷ 总评价数 × 100%<br>≥98% 标绿（优秀）<br>&lt;95% 标红（异常）</span></em>',k:'满意率',f:'sat',c:''},
+    {l:'邀评率<em class="info-btn">?<span class="info-tip">邀评率 = 邀评数 ÷ 接通量 × 100%</span></em>',k:'邀评率',f:'p%',c:''},
+    {l:'工时利用率<em class="info-btn">?<span class="info-tip">工时利用率 = 工作时长 ÷ 登录总时长 × 100%<br>≥85% 标绿（优秀，工作饱和）<br>&lt;70% 标红（异常，效率偏低）</span></em>',k:'工时利用率',f:'wr',c:'k8'},
+    {l:'退单量',k:'退单量',f:'n',c:''}
+  ];
+  var h='';
+  items.forEach(function(it){
+    var v=S(o,it.k);
+    var vs,cc=it.c;
+    if(it.f==='n')vs=N(v);
+    else if(it.f==='p1')vs=P(v,1);
+    else if(it.f==='qc'){vs=P(v)+'%';cc=v>=96?'k3':v<94?'k5':'k4'}
+    else if(it.f==='e4'){vs=P(v*100,2)+'%';cc=v>0.03?'k5':''}
+    else if(it.f==='pmin')vs=P(v)+'min';
+    else if(it.f==='sat'){vs=P(v)+'%';cc=v>=98?'k3':v<95?'k5':'k4'}
+    else if(it.f==='wr'){vs=P(v)+'%';cc=v>=85?'k3':v<70?'k5':'k8'}
+    else if(it.f==='p')vs=P(v);
+    else vs=P(v)+'%';
+    h+='<div class="kpi '+cc+'"><div class="lb">'+it.l+'</div><div class="vl">'+vs+'</div>'+DH(o,it.k)+'</div>';
+  });
+  document.getElementById('kpi').innerHTML=h;
+}
+
+var sortCol=-1,sortAsc=true;
+function rGrp(){
+  var cols=['组别','人数','接起量','日均接起','一解率','质检通过率','质检量','质检均分','差错量','外诉量','外诉率','平均通话时长','平均事后时长','退单量','满意率','邀评率','工时利用率'];
+  var keys=['人数','接起量','日均接起','一解率','质检通过率','质检量','质检均分','差错量','外诉量','外诉率','通话时长','事后时长','退单量','满意率','邀评率','工时利用率'];
+  var types=['n','n','p1','p%','qc','n','p','n','n','e4','pmin','pmin','n','sat','p%','wr'];
+  var thead='<tr><th onclick="sortBy(-1)">组别</th>';
+  keys.forEach(function(k,i){
+    var cls=sortCol===i?'sorted':'';
+    var arr=sortCol===i?(sortAsc?'▲':'▼'):'⇅';
+    thead+='<th class="'+cls+'" onclick="sortBy('+i+')">'+cols[i+1]+'<span class="arr">'+arr+'</span></th>';
+  });
+  thead+='</tr>';
+  var rows=[];
+  D.groups.forEach(function(g){var vals=keys.map(function(k){return S(g,k)});rows.push({g:g,vals:vals})});
+  if(sortCol>=0){rows.sort(function(a,b){var d=a.vals[sortCol]-b.vals[sortCol];return sortAsc?d:-d})}
+  var tbody='';
+  rows.forEach(function(r){
+    var dot='<span class="dot" style="background:'+GCLR[r.g.组别]+'"></span>';
+    var tr='<tr><td style="cursor:pointer;color:var(--accent)" onclick="showGrpDetail(\''+r.g.组别+'\')">'+dot+r.g.组别+'</td>';
+    r.vals.forEach(function(v,i){
+      var t=types[i],vs='',cls='';
+      if(t==='n')vs=N(v);
+      else if(t==='p1')vs=P(v,1);
+      else if(t==='qc'){vs=P(v)+'%';cls=CLS(v,'qc')}
+      else if(t==='p')vs=P(v);
+      else if(t==='e4'){vs=P(v,2)+'%';cls=CLS(v,'ext')}
+      else if(t==='pmin')vs=P(v)+'min';
+      else if(t==='sat'){vs=P(v)+'%';cls=CLS(v,'sat')}
+      else if(t==='wr'){vs=P(v)+'%';cls=CLS(v,'wr')}
+      else vs=P(v)+'%';
+      tr+='<td class="'+cls+'">'+vs+'</td>';
+    });
+    tbody+=tr+'</tr>';
+  });
+  var o=D.overall;
+  var orow='<td><span class="va">整体</span></td>';
+  keys.forEach(function(k,i){
+    var v=S(o,k),t=types[i],vs='',cls='';
+    if(t==='n')vs=N(v);else if(t==='p1')vs=P(v,1);
+    else if(t==='qc')vs=P(v)+'%';else if(t==='p')vs=P(v);
+    else if(t==='e4')vs=P(v*100,2)+'%';
+    else if(t==='pmin')vs=P(v)+'min';
+    else if(t==='sat'){vs=P(v)+'%';cls=CLS(v,'sat')}
+    else if(t==='wr'){vs=P(v)+'%';cls=CLS(v,'wr')}
+    else vs=P(v)+'%';
+    orow+='<td class="'+cls+'">'+vs+'</td>';
+  });
+  tbody+='<tr style="font-weight:700;background:rgba(0,212,255,.06)">'+orow+'</tr>';
+  document.getElementById('gt').innerHTML='<thead>'+thead+'</thead><tbody>'+tbody+'</tbody>';
+  drawSortedBar('cD','日均接起');drawSortedBar('cQ','质检通过率');drawSortedBar('cF','差错量');drawSortedBar('cY','一解率');drawSortedBar('cW','工时利用率');drawSortedBar('cE','外诉率');drawSortedBar('cR','退单量');drawSortedBar('cS','满意率');
+}
+function drawSortedBar(id,key){
+  var sorted=D.groups.slice().sort(function(a,b){return S(b,key)-S(a,key)});
+  drawBar(id,sorted.map(function(g){return S(g,key)}),sorted.map(function(g){return g.组别.replace('热线','')}),sorted.map(function(g){return GCLR[g.组别]}));
+}
+function sortBy(i){if(sortCol===i)sortAsc=!sortAsc;else{sortCol=i;sortAsc=true}rGrp()}
+
+function rZone(){
+  var zones=[D.zoneA,D.zoneB],zC=[GC[0],GC[4]],total=S(D.overall,'接起量');
+  var h='';
+  zones.forEach(function(z,i){
+    var pc=(S(z,'接起量')/total*100).toFixed(1);
+    h+='<div class="zc"><h3>'+z.label+' <span>'+S(z,'人数')+'人 | 接起'+pc+'%</span></h3>';
+    h+='<div class="pb"><div class="fl" style="width:'+pc+'%;background:'+zC[i]+'"></div></div><div class="zk">';
+    [['接起量','n'],['人数','n'],['日均接起','p1'],['出勤天数','n'],['质检通过率','p%'],['质检均分','p'],['一解率','p%'],['外诉量','n'],['外诉率','p4%'],['差错量','n'],['通话时长','pmin'],['事后时长','pmin'],['退单量','n'],['满意率','sat'],['邀评率','p%'],['工时利用率','wr']].forEach(function(k){
+      var v=S(z,k[0]),vs='',st='';
+      if(k[1]==='n')vs=N(v);
+      else if(k[1]==='p1')vs=P(v,1);
+      else if(k[1]==='sat'){vs=P(v)+'%';st='color:'+(v>=98?'var(--green)':v<95?'var(--red)':'var(--accent)')}
+      else if(k[1]==='wr'){vs=P(v)+'%';st='color:'+(v>=85?'var(--green)':v<70?'var(--red)':'var(--accent)')}
+      else if(k[1]==='p%')vs=P(v)+'%';
+      else if(k[1]==='p4%')vs=P(v*100,2)+'%';
+      else if(k[1]==='pmin')vs=P(v)+'min';
+      else vs=P(v);
+      if(k[0]==='质检通过率')st='color:'+(v>=96?'var(--green)':v<94?'var(--red)':'var(--accent)');
+      if(k[0]==='外诉率'&&S(z,'外诉率')>0.03)st='color:var(--red)';
+      h+='<div class="zki"><div class="zl">'+k[0]+'</div><div class="zv" style="'+st+'">'+vs+'</div>'+DH(z,k[0])+'</div>';
+    });
+    h+='</div></div>';
+  });
+  document.getElementById('zg').innerHTML=h;
+  var metrics=[['日均接起量','日均接起',1,''],['质检通过率','质检通过率',2,'%'],['质检量','质检量',0,''],['质检均分','质检均分',2,''],['一解率','一解率',2,'%'],['外诉量','外诉量',0,''],['外诉率','外诉率',2,'%'],['差错量','差错量',0,''],['退单量','退单量',0,''],['平均通话时长','通话时长',2,'min'],['平均事后时长','事后时长',2,'min'],['满意率','满意率',2,'%'],['邀评率','邀评率',2,'%'],['工时利用率','工时利用率',2,'%']];
+  var th='<tr><th>指标</th><th>'+D.zoneA.label+'</th><th>'+D.zoneB.label+'</th><th>差异</th></tr>',tb='';
+  metrics.forEach(function(m){
+    var va=S(D.zoneA,m[1]),vb=S(D.zoneB,m[1]),d=vb-va;
+    var cls='';
+    if(m[1]==='质检通过率')cls=d>0?'vg':'vr';
+    else if(m[1]==='外诉率'){cls=d<0?'vg':'vr';d=vb-va}
+    else if(m[1]==='满意率')cls=CLS(va,'sat');
+    else if(m[1]==='工时利用率')cls=CLS(va,'wr');
+    var fmtA,fmtB;if(m[1]==='外诉率'){fmtA=P(va*100,m[2])+m[3];fmtB=P(vb*100,m[2])+m[3]}else{fmtA=P(va,m[2])+m[3];fmtB=P(vb,m[2])+m[3]}
+    if(m[1]==='满意率'||m[1]==='工时利用率'){fmtA=P(va)+'%';fmtB=P(vb)+'%';}
+    tb+='<tr><td>'+m[0]+'</td><td style="'+(cls?'color:var(--'+(cls==='vg'?'green':'red')+')':'')+'">'+fmtA+'</td><td>'+fmtB+'</td><td class="'+cls+'">'+(d>0?'+':'')+(m[1]==='外诉率'?P(d*100,m[2]):P(d,m[2]))+'%</td></tr>';
+  });
+  document.getElementById('ct').innerHTML='<thead>'+th+'</thead><tbody>'+tb+'</tbody>';
+}
+
+function rWeek(){
+  var h='';
+  D.weeks.forEach(function(w,i){var wc=S(w,'接起量'),wAtt=S(w,'出勤天数'),da=wAtt>0?P(wc/wAtt):0,hk='<div class="kpi k1"><div class="lb">'+WLF[i]+'（'+WD[i]+'天）</div><div class="vl">'+N(wc)+'</div><div class="df" style="color:var(--text2)">人均日均'+da+' | 质检'+P(S(w,'质检通过率'))+'%</div></div>';h+=hk;});
+  document.getElementById('wk').innerHTML=h;
+  drawLine('wc',[D.zoneWeeks.zoneA.map(function(w,i){var wa=S(w,'出勤天数');return wa>0?S(w,'接起量')/wa:0}),D.zoneWeeks.zoneB.map(function(w,i){var wa=S(w,'出勤天数');return wa>0?S(w,'接起量')/wa:0})],[D.zoneA.label,D.zoneB.label],[GC[0],GC[4]],WL);
+  drawLine('wq',[D.zoneWeeks.zoneA.map(function(w){return S(w,'质检通过率')}),D.zoneWeeks.zoneB.map(function(w){return S(w,'质检通过率')})],[D.zoneA.label,D.zoneB.label],[GC[0],GC[4]],WL);
+  drawLine('wr',[D.zoneWeeks.zoneA.map(function(w){return S(w,'一解率')}),D.zoneWeeks.zoneB.map(function(w){return S(w,'一解率')})],[D.zoneA.label,D.zoneB.label],[GC[0],GC[4]],WL);
+  drawLine('wa',[D.zoneWeeks.zoneA.map(function(w){return S(w,'事后时长')}),D.zoneWeeks.zoneB.map(function(w){return S(w,'事后时长')})],[D.zoneA.label,D.zoneB.label],[GC[0],GC[4]],WL);
+  var allInc=[],allExc=[];
+  D.weeks.forEach(function(w){allInc.push(w.质检通过率_含新人);allExc.push(w.质检通过率_剔除新人)});
+  drawLine('gw0',[allInc,allExc],['含新人','剔除新人'],['#00d4ff','#00e676'],WL);
+  drawLine('gwA',G.slice(0,4).map(function(g){return D.weeks.map(function(w){return w.各组[g]?S(w.各组[g],'质检通过率'):null})}),G.slice(0,4).map(function(g){return g.replace('热线','')}),GC.slice(0,4),WL);
+  drawLine('gwB',G.slice(4).map(function(g){return D.weeks.map(function(w){return w.各组[g]?S(w.各组[g],'质检通过率'):null})}),G.slice(4).map(function(g){return g.replace('热线','')}),GC.slice(4),WL);
+}
+
+function rGrpWeekTable(elId,key,fmt,clsKey){
+  var h='<tr><th>组别</th>';
+  for(var i=0;i<5;i++){h+='<th>'+WL[i]+'('+WD[i]+'天)</th>'}
+  h+='<th>月度</th></tr>';
+  var tb='';
+  D.groups.forEach(function(g){
+    var gc=S(g,key);
+    var dot='<span class="dot" style="background:'+GCLR[g.组别]+'"></span>';
+    tb+='<tr><td style="cursor:pointer;color:var(--accent);font-size:11px" onclick="showGrpDetail(\''+g.组别+'\')">'+dot+g.组别.replace('热线','')+'</td>';
+    D.weeks.forEach(function(w){
+      var wg=w.各组[g.组别]||{};
+      var v=S(wg,key);
+      if(clsKey)tb+='<td class="'+CLS(v,clsKey)+'">'+(fmt==='pct'?P(v)+'%':fmt==='min'?P(v)+'min':N(v))+'</td>';
+      else tb+='<td>'+(fmt==='pct'?P(v)+'%':fmt==='min'?P(v)+'min':N(v))+'</td>';
+    });
+    if(clsKey)tb+='<td class="'+CLS(gc,clsKey)+'">'+(fmt==='pct'?P(gc)+'%':fmt==='min'?P(gc)+'min':N(gc))+'</td></tr>';
+    else tb+='<td>'+(fmt==='pct'?P(gc)+'%':fmt==='min'?P(gc)+'min':N(gc))+'</td></tr>';
+  });
+  document.getElementById(elId).innerHTML='<thead>'+h+'</thead><tbody>'+tb+'</tbody>';
+}
+function rGrpWeek(){
+  rGrpWeekTable('gwt_0','质检通过率','pct','qc');
+  rGrpWeekTable('gwt_1','一解率','pct',null);
+  // 日均接起：人均日均接起 = 周接起量 / 周实际出勤人天
+  (function(){
+    var h='<tr><th>组别</th>';
+    for(var i=0;i<5;i++){h+='<th>'+WL[i]+'('+WD[i]+'天)</th>'}
+    h+='<th>月度</th></tr>';
+    var tb='';
+    D.groups.forEach(function(g){
+      var dot='<span class="dot" style="background:'+GCLR[g.组别]+'"></span>';
+      tb+='<tr><td style="cursor:pointer;color:var(--accent);font-size:11px" onclick="showGrpDetail(\''+g.组别+'\')">'+dot+g.组别.replace('热线','')+'</td>';
+      D.weeks.forEach(function(w,wi){
+        var wg=w.各组[g.组别]||{};
+        var wc=S(wg,'接起量'),wAtt=S(wg,'出勤天数');
+        var avg=wAtt>0?P(wc/wAtt):0;
+        tb+='<td>'+avg+'</td>';
+      });
+      var mg=S(g,'日均接起');
+      tb+='<td>'+P(mg)+'</td></tr>';
+    });
+    document.getElementById('gwt_2').innerHTML='<thead>'+h+'</thead><tbody>'+tb+'</tbody>';
+  })();
+  rGrpWeekTable('gwt_3','差错量','num',null);
+  rGrpWeekTable('gwt_4','满意率','pct','sat');
+  rGrpWeekTable('gwt_5','工时利用率','pct','wr');
+  var th2='<tr><th>周</th><th>天数</th><th>接起量</th><th>日均接起</th><th>一解率</th><th>质检通过率</th><th>质检均分</th><th>差错量</th><th>外诉量</th><th>平均事后时长</th><th>退单量</th><th>满意率</th><th>邀评率</th><th>工时利用率</th></tr>',tb2='';
+  D.weeks.forEach(function(w,i){
+    var r=S(w,'质检通过率'),cls=CLS(r,'qc'),conn=S(w,'接起量'),days=WD[i];
+    var wc=S(w,'接起量'),wAtt=S(w,'出勤天数'),da=wAtt>0?wc/wAtt:0,yr=S(w,'一解率'),qm=S(w,'质检均分'),er=S(w,'差错量'),ew=S(w,'外诉量'),ht=S(w,'事后时长'),td=S(w,'退单量'),st=S(w,'满意率'),yr2=S(w,'邀评率'),wr=S(w,'工时利用率');
+    tb2+='<tr><td>'+WLF[i]+'</td><td>'+days+'</td><td>'+N(conn)+'</td><td>'+P(da)+'</td><td>'+P(yr)+'%</td><td class="'+cls+'">'+P(r)+'%</td><td>'+P(qm)+'</td><td>'+er+'</td><td>'+ew+'</td><td>'+P(ht)+'min</td><td>'+td+'</td><td class="'+CLS(st,'sat')+'">'+P(st)+'%</td><td>'+P(yr2)+'%</td><td class="'+CLS(wr,'wr')+'">'+P(wr)+'%</td></tr>';
+  });
+  document.getElementById('wt').innerHTML='<thead>'+th2+'</thead><tbody>'+tb2+'</tbody>';
+}
+
+function rAlert(){
+  var w='',g='';
+  D.groups.forEach(function(gr){
+    var r=S(gr,'质检通过率'),er=S(gr,'外诉率'),d=S(gr,'日均接起'),f=S(gr,'差错量'),ext=S(gr,'外诉量'),sat=S(gr,'满意率'),wr=S(gr,'工时利用率');
+    var qcTrend=D.weeks.map(function(wk){return wk.各组[gr.组别]?S(wk.各组[gr.组别],'质检通过率'):null});
+    var sparkQc=drawSparkline(qcTrend);
+    if(r<94)w+='<div class="ai w"><div class="spark">'+sparkQc+'</div><div>'+gr.组别+' 质检通过率 '+P(r)+'% &lt; 94%</div></div>';
+    if(r>96)g+='<div class="ai g"><div class="spark">'+sparkQc+'</div><div>'+gr.组别+' 质检通过率 '+P(r)+'% &gt; 96%</div></div>';
+    if(er>0.03)w+='<div class="ai w"><div>'+gr.组别+' 外诉率 '+P(er*100,2)+'% &gt; 0.03%</div></div>';
+    if(f>60)w+='<div class="ai w"><div>'+gr.组别+' 差错量 '+f+' &gt; 60</div></div>';
+    if(d>0&&d<70)w+='<div class="ai w"><div>'+gr.组别+' 日均接起 '+d+' &lt; 70</div></div>';
+    if(d>80)g+='<div class="ai g"><div>'+gr.组别+' 日均接起 '+d+' &gt; 80</div></div>';
+    if(ext===0&&S(gr,'接起量')>0)g+='<div class="ai g"><div>'+gr.组别+' 零外诉</div></div>';
+    if(sat<95&&sat>0)w+='<div class="ai w"><div>'+gr.组别+' 满意率 '+P(sat)+'% &lt; 95%（异常）</div></div>';
+    if(sat>=98)g+='<div class="ai g"><div>'+gr.组别+' 满意率 '+P(sat)+'% ≥ 98%（优秀）</div></div>';
+    if(wr<70&&wr>0)w+='<div class="ai w"><div>'+gr.组别+' 工时利用率 '+P(wr)+'% &lt; 70%（异常）</div></div>';
+    if(wr>=85)g+='<div class="ai g"><div>'+gr.组别+' 工时利用率 '+P(wr)+'% ≥ 85%（优秀）</div></div>';
+  });
+  document.getElementById('as').innerHTML='<div class="ac"><h3 style="color:var(--red)">异常预警</h3>'+(w||'<p style="color:var(--text2)">暂无异常</p>')+'</div><div class="ac"><h3 style="color:var(--green)">优秀表现</h3>'+(g||'<p style="color:var(--text2)">暂无</p>')+'</div>';
+}
+
+function drawSparkline(data){
+  var w=60,h=20,valid=data.filter(function(v){return v!=null});
+  if(valid.length<2)return'';
+  var mn=Math.min.apply(null,valid),mx=Math.max.apply(null,valid),rng=mx-mn||1,pts='',n=data.length;
+  data.forEach(function(v,i){if(v==null)return;var x=(i/(n-1))*w,y=h-((v-mn)/rng)*(h-2)-1;pts+=x.toFixed(1)+','+y.toFixed(1)+' '});
+  return '<svg width="'+w+'" height="'+h+'" style="display:block"><polyline points="'+pts.trim()+'" fill="none" stroke="var(--accent)" stroke-width="1.2" stroke-linejoin="round"/></svg>';
+}
+
+var modalSortCol=-1,modalSortAsc=true;
+function showGrpDetail(grpName){
+  modalGrpName=grpName;
+  document.getElementById('mt').textContent=grpName+' - 坐席明细';
+  document.getElementById('ms').value='';
+  var ps=D.persons.filter(function(p){return p.组别===grpName});
+  if(ex)ps=ps.filter(function(p){return !p.新人});
+  renderModalTable(ps);
+  document.getElementById('modal').classList.add('show');
+}
+function renderModalTable(persons){
+  var mcols2=['绩效总排名','出勤天数','接起量','日均接起','质检量','质检均分','事后时长','绩效得分','新人'];if(modalSortCol===-2){persons=persons.slice().sort(function(a,b){return modalSortAsc?a.姓名.localeCompare(b.姓名):b.姓名.localeCompare(a.姓名)})}else if(modalSortCol===mcols2.length-1){var nk='新人';persons=persons.slice().sort(function(a,b){return modalSortAsc?(a[nk]?1:0)-(b[nk]?1:0):(b[nk]?1:0)-(a[nk]?1:0)})}else if(modalSortCol>=0&&modalSortCol<mcols2.length-1){var va=a[mcols2[modalSortCol]]||0,vb=b[mcols2[modalSortCol]]||0;persons=persons.slice().sort(function(a,b){return modalSortAsc?(va-vb):(vb-va)})}
+  // 绩效总排名（基于当前新人过滤的全量排名）
+  var fp=D.persons.filter(function(p){return!(ex&&p.新人)});
+  var ranked=fp.slice().sort(function(x,y){return(y.绩效得分||0)-(x.绩效得分||0)});
+  var rankMap={};ranked.forEach(function(p,i){rankMap[p.姓名]=i+1});
+  var th='<tr><th class="'+(modalSortCol===-2?'sorted':'')+'" onclick="modalSort(-2)">姓名'+(modalSortCol===-2?(modalSortAsc?'▲':'▼'):'')+'</th><th class="'+(modalSortCol===-1?'sorted':'')+'" onclick="modalSort(-1)">绩效总排名'+(modalSortCol===-1?(modalSortAsc?'▲':'▼'):'')+'</th>';
+  var mcols=['出勤天数','接起量','日均接起','一解率','质检量','质检均分','事后时长','绩效得分'];
+  mcols.forEach(function(c,i){th+='<th class="'+(modalSortCol===i?'sorted':'')+'" onclick="modalSort('+i+')">'+c+(modalSortCol===i?(modalSortAsc?'▲':'▼'):'')+'</th>'});
+  th+='<th class="'+(modalSortCol===8?'sorted':'')+'" onclick="modalSort(8)">新人'+(modalSortCol===8?(modalSortAsc?'▲':'▼'):'')+'</th></tr>';
+  var tb='';
+  persons.forEach(function(p){
+    var rk=rankMap[p.姓名]||'-';
+    var rkCls=rk!=='-'&&rk<=50?'vg':rk!=='-'&&rk>=150?'vr':'';
+    var daily=p.出勤天数>0?(p.接起量/p.出勤天数).toFixed(1):'0';
+    tb+='<tr><td>'+p.姓名+'</td><td class="va '+rkCls+'">'+rk+'</td><td>'+p.出勤天数+'</td><td>'+N(p.接起量)+'</td><td>'+daily+'</td><td>'+P(p.一解率)+'%</td><td>'+Math.round(p.质检量)+'</td><td>'+P(p.质检均分)+'</td><td>'+P(p.事后时长)+'min</td><td>'+P(p.绩效得分,2)+'</td><td '+(p.新人?'class="vy"':'')+'>'+(p.新人?'新人':'')+'</td></tr>';
+  });
+  document.getElementById('mc').innerHTML='<div style="overflow-x:auto"><table>'+th+'<tbody>'+tb+'</tbody></table></div>';
+}
+function modalSort(i){if(modalSortCol===i)modalSortAsc=!modalSortAsc;else{modalSortCol=i;modalSortAsc=true}var grpName=document.getElementById('mt').textContent.replace(' - 坐席明细','');var ps=D.persons.filter(function(p){return p.组别===grpName});if(ex)ps=ps.filter(function(p){return !p.新人});renderModalTable(ps)}
+var modalGrpName='';
+function filterModal(){
+  var kw=document.getElementById('ms').value.trim().toLowerCase();
+  var ps=D.persons.filter(function(p){return p.组别===modalGrpName});
+  if(ex)ps=ps.filter(function(p){return !p.新人});
+  if(kw)ps=ps.filter(function(p){return p.姓名.toLowerCase().indexOf(kw)>=0});
+  renderModalTable(ps);
+}
+function closeModal(){document.getElementById('modal').classList.remove('show');modalSortCol=-1;modalSortAsc=true;document.getElementById('ms').value=''}
+document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal()});
+
+function drawBar(id,data,labels,colors){
+  var el=document.getElementById(id);if(!el)return;
+  var w=el.clientWidth||600,h=200,pd={t:12,r:16,b:30,l:42},cw=w-pd.l-pd.r,ch=h-pd.t-pd.b;
+  var mx=Math.max.apply(null,data)*1.1||1,mn=0,n=data.length;
+  var gap=Math.max(3,cw/n*0.25),bw=(cw-gap*(n+1))/n;
+  var s='',ax='';
+  data.forEach(function(v,i){
+    var bh=Math.max(0,(v-mn)/(mx-mn)*ch),x=pd.l+gap+i*(bw+gap),y=pd.t+ch-bh;
+    s+='<rect x="'+x+'" y="'+y+'" width="'+bw+'" height="'+bh+'" fill="'+colors[i]+'" rx="2" opacity=".85" onmouseenter="showTip(event,\''+labels[i]+': '+v+'\')" onmousemove="moveTip(event)" onmouseleave="hideTip()"/>';
+    ax+='<text x="'+(x+bw/2)+'" y="'+(h-6)+'" text-anchor="middle" fill="#94a3b8" font-size="9">'+labels[i]+'</text>';
+  });
+  for(var i=0;i<=4;i++){var val=mn+(mx-mn)*i/4,yy=pd.t+ch-ch*i/4;ax+='<text x="'+(pd.l-5)+'" y="'+(yy+3)+'" text-anchor="end" fill="#64748b" font-size="9">'+val.toFixed(0)+'</text><line x1="'+pd.l+'" y1="'+yy+'" x2="'+(w-pd.r)+'" y2="'+yy+'" stroke="rgba(100,116,139,.12)"/>';}
+  el.innerHTML=s+ax;
+}
+
+function drawLine(id,series,labels,colors,xLabels){
+  var el=document.getElementById(id);if(!el)return;
+  var w=el.clientWidth||600,h=el.clientHeight||200,pd={t:12,r:16,b:30,l:42},cw=w-pd.l-pd.r,ch=h-pd.t-pd.b;
+  var all=[];series.forEach(function(s){s.forEach(function(v){if(v!=null)all.push(v)})});
+  var mx=Math.max.apply(null,all)*1.05,mn=Math.min.apply(null,all)*0.95;
+  var n=xLabels.length,lines='',dots='',ax='',lg='';
+  for(var i=0;i<=4;i++){var val=mn+(mx-mn)*i/4,yy=pd.t+ch-ch*i/4;ax+='<text x="'+(pd.l-5)+'" y="'+(yy+3)+'" text-anchor="end" fill="#64748b" font-size="9">'+val.toFixed(1)+'</text><line x1="'+pd.l+'" y1="'+yy+'" x2="'+(w-pd.r)+'" y2="'+yy+'" stroke="rgba(100,116,139,.12)"/>';}
+  xLabels.forEach(function(l,i){var x=pd.l+cw*i/(n-1);ax+='<text x="'+x+'" y="'+(h-6)+'" text-anchor="middle" fill="#94a3b8" font-size="9">'+l+'</text>';});
+  series.forEach(function(s,si){
+    var pts=[];s.forEach(function(v,i){
+      if(v==null)return;var x=pd.l+cw*i/(n-1),y=pd.t+ch-(v-mn)/(mx-mn)*ch;pts.push(x+','+y);
+      dots+='<circle cx="'+x+'" cy="'+y+'" r="3" fill="'+colors[si%colors.length]+'" stroke="#0a0e1a" stroke-width="1.5" onmouseenter="showTip(event,\''+labels[si]+' '+xLabels[i]+': '+v.toFixed(2)+'\')" onmousemove="moveTip(event)" onmouseleave="hideTip()"/>';
+    });
+    if(pts.length>1)lines+='<polyline points="'+pts.join(' ')+'" fill="none" stroke="'+colors[si%colors.length]+'" stroke-width="1.5" stroke-linejoin="round"/>';
+  });
+  labels.forEach(function(l,i){lg+='<rect x="'+(pd.l+i*72)+'" y="1" width="8" height="8" rx="1" fill="'+colors[i%colors.length]+'"/><text x="'+(pd.l+i*72+11)+'" y="9" fill="#94a3b8" font-size="9">'+l+'</text>';});
+  el.innerHTML=lines+dots+ax+lg;
+}
+
+var tipEl=null;
+function ensureTip(){if(!tipEl){tipEl=document.createElement('div');tipEl.className='tooltip';document.body.appendChild(tipEl)}}
+function showTip(e,txt){ensureTip();tipEl.textContent=txt;tipEl.style.display='block';moveTip(e)}
+function moveTip(e){tipEl.style.left=(e.pageX+10)+'px';tipEl.style.top=(e.pageY-30)+'px'}
+function hideTip(){if(tipEl)tipEl.style.display='none'}
+
+refresh();
+
+function qcFiltered(){return QC.records.filter(function(r){return!(ex&&r['新人'])})}
+function qcStats(recs){
+  var s=0,se=0,m=0,l=0;
+  recs.forEach(function(r){s++;var sc=r['质检评分'];if(sc===0)se++;else if(sc<=80)m++;else l++});
+  var totQc=ex?D.overall['质检量_剔除新人']:D.overall['质检量_含新人'];
+  var rate=totQc>0?(s/totQc*100):0;
+  return{'差错总量':s,'严重':se,'一般':m,'轻微':l,'差错率':rate,'质检总量':totQc}
+}
+function rQcKpi(){
+  var recs=qcFiltered(),s=qcStats(recs);
+  var h='<div class="kpi" style="--c:var(--red)"><div class="lb">差错总量</div><div class="vl vr">'+N(s['差错总量'])+'</div></div>';
+  h+='<div class="kpi" style="--c:var(--accent)"><div class="lb">差错率</div><div class="vl">'+P(s['差错率'],1)+'%</div></div>';
+  h+='<div class="kpi" style="--c:var(--red)"><div class="lb">0分（严重差错）</div><div class="vl vr">'+N(s['严重'])+'</div></div>';
+  h+='<div class="kpi" style="--c:var(--orange)"><div class="lb">1~80分（一般差错）</div><div class="vl vy">'+N(s['一般'])+'</div></div>';
+  h+='<div class="kpi" style="--c:var(--green)"><div class="lb">80~99分（轻微扣分）</div><div class="vl">'+N(s['轻微'])+'</div></div>';
+  h+='<div class="kpi"><div class="lb">质检总量</div><div class="vl">'+N(s['质检总量'])+'</div></div>';
+  document.getElementById('qck').innerHTML=h;
+}
+
+function rQcWeekTrend(){
+  var recs=qcFiltered(),ws={};
+  recs.forEach(function(r){ws[r['周']]=(ws[r['周']]||0)+1});
+  var labels=WL.filter(function(w){return ws[w]!=null}),vals=labels.map(function(l){return ws[l]});
+  if(!labels.length)return document.getElementById('qcWeekTrend').innerHTML='<text x="50%" y="50%" text-anchor="middle" fill="var(--text2)" font-size="13">无数据</text>';
+  var mx=Math.max.apply(null,vals),W=560,H=180,P=40;
+  var svg='<g transform="translate(40,10)">';
+  for(var yi=0;yi<=10;yi++){var yy=H-P-(yi/10)*(H-P-P);svg+='<line x1="0" y1="'+yy+'" x2="'+(W-P)+'" y2="'+yy+'" stroke="rgba(100,116,139,.15)"/>';svg+='<text x="-5" y="'+(yy+4)+'" text-anchor="end" fill="var(--text2)" font-size="10">'+Math.round(mx*yi/10)+'</text>';}
+  labels.forEach(function(l,i){
+    var x=P+i*(W-P)/(labels.length-1),y=H-P-(vals[i]/mx)*(H-P-P);
+    if(i>0){var px=P+(i-1)*(W-P)/(labels.length-1),py=H-P-(vals[i-1]/mx)*(H-P-P);svg+='<line x1="'+px+'" y1="'+py+'" x2="'+x+'" y2="'+y+'" stroke="var(--accent)" stroke-width="2"/>';}
+    svg+='<circle cx="'+x+'" cy="'+y+'" r="4" fill="var(--accent)"/>';
+    svg+='<text x="'+x+'" y="'+(H-P+16)+'" text-anchor="middle" fill="var(--text2)" font-size="11">'+l+'</text>';
+    svg+='<text x="'+x+'" y="'+(y-8)+'" text-anchor="middle" fill="var(--text)" font-size="11" font-weight="600">'+vals[i]+'</text>';
+  });
+  svg+='</g>';
+  document.getElementById('qcWeekTrend').innerHTML=svg;
+}
+
+function rQcSceneBar(){
+  var recs=qcFiltered(),ss={};
+  recs.forEach(function(r){ss[r['场景']]=(ss[r['场景']]||0)+1});
+  var entries=Object.entries(ss).sort(function(a,b){return b[1]-a[1]}).slice(0,10);
+  if(!entries.length)return document.getElementById('qcSceneBar').innerHTML='<text x="50%" y="50%" text-anchor="middle" fill="var(--text2)" font-size="13">无数据</text>';
+  var mx=entries[0][1],W=560,H=180,P=80;
+  var svg='<g transform="translate(40,0)">';
+  entries.forEach(function(e,i){
+    var y=8+i*17,w=Math.max(2,(e[1]/mx)*(W-P)),c=e[1]>=50?'var(--red)':e[1]>=30?'var(--orange)':'var(--accent)';
+    svg+='<rect x="'+P+'" y="'+y+'" width="'+w+'" height="13" rx="3" fill="'+c+'" opacity=".85"/>';
+    svg+='<text x="'+(P-4)+'" y="'+(y+10)+'" text-anchor="end" fill="var(--text2)" font-size="10">'+e[0]+'</text>';
+    svg+='<text x="'+(P+w+4)+'" y="'+(y+10)+'" fill="var(--text)" font-size="10" font-weight="600">'+e[1]+'</text>';
+  });
+  svg+='</g>';
+  document.getElementById('qcSceneBar').innerHTML=svg;
+}
+
+function rQcHeatmap(){
+  var recs=qcFiltered(),hd={};
+  recs.forEach(function(r){if(!hd[r['组别']])hd[r['组别']]={};hd[r['组别']][r['场景']]=(hd[r['组别']][r['场景']]||0)+1});
+  var G2=['热线一组','热线二组','热线三组','热线四组','热线五组','热线六组','热线七组','热线八组'];
+  var allS={};recs.forEach(function(r){allS[r['场景']]=(allS[r['场景']]||0)+1});
+  var sortedS=Object.entries(allS).sort(function(a,b){return b[1]-a[1]}).map(function(e){return e[0]}).slice(0,12);
+  var mx=0;
+  G2.forEach(function(g){sortedS.forEach(function(s){var v=(hd[g]||{})[s]||0;if(v>mx)mx=v;})});
+  var h='<div class="qc-hm" style="grid-template-columns:60px repeat('+sortedS.length+',1fr)">';
+  h+='<div class="qc-hm-label"></div>';
+  sortedS.forEach(function(s){h+='<div class="qc-hm-label" style="font-size:10px;min-width:60px" title="'+s+'">'+s.substring(0,6)+'</div>';});
+  G2.forEach(function(g){
+    h+='<div class="qc-hm-label"><span class="dot" style="background:'+(GCLR[g]||'#666')+'"></span>'+g.replace('热线','')+'</div>';
+    sortedS.forEach(function(s){
+      var v=(hd[g]||{})[s]||0;
+      var bg=v===0?'rgba(30,41,59,.3)':v>=mx*.6?'rgba(255,71,87,'+(0.3+v/mx*0.5)+')':v>=mx*.3?'rgba(255,167,38,'+(0.2+v/mx*0.4)+')':'rgba(0,212,255,'+(0.2+v/mx*0.4)+')';
+      var tc=v>mx*.5?'var(--text)':'var(--text2)';
+      h+='<div class="qc-hm-cell" style="background:'+bg+';color:'+tc+'" data-tip="'+g+' - '+s+': '+v+'件">'+v+'</div>';
+    });
+  });
+  h+='</div>';
+  document.getElementById('qcHeatmap').innerHTML=h;
+}
+
+function rQcPersonTable(){
+  var ps={};
+  QC.records.forEach(function(r){
+    if(ex&&r['新人'])return;
+    if(!ps[r['姓名']])ps[r['姓名']]={'姓名':r['姓名'],'组别':r['组别'],'差错量':0,'b80':0,'a80':0,'z0':0,'新人':r['新人'],'场景':{}};
+    ps[r['姓名']]['差错量']++;
+    var sc=r['质检评分'];
+    if(sc>80&&sc<100)ps[r['姓名']]['b80']++;
+    else if(sc>0&&sc<=80)ps[r['姓名']]['a80']++;
+    else if(sc===0)ps[r['姓名']]['z0']++;
+    var cat=r['场景'];
+    ps[r['姓名']]['场景'][cat]=(ps[r['姓名']]['场景'][cat]||0)+1;
+  });
+  var arr=Object.values(ps).sort(function(a,b){return b['差错量']-a['差错量']});
+  var html='<tr><th>姓名</th><th>组别</th><th>差错量⇅</th><th>80~99</th><th>1~80</th><th>0分</th><th>最高频场景</th></tr>';
+  arr.forEach(function(p){
+    var topS=Object.entries(p['场景']).sort(function(a,b){return b[1]-a[1]});
+    var topScene=topS.length?topS[0][0]+'('+topS[0][1]+')':'-';
+    var cc=p['差错量']>=10?'vr':p['差错量']>=5?'vy':'';
+    html+='<tr><td>'+p['姓名']+(p['新人']?' <span style="color:var(--yellow);font-size:10px">新</span>':'')+'</td><td><span class="dot" style="background:'+GCLR[p['组别']]+'"></span>'+p['组别'].replace('热线','')+'</td><td class="'+cc+'">'+p['差错量']+'</td><td>'+p['b80']+'</td><td class="vy">'+p['a80']+'</td><td class="vr">'+p['z0']+'</td><td style="text-align:left;padding-left:12px;font-size:11px">'+topScene+'</td></tr>';
+  });
+  var t=document.getElementById('qcPersonT');
+  t.querySelector('thead').innerHTML=html;
+  t.querySelector('tbody').innerHTML='';
+}
+
+var qcSortCol=-1,qcSortAsc=true;
+function renderQcDetail(){
+  var gf=document.getElementById('qcGrpF').value;
+  var sf=document.getElementById('qcSevF').value;
+  var nf=document.getElementById('qcNameF').value.trim();
+  var scf=document.getElementById('qcSceneF').value.trim();
+  var tf=document.getElementById('qcTypeF').value.trim();
+  
+  var list=QC.records.filter(function(r){
+    if(ex&&r['新人'])return false;
+    if(gf&&r['组别']!==gf)return false;
+    if(sf){var sc=r['质检评分'];if(sf==='80-100'&&!(sc>80&&sc<100))return false;if(sf==='0-80'&&!(sc>0&&sc<=80))return false;if(sf==='0'&&sc!==0)return false;}
+    if(nf&&r['姓名'].indexOf(nf)<0)return false;
+    if(scf&&r['场景'].indexOf(scf)<0)return false;
+    if(tf&&r['差错类型'].indexOf(tf)<0)return false;
+    return true;
+  });
+  if(qcSortCol>=0){
+    var keys=['日期','姓名','组别','质检评分','严重程度','三级类别','差错类型'];
+    var k=keys[qcSortCol],asc=qcSortAsc;
+    list.sort(function(a,b){
+      var va=a[k],vb=b[k];
+      if(typeof va==='number')return asc?va-vb:vb-va;
+      return asc?String(va).localeCompare(String(vb)):String(vb).localeCompare(String(va));
+    });
+  }
+  document.getElementById('qcCount').textContent=list.length+' 条记录';
+  var html='<tr><th onclick="sortQc(0)">日期<span class="arr">⇅</span></th><th onclick="sortQc(1)">姓名<span class="arr">⇅</span></th><th onclick="sortQc(2)">组别<span class="arr">⇅</span></th><th onclick="sortQc(3)">评分<span class="arr">⇅</span></th><th onclick="sortQc(4)">评分区间<span class="arr">⇅</span></th><th onclick="sortQc(5)">场景<span class="arr">⇅</span></th><th>差错类型</th></tr>';
+  var tbody='';
+  list.forEach(function(r,i){
+    var sc=r['质检评分']===0?'sev-s':r['质检评分']<=80?'sev-m':'sev-l';
+    var scoreCls=r['质检评分']<=60?'vr':r['质检评分']<=80?'vy':'';
+    tbody+='<tr onclick="toggleQcRow(this)" style="cursor:pointer"><td>'+r['日期']+'</td><td>'+r['姓名']+(r['新人']?' <span style="color:var(--yellow);font-size:10px">新</span>':'')+'</td><td><span class="dot" style="background:'+GCLR[r['组别']]+'"></span>'+r['组别'].replace('热线','')+'</td><td class="'+scoreCls+'">'+r['质检评分']+'</td><td><span class="sev-tag '+sc+'">'+(r['质检评分']===0?'0分（严重差错）':r['质检评分']<=80?'1~80分（一般差错）':'80~99分（轻微扣分）')+'</span></td><td style="text-align:left;padding-left:8px">'+r['场景']+'</td><td style="text-align:left;padding-left:8px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+escH(r['差错类型'])+'">'+escH(r['差错类型'].substring(0,30))+'</td></tr>';
+  });
+  var t=document.getElementById('qcDetailT');
+  t.querySelector('thead').innerHTML=html;
+  t.querySelector('tbody').innerHTML=tbody;
+}
+
+function toggleQcRow(tr){
+  var next=tr.nextElementSibling;
+  if(next&&next.classList.contains('qc-detail-expand')){next.remove();return;}
+  var idx=Array.from(tr.parentNode.children).indexOf(tr);
+  var gf=document.getElementById('qcGrpF').value;
+  var sf=document.getElementById('qcSevF').value;
+  var nf=document.getElementById('qcNameF').value.trim();
+  var scf=document.getElementById('qcSceneF').value.trim();
+  var tf=document.getElementById('qcTypeF').value.trim();
+  
+  var list=QC.records.filter(function(r){
+    if(ex&&r['新人'])return false;
+    if(gf&&r['组别']!==gf)return false;
+    if(sf){var sc=r['质检评分'];if(sf==='80-100'&&!(sc>80&&sc<100))return false;if(sf==='0-80'&&!(sc>0&&sc<=80))return false;if(sf==='0'&&sc!==0)return false;}
+    if(nf&&r['姓名'].indexOf(nf)<0)return false;
+    if(scf&&r['场景'].indexOf(scf)<0)return false;
+    if(tf&&r['差错类型'].indexOf(tf)<0)return false;
+    return true;
+  });
+  if(qcSortCol>=0){
+    var keys=['日期','姓名','组别','质检评分','严重程度','三级类别','差错类型'];
+    var k=keys[qcSortCol],asc=qcSortAsc;
+    list.sort(function(a,b){
+      var va=a[k],vb=b[k];
+      if(typeof va==='number')return asc?va-vb:vb-va;
+      return asc?String(va).localeCompare(String(vb)):String(vb).localeCompare(String(va));
+    });
+  }
+  var r=list[idx];
+  var nr=document.createElement('tr');
+  nr.className='qc-detail-expand';
+  nr.innerHTML='<td colspan="7"><strong>差错描述：</strong>'+(r['差错描述']||'无')+'<br><strong>判罚内容：</strong>'+(r['判罚内容']||'无')+'</td>';
+  tr.after(nr);
+}
+
+function sortQc(col){
+  if(qcSortCol===col)qcSortAsc=!qcSortAsc;else{qcSortCol=col;qcSortAsc=true;}
+  renderQcDetail();
+}
+
+function clearQcFilters(){
+  document.getElementById('qcGrpF').value='';
+  document.getElementById('qcSevF').value='';
+  document.getElementById('qcNameF').value='';
+  document.getElementById('qcSceneF').value='';
+  document.getElementById('qcTypeF').value='';
+  qcSortCol=-1;qcSortAsc=true;
+  renderQcDetail();
+}
+
+var qcSubTab=0;
+function swQcSub(i){
+  qcSubTab=i;
+  document.querySelectorAll('.qc-subtab').forEach(function(t,j){t.classList.toggle('active',j===i);t.style.color=j===i?'var(--accent)':'var(--text2)';t.style.borderBottomColor=j===i?'var(--accent)':'transparent'});
+  document.querySelectorAll('.qc-subpanel').forEach(function(p,j){p.classList.toggle('active',j===i);p.style.display=j===i?'block':'none'});
+  if(i===0)rQcTab();else rQcZone();
+}
+function rQcTab(){
+  rQcKpi();rQcWeekTrend();rQcSceneBar();rQcHeatmap();rQcPersonTable();renderQcDetail();
+}
+function rQcZone(){
+  var recs=qcFiltered();
+  var zA={label:'叶莉莎（1-4组）',groups:['热线一组','热线二组','热线三组','热线四组']};
+  var zB={label:'陈浩（5-8组）',groups:['热线五组','热线六组','热线七组','热线八组']};
+  function zoneCalc(zone){
+    var zr=recs.filter(function(r){return zone.groups.indexOf(r['组别'])>=0});
+    var s=0,se=0,m=0,l=0;
+    zr.forEach(function(r){s++;var sc=r['质检评分'];if(sc===0)se++;else if(sc<=80)m++;else l++});
+    var wk={};zr.forEach(function(r){wk[r['周']]=(wk[r['周']]||0)+1});
+    var grpS={};zone.groups.forEach(function(g){grpS[g]={t:0,se:0,m:0,l:0}});
+    zr.forEach(function(r){var gs=grpS[r['组别']];gs.t++;var sc=r['质检评分'];if(sc===0)gs.se++;else if(sc<=80)gs.m++;else gs.l++});
+    var zoneQc=0;D.groups.forEach(function(g){if(zone.groups.indexOf(g['组别'])>=0)zoneQc+=ex?g['质检量_剔除新人']:g['质检量_含新人']});
+    return{label:zone.label,groups:zone.groups,count:s,severe:se,moderate:m,minor:l,rate:zoneQc>0?(s/zoneQc*100):0,qcTotal:zoneQc,weeks:wk,grpStats:grpS}
+  }
+  var a=zoneCalc(zA),b=zoneCalc(zB);
+  // KPI cards — 10个核心指标
+  var suf=ex?'剔除新人':'含新人';
+  var nh='<div class="kpi" style="--c:var(--accent)"><div class="lb">'+a.label+'</div><div class="vl">'+a.count+'<div class="df" style="font-size:10px">差错量</div></div></div>';
+  nh+='<div class="kpi" style="--c:var(--accent)"><div class="lb">'+a.label+' 差错率</div><div class="vl">'+P(a.rate,1)+'%</div></div>';
+  nh+='<div class="kpi" style="--c:var(--purple)"><div class="lb">'+b.label+'</div><div class="vl">'+b.count+'<div class="df" style="font-size:10px">差错量</div></div></div>';
+  nh+='<div class="kpi" style="--c:var(--purple)"><div class="lb">'+b.label+' 差错率</div><div class="vl">'+P(b.rate,1)+'%</div></div>';
+  var dCnt=b.count-a.count;nh+='<div class="kpi" style="--c:var(--yellow)"><div class="lb">差错量差异</div><div class="vl">'+(dCnt>0?'+':'')+dCnt+'</div></div>';
+  var dRate=b.rate-a.rate;nh+='<div class="kpi" style="--c:'+(dRate<0?'var(--green)':'var(--red)')+'"><div class="lb">差错率差异</div><div class="vl">'+(dRate>0?'+':'')+P(dRate,1)+'pp</div></div>';
+  var zAData=D.zoneA,zBData=D.zoneB;
+  var aQcRate=S(zAData,'质检通过率'),bQcRate=S(zBData,'质检通过率');
+  nh+='<div class="kpi" style="--c:var(--green)"><div class="lb">'+a.label+' 质检通过率</div><div class="vl">'+P(aQcRate,1)+'%</div></div>';
+  nh+='<div class="kpi" style="--c:var(--green)"><div class="lb">'+b.label+' 质检通过率</div><div class="vl">'+P(bQcRate,1)+'%</div></div>';
+  var aSat=S(zAData,'满意率'),bSat=S(zBData,'满意率');
+  nh+='<div class="kpi" style="--c:var(--pink)"><div class="lb">'+a.label+' 满意率</div><div class="vl">'+P(aSat,1)+'%</div></div>';
+  nh+='<div class="kpi" style="--c:var(--pink)"><div class="lb">'+b.label+' 满意率</div><div class="vl">'+P(bSat,1)+'%</div></div>';
+  document.getElementById('qcZoneKpi').innerHTML=nh;
+  // === 核心指标对标雷达图（用分组柱状图替代：6个维度，每组2根柱子） ===
+  (function(){
+    var dims=[
+      {l:'日均接起',aK:'日均接起',bK:'日均接起',unit:'',dec:1,inv:false},
+      {l:'质检通过率',aK:'质检通过率',bK:'质检通过率',unit:'%',dec:1,inv:false},
+      {l:'满意率',aK:'满意率',bK:'满意率',unit:'%',dec:1,inv:false},
+      {l:'工时利用率',aK:'工时利用率',bK:'工时利用率',unit:'%',dec:1,inv:false},
+      {l:'差错率',aK:null,bK:null,unit:'%',dec:1,inv:true,vals:[a.rate,b.rate]},
+      {l:'外诉率',aK:'外诉率',bK:'外诉率',unit:'%',dec:2,inv:true}
+    ];
+    var svg='<g transform="translate(50,5)">';
+    var barH=14,gap=20,startY=0;
+    dims.forEach(function(d,i){
+      var y=startY+i*(barH+gap);
+      var aV=d.aK?S(zAData,d.aK):(d.vals?d.vals[0]:0);
+      var bV=d.bK?S(zBData,d.bK):(d.vals?d.vals[1]:0);
+      var mx=Math.max(aV,bV)*1.15||1;
+      var wA=Math.max(2,(aV/mx)*240),wB=Math.max(2,(bV/mx)*240);
+      svg+='<text x="-8" y="'+(y+barH/2+4)+'" text-anchor="end" fill="var(--text2)" font-size="10">'+d.l+'</text>';
+      svg+='<rect x="0" y="'+y+'" width="'+wA+'" height="'+(barH-4)+'" rx="3" fill="var(--accent)" opacity=".75"/>';
+      svg+='<text x="'+(wA+4)+'" y="'+(y+barH/2+2)+'" fill="var(--text)" font-size="10" font-weight="600">'+P(aV,d.dec)+d.unit+'</text>';
+      svg+='<rect x="0" y="'+(y+barH-2)+'" width="'+wB+'" height="'+(barH-4)+'" rx="3" fill="var(--purple)" opacity=".75"/>';
+      svg+='<text x="'+(wB+4)+'" y="'+(y+barH+barH/2-2)+'" fill="var(--text)" font-size="10" font-weight="600">'+P(bV,d.dec)+d.unit+'</text>';
+    });
+    svg+='<rect x="280" y="5" width="10" height="10" rx="2" fill="var(--accent)" opacity=".75"/><text x="294" y="14" fill="var(--text2)" font-size="10">叶莉莎</text>';
+    svg+='<rect x="340" y="5" width="10" height="10" rx="2" fill="var(--purple)" opacity=".75"/><text x="354" y="14" fill="var(--text2)" font-size="10">陈浩</text>';
+    svg+='</g>';
+    document.getElementById('qcZoneBenchmark').innerHTML=svg;
+  })();
+  // === 分周趋势双折线 ===
+  (function(){
+    var WD=40;
+    var svg='<g transform="translate(50,10)">';
+    var mx=0;
+    WL.forEach(function(w){var va=a.weeks[w]||0,vb=b.weeks[w]||0;mx=Math.max(mx,va,vb)});
+    if(!mx){document.getElementById('qcZoneWeek').innerHTML='<text x="50%" y="50%" text-anchor="middle" fill="var(--text2)" font-size="13">无数据</text>';return;}
+    for(var yi=0;yi<=4;yi++){var yy=180-WD-(yi/4)*(180-WD-WD);svg+='<line x1="0" y1="'+yy+'" x2="'+(560-WD)+'" y2="'+yy+'" stroke="rgba(100,116,139,.15)"/>';svg+='<text x="-5" y="'+(yy+4)+'" text-anchor="end" fill="var(--text2)" font-size="10">'+Math.round(mx*yi/4)+'</text>';}
+    var aP='',bP='';
+    WL.forEach(function(w,i){
+      var va=a.weeks[w]||0,vb=b.weeks[w]||0;
+      var x=WD+i*(560-WD)/(WL.length-1);
+      var ya=180-WD-(va/mx)*(180-WD-WD),yb=180-WD-(vb/mx)*(180-WD-WD);
+      if(i>0){var px=WD+(i-1)*(560-WD)/(WL.length-1);var pya=180-WD-(((a.weeks[WL[i-1]])||0)/mx)*(180-WD-WD);var pyb=180-WD-(((b.weeks[WL[i-1]])||0)/mx)*(180-WD-WD);aP+='<line x1="'+px+'" y1="'+pya+'" x2="'+x+'" y2="'+ya+'" stroke="var(--accent)" stroke-width="2"/>';bP+='<line x1="'+px+'" y1="'+pyb+'" x2="'+x+'" y2="'+yb+'" stroke="var(--purple)" stroke-width="2"/>';}
+      aP+='<circle cx="'+x+'" cy="'+ya+'" r="3" fill="var(--accent)"/>';aP+='<text x="'+x+'" y="'+(ya-8)+'" text-anchor="middle" fill="var(--accent)" font-size="10" font-weight="600">'+va+'</text>';
+      bP+='<circle cx="'+x+'" cy="'+yb+'" r="3" fill="var(--purple)"/>';bP+='<text x="'+x+'" y="'+(yb-8)+'" text-anchor="middle" fill="var(--purple)" font-size="10" font-weight="600">'+vb+'</text>';
+      svg+='<text x="'+x+'" y="'+(180-WD+16)+'" text-anchor="middle" fill="var(--text2)" font-size="11">'+w+'</text>';
+    });
+    svg+=aP+bP;
+    svg+='<rect x="'+(560-WD-90)+'" y="5" width="10" height="10" rx="2" fill="var(--accent)"/><text x="'+(560-WD-76)+'" y="14" fill="var(--text2)" font-size="10">叶莉莎</text>';
+    svg+='<rect x="'+(560-WD-30)+'" y="5" width="10" height="10" rx="2" fill="var(--purple)"/><text x="'+(560-WD-16)+'" y="14" fill="var(--text2)" font-size="10">陈浩</text>';
+    svg+='</g>';
+    document.getElementById('qcZoneWeek').innerHTML=svg;
+  })();
+  // === 严重程度环形图对比 ===
+  (function(){
+    function ring(z,color){
+      var tot=z.severe+z.moderate+z.minor;
+      if(!tot)return'<text x="0" y="60" text-anchor="middle" fill="var(--text2)" font-size="12">无差错</text>';
+      var circ=2*Math.PI*50;
+      var s='<circle cx="0" cy="0" r="50" fill="none" stroke="rgba(30,41,59,.5)" stroke-width="14"/>';
+      s+='<circle cx="0" cy="0" r="50" fill="none" stroke="var(--red)" stroke-width="14" stroke-dasharray="'+(z.severe/tot*circ)+' '+circ+'" stroke-dashoffset="'+(circ*0.25)+'" transform="rotate(-90)" opacity=".85"/>';
+      s+='<circle cx="0" cy="0" r="50" fill="none" stroke="var(--orange)" stroke-width="14" stroke-dasharray="'+(z.moderate/tot*circ)+' '+circ+'" stroke-dashoffset="'+(circ*0.25-z.severe/tot*circ)+'" transform="rotate(-90)" opacity=".85"/>';
+      s+='<circle cx="0" cy="0" r="50" fill="none" stroke="var(--green)" stroke-width="14" stroke-dasharray="'+(z.minor/tot*circ)+' '+circ+'" stroke-dashoffset="'+(circ*0.25-(z.severe+z.moderate)/tot*circ)+'" transform="rotate(-90)" opacity=".85"/>';
+      s+='<text x="0" y="-8" text-anchor="middle" fill="var(--text)" font-size="20" font-weight="700">'+tot+'</text>';
+      s+='<text x="0" y="8" text-anchor="middle" fill="var(--text2)" font-size="9">总差错</text>';
+      s+='<text x="0" y="24" text-anchor="middle" fill="var(--red)" font-size="8">0分(严重) '+P(z.severe/tot*100,1)+'%</text>';
+      s+='<text x="0" y="34" text-anchor="middle" fill="var(--orange)" font-size="8">1~80分(一般) '+P(z.moderate/tot*100,1)+'%</text>';
+      s+='<text x="0" y="44" text-anchor="middle" fill="var(--green)" font-size="8">80~99分(轻微) '+P(z.minor/tot*100,1)+'%</text>';
+      return s;
+    }
+    var svg='<g>';
+    svg+='<g transform="translate(140,110)"><text x="0" y="-68" text-anchor="middle" fill="var(--accent)" font-size="13" font-weight="600">'+a.label+'</text>'+ring(a)+'</g>';
+    svg+='<line x1="280" y1="0" x2="280" y2="220" stroke="var(--border)"/>';
+    svg+='<g transform="translate(420,110)"><text x="0" y="-68" text-anchor="middle" fill="var(--purple)" font-size="13" font-weight="600">'+b.label+'</text>'+ring(b)+'</g>';
+    svg+='</g>';
+    document.getElementById('qcZoneSev').innerHTML=svg;
+  })();
+  // === 区域差错场景TOP10（双区域横向对比柱状图） ===
+  (function(){
+    var allS={};recs.forEach(function(r){allS[r['场景']]=(allS[r['场景']]||0)+1});
+    var topS=Object.entries(allS).sort(function(x,y){return y[1]-x[1]}).slice(0,10);
+    var mx=topS[0][1]||1;
+    var svg='<g transform="translate(40,0)">';
+    topS.forEach(function(e,i){
+      var y=8+i*18;
+      var aV=(function(){var c=0;recs.forEach(function(r){if(zA.groups.indexOf(r['组别'])>=0&&r['场景']===e[0])c++});return c})();
+      var bV=(function(){var c=0;recs.forEach(function(r){if(zB.groups.indexOf(r['组别'])>=0&&r['场景']===e[0])c++});return c})();
+      var wA=Math.max(2,(aV/mx)*200),wB=Math.max(2,(bV/mx)*200);
+      svg+='<text x="-4" y="'+(y+10)+'" text-anchor="end" fill="var(--text2)" font-size="9">'+e[0].substring(0,6)+'</text>';
+      svg+='<rect x="0" y="'+y+'" width="'+wA+'" height="8" rx="2" fill="var(--accent)" opacity=".75"/>';
+      svg+='<text x="'+(wA+3)+'" y="'+(y+8)+'" fill="var(--text)" font-size="9">'+aV+'</text>';
+      svg+='<rect x="0" y="'+(y+9)+'" width="'+wB+'" height="8" rx="2" fill="var(--purple)" opacity=".75"/>';
+      svg+='<text x="'+(wB+3)+'" y="'+(y+17)+'" fill="var(--text)" font-size="9">'+bV+'</text>';
+    });
+    svg+='<rect x="220" y="2" width="8" height="8" rx="2" fill="var(--accent)" opacity=".75"/><text x="232" y="10" fill="var(--text2)" font-size="9">叶莉莎</text>';
+    svg+='<rect x="280" y="2" width="8" height="8" rx="2" fill="var(--purple)" opacity=".75"/><text x="292" y="10" fill="var(--text2)" font-size="9">陈浩</text>';
+    svg+='</g>';
+    document.getElementById('qcZoneScene').innerHTML=svg;
+  })();
+  // === 分组多维对比表 ===
+  (function(){
+    var html='<tr><th>区域</th><th>组别</th><th>差错量</th><th>差错率</th><th>质检通过率</th></tr>';
+    
+    // 需要用带组别的正确结构
+    [a,b].forEach(function(z){
+      var gi=0;
+      z.groups.forEach(function(g){
+        var gs=z.grpStats[g];
+        var gData=D.groups.filter(function(x){return x['组别']===g})[0];
+        if(!gData){gi++;return;}
+        var gQc=ex?gData['质检量_剔除新人']:gData['质检量_含新人'];
+        var rate=gQc>0?(gs.t/gQc*100):0;
+        var cc=gs.t>=20?'vr':gs.t>=10?'vy':'';
+        var rateCls=rate>6?'vr':rate<4?'vg':'';
+        html+='<tr>';
+        if(gi===0)html+='<td rowspan="'+z.groups.length+'" style="vertical-align:middle;font-weight:600;color:var(--accent)">'+z.label+'</td>';
+        html+='<td><span class="dot" style="background:'+GCLR[g]+'"></span>'+g.replace('热线','')+'</td>';
+        html+='<td class="'+cc+'" style="font-weight:700">'+gs.t+'</td>';
+        html+='<td class="'+rateCls+'">'+P(rate,1)+'%</td>';
+        html+='<td class="'+CLS(S(gData,'质检通过率'),'qc')+'">'+P(S(gData,'质检通过率'),1)+'%</td>';
+        html+='</tr>';
+        gi++;
+      });
+    });
+    var t=document.getElementById('qcZoneTable');
+    t.querySelector('thead').innerHTML=html;
+    t.querySelector('tbody').innerHTML='';
+  })();
+  // === 区域坐席差错与绩效排行 ===
+  (function(){
+    // 从persons中过滤并关联差错数据
+    var filteredPersons=D.persons.filter(function(p){return!(ex&&p['新人'])});
+    // 绩效排名（按绩效得分降序）
+    var ranked=filteredPersons.slice().sort(function(x,y){return(y['绩效得分']||0)-(x['绩效得分']||0)});
+    var rankMap={};ranked.forEach(function(p,i){rankMap[p['姓名']]=i+1});
+    // 差错统计
+    var ps={};
+    recs.forEach(function(r){
+      if(!ps[r['姓名']])ps[r['姓名']]={name:r['姓名'],grp:r['组别'],errCnt:0,se:0,mo:0,mi:0};
+      ps[r['姓名']].errCnt++;
+      var sc=r['质检评分'];if(sc===0)ps[r['姓名']].se++;
+      else if(sc<=80)ps[r['姓名']].mo++;
+      else ps[r['姓名']].mi++;
+    });
+    // 合并
+    var list=[];
+    filteredPersons.forEach(function(p){
+      var e=ps[p['姓名']]||{errCnt:0,se:0,mo:0,mi:0,grp:p['组别']};
+      list.push({name:p['姓名'],grp:p['组别'],rank:rankMap[p['姓名']]||'-',perf:p['绩效得分'],errCnt:e.errCnt,se:e.se||0,mo:e.mo||0,mi:e.mi||0});
+    });
+    // 只取有差错的，按差错量降序
+    var errList=list.filter(function(x){return x.errCnt>0}).sort(function(x,y){return y.errCnt-x.errCnt});
+    document.getElementById('qcZonePerfInfo').textContent='共 '+errList.length+' 人有差错记录';
+    var html='<tr><th>绩效排名</th><th>姓名</th><th>组别</th><th>差错量⇅</th><th>0分</th><th>1~80分</th><th>80~99分</th><th>绩效得分⇅</th></tr>';
+    var tbody='';
+    errList.forEach(function(p){
+      var cc=p.errCnt>=10?'vr':p.errCnt>=5?'vy':'';
+      var perfCls=p.perf>=70?'vg':p.perf<50?'vr':'';
+      var topS=Object.entries((function(){var s={};recs.forEach(function(r){if(r['姓名']===p.name)s[r['场景']]=(s[r['场景']]||0)+1});return s})()).sort(function(a,b){return b[1]-a[1]});
+      var topScene=topS.length?topS[0][0]+'('+topS[0][1]+')':'-';
+      tbody+='<tr><td class="va">'+p.rank+'</td><td>'+p.name+'</td><td><span class="dot" style="background:'+GCLR[p.grp]+'"></span>'+p.grp.replace('热线','')+'</td><td class="'+cc+'">'+p.errCnt+'</td><td class="vr">'+p.se+'</td><td class="vy">'+p.mo+'</td><td>'+p.mi+'</td><td class="'+perfCls+'">'+P(p.perf,1)+'</td></tr>';
+    });
+    var t=document.getElementById('qcZonePerf');
+    t.querySelector('thead').innerHTML=html;
+    t.querySelector('tbody').innerHTML=tbody;
+  })();
+}
+
+function escH(s){var r=String(s);var a=r.split('&');r=a.join('&amp;');var b=r.split('\x3c');r=b.join('&lt;');var c=r.split('\x3e');r=c.join('&gt;');return r.replace(/"/g,'&quot;');}
+
+
+// 劫持refresh和swTab
+var _origRefresh=refresh;
+refresh=function(){_origRefresh();if(document.querySelector('.tp.active').id==='p4')rQcTab();};
+
+var _origSwTab=swTab;
+swTab=function(i){_origSwTab(i);if(i===4)rQcTab();};
+
+refresh();
+
+</script>
