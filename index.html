@@ -2056,7 +2056,7 @@ function renderQcDetail(){
     return true;
   });
   if(qcSortCol>=0){
-    var keys=['日期','姓名','组别','质检评分','严重程度','三级类别','差错类型'];
+    var keys=['日期','姓名','组别','质检评分','质检评分','场景','差错类型'];
     var k=keys[qcSortCol],asc=qcSortAsc;
     list.sort(function(a,b){
       var va=a[k],vb=b[k];
@@ -2097,7 +2097,7 @@ function toggleQcRow(tr){
     return true;
   });
   if(qcSortCol>=0){
-    var keys=['日期','姓名','组别','质检评分','严重程度','三级类别','差错类型'];
+    var keys=['日期','姓名','组别','质检评分','质检评分','场景','差错类型'];
     var k=keys[qcSortCol],asc=qcSortAsc;
     list.sort(function(a,b){
       var va=a[k],vb=b[k];
