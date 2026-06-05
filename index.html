@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<script>if(!location.search.includes('v=')){location.replace(location.pathname+'?v=12')}</script>
+<script>if(!location.search.includes('v=')){location.replace(location.pathname+'?v=13')}</script>
 <meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>热线管理看板 - 2026年6月 [v12]</title>
+<title>热线管理看板 - 2026年6月 [v13]</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0a0e1a;--card:rgba(15,23,42,.85);--border:rgba(100,116,139,.2);--accent:#00d4ff;--text:#e2e8f0;--text2:#94a3b8;--red:#ff4757;--green:#00e676;--yellow:#ffd740;--purple:#b388ff;--orange:#ffa726;--pink:#ff6b9d}
@@ -106,7 +106,7 @@ svg{width:100%}
 <body>
 
 <div class="header">
-  <h1>热线管理看板 - 2026年6月 [v12]</h1>
+  <h1>热线管理看板 - 2026年6月 [v13]</h1>
   <div class="header-right">
     <span class="badge" id="nb">新人 0 人</span>
     <div class="tg-wrap">
@@ -6618,17 +6618,18 @@ function rQcZone(){
   var recs=qcFiltered();
   var zA={label:'叶莉莎（1-4组）',groups:['热线一组','热线二组','热线三组','热线四组']};
   var zB={label:'陈浩（5-8组）',groups:['热线五组','热线六组','热线七组','热线八组']};
-  function zoneCalc(zone){
+  function zoneCalc(zone,zData){
     var zr=recs.filter(function(r){return zone.groups.indexOf(r['组别'])>=0});
     var s=0,se=0,m=0,l=0;
     zr.forEach(function(r){s++;var sc=r['质检评分'];if(sc===0)se++;else if(sc<=80)m++;else l++});
     var wk={};zr.forEach(function(r){wk[r['周']]=(wk[r['周']]||0)+1});
     var grpS={};zone.groups.forEach(function(g){grpS[g]={t:0,se:0,m:0,l:0}});
     zr.forEach(function(r){var gs=grpS[r['组别']];gs.t++;var sc=r['质检评分'];if(sc===0)gs.se++;else if(sc<=80)gs.m++;else gs.l++});
-    var zoneQc=0;D.groups.forEach(function(g){if(zone.groups.indexOf(g['组别'])>=0)zoneQc+=ex?g['质检量_剔除新人']:g['质检量_含新人']});
-    return{label:zone.label,groups:zone.groups,count:s,severe:se,moderate:m,minor:l,rate:zoneQc>0?(s/zoneQc*100):0,qcTotal:zoneQc,weeks:wk,grpStats:grpS}
+    var zoneQc=S(zData,'质检量');
+    var errCount=S(zData,'差错量');
+    return{label:zone.label,groups:zone.groups,count:errCount,severe:se,moderate:m,minor:l,rate:zoneQc>0?(errCount/zoneQc*100):0,qcTotal:zoneQc,weeks:wk,grpStats:grpS}
   }
-  var a=zoneCalc(zA),b=zoneCalc(zB);
+  var a=zoneCalc(zA,D.zoneA),b=zoneCalc(zB,D.zoneB);
   // KPI cards — 10个核心指标
   var suf=ex?'剔除新人':'含新人';
   var nh='<div class="kpi" style="--c:var(--accent)"><div class="lb">'+a.label+'</div><div class="vl">'+a.count+'<div class="df" style="font-size:10px">差错量</div></div></div>';
@@ -6653,14 +6654,14 @@ function rQcZone(){
       {l:'满意率',aK:'满意率',bK:'满意率',unit:'%',dec:1,inv:false},
       {l:'工时利用率',aK:'工时利用率',bK:'工时利用率',unit:'%',dec:1,inv:false},
       {l:'差错率',aK:null,bK:null,unit:'%',dec:1,inv:true,vals:[a.rate,b.rate]},
-      {l:'外诉率',aK:'外诉率',bK:'外诉率',unit:'%',dec:2,inv:true}
+      {l:'外诉率',aK:'外诉率',bK:'外诉率',unit:'%',dec:2,inv:true,mult:100}
     ];
     var svg='<g transform="translate(50,5)">';
     var barH=14,gap=20,startY=0;
     dims.forEach(function(d,i){
       var y=startY+i*(barH+gap);
-      var aV=d.aK?S(zAData,d.aK):(d.vals?d.vals[0]:0);
-      var bV=d.bK?S(zBData,d.bK):(d.vals?d.vals[1]:0);
+      var aV=d.aK?S(zAData,d.aK)*(d.mult||1):(d.vals?d.vals[0]:0);
+      var bV=d.bK?S(zBData,d.bK)*(d.mult||1):(d.vals?d.vals[1]:0);
       var mx=Math.max(aV,bV)*1.15||1;
       var wA=Math.max(2,(aV/mx)*240),wB=Math.max(2,(bV/mx)*240);
       svg+='<text x="-8" y="'+(y+barH/2+4)+'" text-anchor="end" fill="var(--text2)" font-size="10">'+d.l+'</text>';
