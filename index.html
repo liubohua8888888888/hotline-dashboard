@@ -166,8 +166,8 @@ svg{width:100%}
   </div>
   <div class="cb"><h3>整体质检通过率分周趋势（含新人 vs 剔除新人）</h3><svg id="gw0" height="200"></svg></div>
   <div class="cr">
-    <div class="cb"><h3>叶莉莎区域(1-4组)质检通过率趋势</h3><svg id="gwA" height="200"></svg></div>
-    <div class="cb"><h3>陈浩区域(5-8组)质检通过率趋势</h3><svg id="gwB" height="200"></svg></div>
+    <div class="cb"><h3>A区(1-4组)质检通过率趋势</h3><svg id="gwA" height="200"></svg></div>
+    <div class="cb"><h3>B区(5-8组)质检通过率趋势</h3><svg id="gwB" height="200"></svg></div>
   </div>
   <div class="stl">各组分周质检通过率明细</div>
   <div style="overflow-x:auto"><table id="gwt_0"><thead></thead><tbody></tbody></table></div>
@@ -277,7 +277,7 @@ var CLS=function(v,type){
 };
 
 function refresh(){renderAll();var t=document.getElementById('toggleTrack');var l1=document.getElementById('tl1');var l2=document.getElementById('tl2');if(ex){t.classList.add('on');l1.classList.remove('active');l2.classList.add('active')}else{t.classList.remove('on');l1.classList.add('active');l2.classList.remove('active')}}
-function toggleSwitch(){ex=!ex;var t=document.getElementById('toggleTrack');var l1=document.getElementById('tl1');var l2=document.getElementById('tl2');if(ex){t.classList.add('on');l1.classList.remove('active');l2.classList.add('active')}else{t.classList.remove('on');l1.classList.add('active');l2.classList.remove('active')}refresh();if(typeof rQcZone==='function')rQcZone()}
+function toggleSwitch(){ex=!ex;var t=document.getElementById('toggleTrack');var l1=document.getElementById('tl1');var l2=document.getElementById('tl2');if(ex){t.classList.add('on');l1.classList.remove('active');l2.classList.add('active')}else{t.classList.remove('on');l1.classList.add('active');l2.classList.remove('active')}refresh();if(typeof rQcZone==='function')rQcZone();if(typeof rQcKpi==='function')rQcKpi();if(typeof rQcWeekTrend==='function')rQcWeekTrend();if(typeof rQcSceneBar==='function')rQcSceneBar();if(typeof rQcHeatmap==='function')rQcHeatmap();if(typeof renderQcDetail==='function')renderQcDetail();if(typeof rQcPersonRank==='function')rQcPersonRank()}
 (function(){var tr=document.getElementById('toggleTrack');if(tr){tr.addEventListener('click',function(e){e.preventDefault();toggleSwitch()});tr.addEventListener('touchend',function(e){e.preventDefault();toggleSwitch()})}})()
 function swBtns(n){}
 function swTab(i){document.querySelectorAll('.tab').forEach(function(t,j){t.classList.toggle('active',j===i)});document.querySelectorAll('.tp').forEach(function(p,j){p.classList.toggle('active',j===i)});if(i===4){try{rQcKpi();rQcWeekTrend();rQcSceneBar();rQcHeatmap();renderQcDetail();}catch(e){}}}
@@ -804,8 +804,8 @@ function rQcTab(){
 }
 function rQcZone(){
   var recs=qcFiltered();
-  var zA={label:'叶莉莎（1-4组）',groups:['热线一组','热线二组','热线三组','热线四组']};
-  var zB={label:'陈浩（5-8组）',groups:['热线五组','热线六组','热线七组','热线八组']};
+  var zA={label:'A区（1-4组）',groups:['热线一组','热线二组','热线三组','热线四组']};
+  var zB={label:'B区（5-8组）',groups:['热线五组','热线六组','热线七组','热线八组']};
   function zoneCalc(zone,zData){
     var zr=recs.filter(function(r){return zone.groups.indexOf(r['组别'])>=0});
     var s=0,se=0,m=0,l=0;
@@ -858,8 +858,8 @@ function rQcZone(){
       svg+='<rect x="0" y="'+(y+barH-2)+'" width="'+wB+'" height="'+(barH-4)+'" rx="3" fill="var(--purple)" opacity=".75"/>';
       svg+='<text x="'+(wB+4)+'" y="'+(y+barH+barH/2-2)+'" fill="var(--text)" font-size="10" font-weight="600">'+P(bV,d.dec)+d.unit+'</text>';
     });
-    svg+='<rect x="280" y="5" width="10" height="10" rx="2" fill="var(--accent)" opacity=".75"/><text x="294" y="14" fill="var(--text2)" font-size="10">叶莉莎</text>';
-    svg+='<rect x="340" y="5" width="10" height="10" rx="2" fill="var(--purple)" opacity=".75"/><text x="354" y="14" fill="var(--text2)" font-size="10">陈浩</text>';
+    svg+='<rect x="280" y="5" width="10" height="10" rx="2" fill="var(--accent)" opacity=".75"/><text x="294" y="14" fill="var(--text2)" font-size="10">A区</text>';
+    svg+='<rect x="340" y="5" width="10" height="10" rx="2" fill="var(--purple)" opacity=".75"/><text x="354" y="14" fill="var(--text2)" font-size="10">B区</text>';
     svg+='</g>';
     document.getElementById('qcZoneBenchmark').innerHTML=svg;
   })();
@@ -882,8 +882,8 @@ function rQcZone(){
       svg+='<text x="'+x+'" y="'+(180-WD+16)+'" text-anchor="middle" fill="var(--text2)" font-size="11">'+w+'</text>';
     });
     svg+=aP+bP;
-    svg+='<rect x="'+(560-WD-90)+'" y="5" width="10" height="10" rx="2" fill="var(--accent)"/><text x="'+(560-WD-76)+'" y="14" fill="var(--text2)" font-size="10">叶莉莎</text>';
-    svg+='<rect x="'+(560-WD-30)+'" y="5" width="10" height="10" rx="2" fill="var(--purple)"/><text x="'+(560-WD-16)+'" y="14" fill="var(--text2)" font-size="10">陈浩</text>';
+    svg+='<rect x="'+(560-WD-90)+'" y="5" width="10" height="10" rx="2" fill="var(--accent)"/><text x="'+(560-WD-76)+'" y="14" fill="var(--text2)" font-size="10">A区</text>';
+    svg+='<rect x="'+(560-WD-30)+'" y="5" width="10" height="10" rx="2" fill="var(--purple)"/><text x="'+(560-WD-16)+'" y="14" fill="var(--text2)" font-size="10">B区</text>';
     svg+='</g>';
     document.getElementById('qcZoneWeek').innerHTML=svg;
   })();
@@ -928,8 +928,8 @@ function rQcZone(){
       svg+='<rect x="0" y="'+(y+9)+'" width="'+wB+'" height="8" rx="2" fill="var(--purple)" opacity=".75"/>';
       svg+='<text x="'+(wB+3)+'" y="'+(y+17)+'" fill="var(--text)" font-size="9">'+bV+'</text>';
     });
-    svg+='<rect x="220" y="2" width="8" height="8" rx="2" fill="var(--accent)" opacity=".75"/><text x="232" y="10" fill="var(--text2)" font-size="9">叶莉莎</text>';
-    svg+='<rect x="280" y="2" width="8" height="8" rx="2" fill="var(--purple)" opacity=".75"/><text x="292" y="10" fill="var(--text2)" font-size="9">陈浩</text>';
+    svg+='<rect x="220" y="2" width="8" height="8" rx="2" fill="var(--accent)" opacity=".75"/><text x="232" y="10" fill="var(--text2)" font-size="9">A区</text>';
+    svg+='<rect x="280" y="2" width="8" height="8" rx="2" fill="var(--purple)" opacity=".75"/><text x="292" y="10" fill="var(--text2)" font-size="9">B区</text>';
     svg+='</g>';
     document.getElementById('qcZoneScene').innerHTML=svg;
   })();
