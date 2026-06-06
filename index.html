@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<script>if(!location.search.includes('v=')){location.replace(location.pathname+'?v=17')}</script>
+<script>if(!location.search.includes('v=')){location.replace(location.pathname+'?v=18')}</script>
 <meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
@@ -201,7 +201,12 @@ svg{width:100%}
     </div>
     <div class="stl">组别 × 场景差错热力图</div>
     <div style="overflow-x:auto"><div id="qcHeatmap"></div></div>
-    <div class="stl">人员差错排行</div>
+    <div class="stl" style="display:flex;align-items:center;gap:8px">人员差错排行
+<select id="qcRankGrpF" onchange="renderQcRank()" style="background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:2px 6px;font-size:12px;outline:none">
+<option value="all">全部组别</option>
+<option value="热线一组">一组</option><option value="热线二组">二组</option><option value="热线三组">三组</option><option value="热线四组">四组</option><option value="热线五组">五组</option><option value="热线六组">六组</option><option value="热线七组">七组</option><option value="热线八组">八组</option>
+</select>
+</div>
     <div style="overflow-x:auto"><table id="qcPersonT"><thead></thead><tbody></tbody></table></div>
     <div class="stl">差错明细 <span style="font-size:11px;color:var(--text2);font-weight:400" id="qcFilterInfo"></span></div>
     <div style="overflow-x:auto;margin-bottom:12px">
@@ -678,9 +683,11 @@ function rQcHeatmap(){
 }
 
 function rQcPersonTable(){
+  var grpF=document.getElementById('qcRankGrpF').value;
   var ps={};
   QC.records.forEach(function(r){
     if(ex&&r['新人'])return;
+    if(grpF!=='all'&&r['组别']!==grpF)return;
     if(!ps[r['姓名']])ps[r['姓名']]={'姓名':r['姓名'],'组别':r['组别'],'差错量':0,'b80':0,'a80':0,'z0':0,'新人':r['新人'],'场景':{}};
     ps[r['姓名']]['差错量']++;
     var sc=r['质检评分'];
