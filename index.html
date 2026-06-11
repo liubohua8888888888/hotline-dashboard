@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<script>if(!location.search.includes('v=')){location.replace(location.pathname+'?v=38')}</script>
+<script>if(!location.search.includes('v=')){location.replace(location.pathname+'?v=39')}</script>
 <meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
@@ -102,7 +102,6 @@ svg{width:100%}
 .toggle-label{font-size:12px;color:#94a3b8;font-weight:600;transition:.2s}
 .toggle-label.active{color:#00d4ff}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
 <body>
 
@@ -119,8 +118,8 @@ svg{width:100%}
         <span class="toggle-label" id="tl2" style="cursor:pointer" onclick="ex=true;refresh();if(typeof rQcZone==='function')rQcZone()">剔除新人</span>
       </div>
     </div>
-    <button id="exportBtn" onclick="exportImage()" style="margin-left:12px;padding:6px 14px;background:linear-gradient(135deg,#00d4ff,#0080ff);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;white-space:nowrap;transition:opacity .2s" onmouseover="this.style.opacity=0.85" onmouseout="this.style.opacity=1">导出图片</button>
-  </div>
+
+    <button id="exportBtn" onclick="exportImage()" style="margin-left:12px;padding:6px 14px;background:linear-gradient(135deg,#00d4ff,#0080ff);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;white-space:nowrap" onmouseover="this.style.opacity=0.85" onmouseout="this.style.opacity=1">导出图片</button>  </div>
 </div>
 
 <div class="tabs">
@@ -4102,3 +4101,17 @@ swTab=function(i){_origSwTab(i);if(i===4)rQcTab();};
 refresh();
 
 </script>
+
+<script>
+function exportImage(){
+  var main=document.querySelector('.main');
+  if(!main){alert('未找到内容区域');return}
+  var win=window.open('','_blank');
+  if(!win){alert('请允许弹出窗口后重试');return}
+  var css=document.querySelector('style').textContent;
+  win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>热线管理看板</title><style>'+css+'</style></head><body style="margin:0;padding:20px;background:#0a0e1a">'+main.outerHTML+'<script>setTimeout(function(){window.print()},600)<\/script></body></html>');
+  win.document.close();
+}
+</script>
+</body>
+</html>
