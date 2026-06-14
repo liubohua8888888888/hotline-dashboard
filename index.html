@@ -298,10 +298,12 @@ function rPersonAlert(){
   ps.forEach(function(p){
     var items=[];
     var qcPass=p.质检量>0?(p.质检量-p.差错量)/p.质检量*100:-1;
+    var extRate=p.接起量>0?(p.外诉量||0)/p.接起量*100:0;
     if(p.差错量>=3)items.push('差错量'+p.差错量+'次'+(p.质检量>0?'，通过率'+qcPass.toFixed(1)+'%':''));
-    if(p.退单量>=3)items.push('退单量'+p.退单量+'次');
-    if(p.日均接起>0&&p.日均接起<50&&p.出勤天数>=5)items.push('日均接起'+p.日均接起);
-    if(qcPass>=0&&qcPass<85&&p.质检量>=10)items.push('质检通过率'+qcPass.toFixed(1)+'%');
+    if(p.退单量>=2)items.push('退单量'+p.退单量+'次');
+    if(p.日均接起>0&&p.日均接起<80&&p.出勤天数>=5)items.push('日均接起'+p.日均接起);
+    if(qcPass>=0&&qcPass<95&&p.质检量>=10)items.push('质检通过率'+qcPass.toFixed(1)+'%');
+    if(extRate>=0.2)items.push('外诉率'+extRate.toFixed(2)+'%');
     if(items.length>0){
       w+='<div class="ap w" onclick="showGrpDetail(\''+p.组别+'\')"><div class="an">'+p.姓名+'</div><div><b>'+items.join('；')+'</b><div class="ag">'+p.组别+' | 出勤'+p.出勤天数+'天 | 接起'+p.接起量+' | 质检'+p.质检量+'次</div></div></div>';
     }
