@@ -325,6 +325,7 @@ function rPersonAlert(){
     var goodItems=[];
     if(p.质检量>=10&&p.差错量===0)goodItems.push('零差错('+p.质检量+'次质检)');
     if(p.退单量===0)goodItems.push('零退单');
+    if(p.日均接起>=90)goodItems.push('日均接起'+P(p.日均接起));
     if(goodItems.length>0&&p.质检量>=5){
       g+='<div class="ap g" onclick="showGrpDetail(\''+p.组别+'\')"><div class="an">'+p.姓名+'</div><div><b>'+goodItems.join('；')+'</b><div class="ag">'+p.组别+' | 质检'+p.质检量+'次 | 接起'+p.接起量+'</div></div></div>';
     }
