@@ -580,13 +580,13 @@ function showGrpDetail(grpName){
   document.getElementById('modal').classList.add('show');
 }
 function renderModalTable(persons){
-  var mcols2=['绩效总排名','出勤天数','接起量','日均接起','质检量','质检均分','事后时长','绩效得分','新人'];if(modalSortCol===-2){persons=persons.slice().sort(function(a,b){return modalSortAsc?a.姓名.localeCompare(b.姓名):b.姓名.localeCompare(a.姓名)})}else if(modalSortCol===-1){var fp=D.persons.filter(function(p){return!(ex&&p.新人)});var ranked=fp.slice().sort(function(x,y){return(y.绩效得分||0)-(x.绩效得分||0)});var rm={};ranked.forEach(function(p,i){rm[p.姓名]=i+1});persons=persons.slice().sort(function(a,b){return modalSortAsc?(rm[a.姓名]||9999)-(rm[b.姓名]||9999):(rm[b.姓名]||9999)-(rm[a.姓名]||9999)})}else if(modalSortCol===mcols2.length-1){var nk='新人';persons=persons.slice().sort(function(a,b){return modalSortAsc?(a[nk]?1:0)-(b[nk]?1:0):(b[nk]?1:0)-(a[nk]?1:0)})}else if(modalSortCol>=0&&modalSortCol<mcols2.length-1){var va=a[mcols2[modalSortCol]]||0,vb=b[mcols2[modalSortCol]]||0;persons=persons.slice().sort(function(a,b){return modalSortAsc?(va-vb):(vb-va)})}
+  var mcols2=['绩效总排名','出勤天数','接起量','日均接起','质检量','质检均分','事后时长','绩效得分','外诉率','新人'];if(modalSortCol===-2){persons=persons.slice().sort(function(a,b){return modalSortAsc?a.姓名.localeCompare(b.姓名):b.姓名.localeCompare(a.姓名)})}else if(modalSortCol===-1){var fp=D.persons.filter(function(p){return!(ex&&p.新人)});var ranked=fp.slice().sort(function(x,y){return(y.绩效得分||0)-(x.绩效得分||0)});var rm={};ranked.forEach(function(p,i){rm[p.姓名]=i+1});persons=persons.slice().sort(function(a,b){return modalSortAsc?(rm[a.姓名]||9999)-(rm[b.姓名]||9999):(rm[b.姓名]||9999)-(rm[a.姓名]||9999)})}else if(modalSortCol===9){var nk='新人';persons=persons.slice().sort(function(a,b){return modalSortAsc?(a[nk]?1:0)-(b[nk]?1:0):(b[nk]?1:0)-(a[nk]?1:0)})}else if(modalSortCol>=0&&modalSortCol<mcols2.length-1){var va=a[mcols2[modalSortCol]]||0,vb=b[mcols2[modalSortCol]]||0;persons=persons.slice().sort(function(a,b){return modalSortAsc?(va-vb):(vb-va)})}
   // 绩效总排名（基于当前新人过滤的全量排名）
   var fp=D.persons.filter(function(p){return!(ex&&p.新人)});
   var ranked=fp.slice().sort(function(x,y){return(y.绩效得分||0)-(x.绩效得分||0)});
   var rankMap={};ranked.forEach(function(p,i){rankMap[p.姓名]=i+1});
   var th='<tr><th class="'+(modalSortCol===-2?'sorted':'')+'" onclick="modalSort(-2)">姓名'+(modalSortCol===-2?(modalSortAsc?'▲':'▼'):'')+'</th><th class="'+(modalSortCol===-1?'sorted':'')+'" onclick="modalSort(-1)">绩效总排名'+(modalSortCol===-1?(modalSortAsc?'▲':'▼'):'')+'</th>';
-  var mcols=['出勤天数','接起量','日均接起','一解率','质检量','质检均分','事后时长','绩效得分'];
+  var mcols=['出勤天数','接起量','日均接起','一解率','质检量','质检均分','事后时长','绩效得分','外诉率'];
   mcols.forEach(function(c,i){th+='<th class="'+(modalSortCol===i?'sorted':'')+'" onclick="modalSort('+i+')">'+c+(modalSortCol===i?(modalSortAsc?'▲':'▼'):'')+'</th>'});
   th+='<th class="'+(modalSortCol===8?'sorted':'')+'" onclick="modalSort(8)">新人'+(modalSortCol===8?(modalSortAsc?'▲':'▼'):'')+'</th></tr>';
   var tb='';
@@ -594,7 +594,7 @@ function renderModalTable(persons){
     var rk=rankMap[p.姓名]||'-';
     var rkCls=rk!=='-'&&rk<=50?'vg':rk!=='-'&&rk>=150?'vr':'';
     var daily=p.出勤天数>0?(p.接起量/p.出勤天数).toFixed(1):'0';
-    tb+='<tr><td>'+p.姓名+'</td><td class="va '+rkCls+'">'+rk+'</td><td>'+p.出勤天数+'</td><td>'+N(p.接起量)+'</td><td>'+daily+'</td><td>'+P(p.一解率)+'%</td><td>'+Math.round(p.质检量)+'</td><td>'+P(p.质检均分)+'</td><td>'+P(p.事后时长)+'min</td><td>'+P(p.绩效得分,2)+'</td><td '+(p.新人?'class="vy"':'')+'>'+(p.新人?'新人':'')+'</td></tr>';
+    tb+='<tr><td>'+p.姓名+'</td><td class="va '+rkCls+'">'+rk+'</td><td>'+p.出勤天数+'</td><td>'+N(p.接起量)+'</td><td>'+daily+'</td><td>'+P(p.一解率)+'%</td><td>'+Math.round(p.质检量)+'</td><td>'+P(p.质检均分)+'</td><td>'+P(p.事后时长)+'min</td><td>'+P(p.绩效得分,2)+'</td><td>'+((p.外诉量||0)&&p.接起量>0?P((p.外诉量||0)/p.接起量*100,2)+'%':'0%')+'</td><td '+(p.新人?'class="vy"':'')+'>'+(p.新人?'新人':'')+'</td></tr>';
   });
   document.getElementById('mc').innerHTML='<div style="overflow-x:auto"><table>'+th+'<tbody>'+tb+'</tbody></table></div>';
 }
