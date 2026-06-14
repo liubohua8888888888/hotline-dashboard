@@ -75,6 +75,10 @@ tr:hover{background:rgba(30,41,59,.4)}
 .ap .ag{color:var(--text2);font-size:11px}
 .ap.w{border-left:3px solid var(--red)}
 .ap.g{border-left:3px solid var(--green)}
+.apf{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.apf button{padding:4px 12px;border-radius:14px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:12px;transition:all .2s}
+.apf button:hover,.apf button.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+
 
 .ai .spark{flex-shrink:0}
 svg{width:100%}
@@ -294,8 +298,18 @@ function toggleSwitch(){ex=!ex;var t=document.getElementById('toggleTrack');var 
 
 function rPersonAlert(){
   var ps=D.persons.filter(function(p){return!(ex&&p.新人)});
+  var groups=['全部'];var gset={};
+  ps.forEach(function(p){gset[p.组别]=1});
+  Object.keys(gset).sort(function(a,b){return a.localeCompare(b,'zh')}).forEach(function(g){groups.push(g)});
+  if(!window._apGrp)window._apGrp='全部';
+  var fbtns='<div class="apf">';
+  groups.forEach(function(g){
+    fbtns+='<button class="'+(window._apGrp===g?'on':'')+'" onclick="window._apGrp=\''+g+'\';rPersonAlert()">'+g.replace('热线','')+'</button>';
+  });
+  fbtns+='</div>';
+  var fps=window._apGrp==='全部'?ps:ps.filter(function(p){return p.组别===window._apGrp});
   var w='',g='';
-  ps.forEach(function(p){
+  fps.forEach(function(p){
     var items=[];
     var qcPass=p.质检量>0?(p.质检量-p.差错量)/p.质检量*100:-1;
     var extRate=p.接起量>0?(p.外诉量||0)/p.接起量*100:0;
@@ -314,7 +328,7 @@ function rPersonAlert(){
       g+='<div class="ap g" onclick="showGrpDetail(\''+p.组别+'\')"><div class="an">'+p.姓名+'</div><div><b>'+goodItems.join('；')+'</b><div class="ag">'+p.组别+' | 质检'+p.质检量+'次 | 接起'+p.接起量+'</div></div></div>';
     }
   });
-  document.getElementById('aps').innerHTML='<div class="ac"><h3 style="color:var(--red)">个人异常预警</h3><div class="acnt">'+(w||'<p style="color:var(--text2)">暂无异常</p>')+'</div></div><div class="ac"><h3 style="color:var(--green)">个人优秀表现</h3><div class="acnt">'+(g||'<p style="color:var(--text2)">暂无</p>')+'</div></div>';
+  document.getElementById('aps').innerHTML=fbtns+'<div class="ac"><h3 style="color:var(--red)">个人异常预警</h3><div class="acnt">'+(w||'<p style="color:var(--text2)">暂无异常</p>')+'</div></div><div class="ac"><h3 style="color:var(--green)">个人优秀表现</h3><div class="acnt">'+(g||'<p style="color:var(--text2)">暂无</p>')+'</div></div>';
 }
 
 
