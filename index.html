@@ -69,6 +69,13 @@ tr:hover{background:rgba(30,41,59,.4)}
 .ai{padding:7px 10px;margin:5px 0;border-radius:5px;font-size:12px;display:flex;align-items:center;gap:8px}
 .ai.w{background:rgba(255,71,87,.1);border-left:3px solid var(--red)}
 .ai.g{background:rgba(0,230,118,.1);border-left:3px solid var(--green)}
+.ap{padding:6px 10px;margin:4px 0;border-radius:5px;font-size:12px;display:flex;align-items:center;gap:8px;cursor:pointer;transition:background .2s}
+.ap:hover{background:rgba(255,255,255,.05)}
+.ap .an{min-width:56px;font-weight:600;color:var(--text)}
+.ap .ag{color:var(--text2);font-size:11px}
+.ap.w{border-left:3px solid var(--red)}
+.ap.g{border-left:3px solid var(--green)}
+
 .ai .spark{flex-shrink:0}
 svg{width:100%}
 .foot{text-align:center;padding:14px;color:var(--text2);font-size:11px;border-top:1px solid var(--border);margin-top:28px}
@@ -187,6 +194,7 @@ svg{width:100%}
 
 <div class="tp" id="p3">
   <div class="as" id="as"></div>
+  <div class="as" id="aps" style="margin-top:16px"></div>
 </div>
 <div class="tp" id="p4">
   <div style="display:flex;gap:0;margin-bottom:16px;border-bottom:1px solid var(--border)">
@@ -282,7 +290,32 @@ var CLS=function(v,type){
 };
 
 function refresh(){renderAll();var t=document.getElementById('toggleTrack');var l1=document.getElementById('tl1');var l2=document.getElementById('tl2');if(ex){t.classList.add('on');l1.classList.remove('active');l2.classList.add('active')}else{t.classList.remove('on');l1.classList.add('active');l2.classList.remove('active')}}
-function toggleSwitch(){ex=!ex;var t=document.getElementById('toggleTrack');var l1=document.getElementById('tl1');var l2=document.getElementById('tl2');if(ex){t.classList.add('on');l1.classList.remove('active');l2.classList.add('active')}else{t.classList.remove('on');l1.classList.add('active');l2.classList.remove('active')}refresh();if(typeof rQcZone==='function')rQcZone();if(typeof rQcKpi==='function')rQcKpi();if(typeof rQcWeekTrend==='function')rQcWeekTrend();if(typeof rQcSceneBar==='function')rQcSceneBar();if(typeof rQcHeatmap==='function')rQcHeatmap();if(typeof renderQcDetail==='function')renderQcDetail();if(typeof rQcPersonTable==='function')rQcPersonTable()}
+function toggleSwitch(){ex=!ex;var t=document.getElementById('toggleTrack');var l1=document.getElementById('tl1');var l2=document.getElementById('tl2');if(ex){t.classList.add('on');l1.classList.remove('active');l2.classList.add('active')}else{t.classList.remove('on');l1.classList.add('active');l2.classList.remove('active')}refresh();if(typeof rQcZone==='function')rQcZone();if(typeof rQcKpi==='function')rQcKpi();if(typeof rQcWeekTrend==='function')rQcWeekTrend();if(typeof rQcSceneBar==='function')rQcSceneBar();if(typeof rQcHeatmap==='function')rQcHeatmap();if(typeof renderQcDetail==='function')renderQcDetail();if(typeof rQcPersonTable==='function')rQcPersonTable();rPersonAlert()}
+
+function rPersonAlert(){
+  var ps=D.persons.filter(function(p){return!(ex&&p.新人)});
+  var w='',g='';
+  ps.forEach(function(p){
+    var items=[];
+    var qcPass=p.质检量>0?(p.质检量-p.差错量)/p.质检量*100:-1;
+    if(p.差错量>=3)items.push('差错量'+p.差错量+'次'+(p.质检量>0?'，通过率'+qcPass.toFixed(1)+'%':''));
+    if(p.退单量>=3)items.push('退单量'+p.退单量+'次');
+    if(p.日均接起>0&&p.日均接起<50&&p.出勤天数>=5)items.push('日均接起'+p.日均接起);
+    if(qcPass>=0&&qcPass<85&&p.质检量>=10)items.push('质检通过率'+qcPass.toFixed(1)+'%');
+    if(items.length>0){
+      w+='<div class="ap w" onclick="showGrpDetail(\''+p.组别+'\')"><div class="an">'+p.姓名+'</div><div><b>'+items.join('；')+'</b><div class="ag">'+p.组别+' | 出勤'+p.出勤天数+'天 | 接起'+p.接起量+' | 质检'+p.质检量+'次</div></div></div>';
+    }
+    var goodItems=[];
+    if(p.质检量>=10&&p.差错量===0)goodItems.push('零差错('+p.质检量+'次质检)');
+    if(p.退单量===0)goodItems.push('零退单');
+    if(goodItems.length>0&&p.质检量>=5){
+      g+='<div class="ap g" onclick="showGrpDetail(\''+p.组别+'\')"><div class="an">'+p.姓名+'</div><div><b>'+goodItems.join('；')+'</b><div class="ag">'+p.组别+' | 质检'+p.质检量+'次 | 接起'+p.接起量+'</div></div></div>';
+    }
+  });
+  document.getElementById('aps').innerHTML='<div class="ac"><h3 style="color:var(--red)">个人异常预警</h3><div class="acnt">'+(w||'<p style="color:var(--text2)">暂无异常</p>')+'</div></div><div class="ac"><h3 style="color:var(--green)">个人优秀表现</h3><div class="acnt">'+(g||'<p style="color:var(--text2)">暂无</p>')+'</div></div>';
+}
+
+
 (function(){var tr=document.getElementById('toggleTrack');if(tr){tr.addEventListener('click',function(e){e.preventDefault();toggleSwitch()});tr.addEventListener('touchend',function(e){e.preventDefault();toggleSwitch()})}})()
 function swBtns(n){}
 function swTab(i){document.querySelectorAll('.tab').forEach(function(t,j){t.classList.toggle('active',j===i)});document.querySelectorAll('.tp').forEach(function(p,j){p.classList.toggle('active',j===i)});if(i===4){try{rQcKpi();rQcWeekTrend();rQcSceneBar();rQcHeatmap();renderQcDetail();}catch(e){}}}
@@ -1045,7 +1078,7 @@ refresh();
   };
 })();
 
-refresh();
+refresh();rPersonAlert();
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
