@@ -577,7 +577,7 @@ function rAlert(){
     if(d>80)g+='<div class="ai g"><div>'+gr.组别+' 日均接起 '+d+' &gt; 80</div></div>';
     if(ext===0&&S(gr,'接起量')>0)g+='<div class="ai g"><div>'+gr.组别+' 零外诉</div></div>';
     if(sat===0)w+='<div class="ai w"><div>'+gr.组别+' 满意率 数据暂缺</div></div>';else if(sat<95)w+='<div class="ai w"><div>'+gr.组别+' 满意率 '+P(sat)+'% &lt; 95%（异常）</div></div>';
-    
+    if((S(gr,'一解率')||0)<=93)w+='<div class="ai w"><div>'+gr.组别+' 一解率 '+P(S(gr,'一解率'))+'% ≤ 93%（异常）</div></div>';
     if(wr===0)w+='<div class="ai w"><div>'+gr.组别+' 工时利用率 数据暂缺</div></div>';else if(wr<70)w+='<div class="ai w"><div>'+gr.组别+' 工时利用率 '+P(wr)+'% &lt; 70%（异常）</div></div>';
     
   });
