@@ -330,7 +330,7 @@ function rPersonAlert(){
     if(p.日均接起>0&&p.日均接起<80&&p.出勤天数>=5)items.push('日均接起'+p.日均接起);
     if(qcPass>=0&&qcPass<95&&p.质检量>=10)items.push('质检通过率'+qcPass.toFixed(1)+'%');
     if(extRate>=0.2)items.push('外诉率'+extRate.toFixed(2)+'%');
-    if((p.一解率||0)<92)items.push('一解率'+P(p.一解率)+'%');
+    if((p.一解率||0)<=93)items.push('一解率'+P(p.一解率)+'%');
     if(items.length>0){
       w+='<div class="ap w" onclick="showGrpDetail(\''+p.组别+'\')"><div class="an">'+p.姓名+'</div><div><b>'+items.join('；')+'</b><div class="ag">'+p.组别+' | 出勤'+p.出勤天数+'天 | 接起'+p.接起量+' | 质检'+p.质检量+'次</div></div></div>';
     }
