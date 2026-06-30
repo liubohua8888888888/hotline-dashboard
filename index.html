@@ -636,7 +636,7 @@ document.getElementById('modal').addEventListener('click',function(e){if(e.targe
 function drawBar(id,data,labels,colors){
   var el=document.getElementById(id);if(!el)return;
   var w=el.clientWidth||600,h=200,pd={t:12,r:16,b:30,l:42},cw=w-pd.l-pd.r,ch=h-pd.t-pd.b;
-  var mx=Math.max.apply(null,data)*1.1||1,mn=0,n=data.length;
+  var mx=Math.max.apply(null,data)||0;mx=mx*1.1||1,mn=0,n=data.length;
   var gap=Math.max(3,cw/n*0.25),bw=(cw-gap*(n+1))/n;
   var s='',ax='';
   data.forEach(function(v,i){
@@ -652,7 +652,7 @@ function drawLine(id,series,labels,colors,xLabels){
   var el=document.getElementById(id);if(!el)return;
   var w=el.clientWidth||600,h=el.clientHeight||200,pd={t:12,r:16,b:30,l:42},cw=w-pd.l-pd.r,ch=h-pd.t-pd.b;
   var all=[];series.forEach(function(s){s.forEach(function(v){if(v!=null)all.push(v)})});
-  var mx=Math.max.apply(null,all)*1.05,mn=Math.min.apply(null,all)*0.95;
+  var mx=Math.max.apply(null,all)*1.05,mn=Math.min.apply(null,all)*0.95;if(mx===mn){mx+=1;mn=Math.max(0,mn-1);}
   var n=xLabels.length,lines='',dots='',ax='',lg='';
   for(var i=0;i<=4;i++){var val=mn+(mx-mn)*i/4,yy=pd.t+ch-ch*i/4;ax+='<text x="'+(pd.l-5)+'" y="'+(yy+3)+'" text-anchor="end" fill="#64748b" font-size="9">'+val.toFixed(1)+'</text><line x1="'+pd.l+'" y1="'+yy+'" x2="'+(w-pd.r)+'" y2="'+yy+'" stroke="rgba(100,116,139,.12)"/>';}
   xLabels.forEach(function(l,i){var x=pd.l+cw*i/(n-1);ax+='<text x="'+x+'" y="'+(h-6)+'" text-anchor="middle" fill="#94a3b8" font-size="9">'+l+'</text>';});
@@ -770,16 +770,17 @@ function rQcPersonTable(){
     ps[r['姓名']]['场景'][cat]=(ps[r['姓名']]['场景'][cat]||0)+1;
   });
   var arr=Object.values(ps).sort(function(a,b){return b['差错量']-a['差错量']});
-  var html='<tr><th>姓名</th><th>组别</th><th>差错量⇅</th><th>80~99</th><th>1~80</th><th>0分</th><th>最高频场景</th></tr>';
+  var thead='<tr><th>姓名</th><th>组别</th><th>差错量⇅</th><th>80~99</th><th>1~80</th><th>0分</th><th>最高频场景</th></tr>';
+  var tbody='';
   arr.forEach(function(p){
     var topS=Object.entries(p['场景']).sort(function(a,b){return b[1]-a[1]});
     var topScene=topS.length?topS[0][0]+'('+topS[0][1]+')':'-';
     var cc=p['差错量']>=10?'vr':p['差错量']>=5?'vy':'';
-    html+='<tr><td>'+p['姓名']+(p['新人']?' <span style="color:var(--yellow);font-size:10px">新</span>':'')+'</td><td><span class="dot" style="background:'+GCLR[p['组别']]+'"></span>'+p['组别'].replace('热线','')+'</td><td class="'+cc+'">'+p['差错量']+'</td><td>'+p['b80']+'</td><td class="vy">'+p['a80']+'</td><td class="vr">'+p['z0']+'</td><td style="text-align:left;padding-left:12px;font-size:11px">'+topScene+'</td></tr>';
+    tbody+='<tr><td>'+p['姓名']+(p['新人']?' <span style="color:var(--yellow);font-size:10px">新</span>':'')+'</td><td><span class="dot" style="background:'+GCLR[p['组别']]+'"></span>'+p['组别'].replace('热线','')+'</td><td class="'+cc+'">'+p['差错量']+'</td><td>'+p['b80']+'</td><td class="vy">'+p['a80']+'</td><td class="vr">'+p['z0']+'</td><td style="text-align:left;padding-left:12px;font-size:11px">'+topScene+'</td></tr>';
   });
   var t=document.getElementById('qcPersonT');
-  t.querySelector('thead').innerHTML=html;
-  t.querySelector('tbody').innerHTML='';
+  t.querySelector('thead').innerHTML=thead;
+  t.querySelector('tbody').innerHTML=tbody;
 }
 
 var qcSortCol=-1,qcSortAsc=true;
@@ -927,7 +928,7 @@ function swQcSub(i){
   if(i===0)rQcTab();else rQcZone();
 }
 function rQcTab(){
-  rQcKpi();rQcWeekTrend();rQcSceneBar();rQcHeatmap();rQcPersonTable();renderQcDetail();
+  rQcKpi();rQcWeekTrend();rQcSceneBar();rQcHeatmap();rQcPersonTable();renderQcDetail();rQcDayTrend();rQcDayGrpTrend();rQcDayTable();rQcPersonDayTable();
 }
 function rQcZone(){
   var recs=qcFiltered();
